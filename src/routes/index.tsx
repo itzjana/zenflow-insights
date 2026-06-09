@@ -10,6 +10,7 @@ import { CountUp } from "@/components/CountUp";
 import workVault from "@/assets/work-vault.jpg";
 import workLumina from "@/assets/work-lumina.jpg";
 import workAether from "@/assets/work-aether.jpg";
+import bgImage from "@/assets/bg.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -85,42 +86,45 @@ const metrics = [
 ] as const;
 
 /* ─── Glass card arrow icon ─── */
-function ArrowIcon() {
+function ArrowIcon({ className }: { className?: string }) {
   return (
-    <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <div
+      className={`w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center ${className ?? ""}`}
+    >
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M1 13L13 1"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M13 1H3"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M13 1V11"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     </div>
   );
 }
 
-/* ─── Stacked avatar trust badge ─── */
-function TrustBadge() {
-  const colors = ["#6D33E2", "#9B59B6", "#3498DB", "#2ECC71", "#E67E22"];
-  const initials = ["J", "A", "K", "S", "R"];
-  return (
-    <Reveal delay={0.7}>
-      <div className="flex items-center gap-3 bg-white/90 backdrop-blur-xl rounded-full px-4 py-2.5 shadow-lg shadow-black/5 border border-white/80">
-        <div className="flex -space-x-2.5">
-          {initials.map((letter, i) => (
-            <div
-              key={i}
-              className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-bold text-white"
-              style={{ background: colors[i], zIndex: 5 - i }}
-            >
-              {letter}
-            </div>
-          ))}
-        </div>
-        <div>
-          <span className="text-foreground font-bold text-sm">Active Clients</span>
-          <span className="text-brand font-extrabold text-sm ml-1.5">+323</span>
-        </div>
-      </div>
-    </Reveal>
-  );
-}
+/* TrustBadge removed — replaced by inline CTA in hero left column */
 
 function Home() {
   return (
@@ -128,10 +132,10 @@ function Home() {
       <SiteNav />
 
       {/* ═══════ DESKTOP HERO ═══════ */}
-      <section className="hidden md:flex relative min-h-[100svh] flex-col justify-end px-10 pb-16 pt-32 overflow-hidden">
+      <section className="hidden md:flex relative flex-col justify-end px-10 pb-16 pt-32 overflow-hidden">
         <FloatingObject className="absolute top-0 right-0 w-full md:w-3/4 h-full z-0 opacity-60 md:opacity-70" />
 
-        <div className="relative z-10 w-full max-w-[1600px] mx-auto">
+        <div className="relative z-10 w-full mx-auto">
           <Reveal className="flex items-baseline gap-4 mb-6" y={20}>
             <span className="text-xs font-serif italic text-foreground/40">01. Digital Agency</span>
             <div className="h-px flex-1 bg-foreground/5" />
@@ -157,87 +161,136 @@ function Home() {
           </h1>
 
           {/* Bottom area: left copy + right glass cards */}
-          <div className="mt-12 flex flex-col lg:flex-row gap-12 lg:gap-8 items-start lg:items-end">
-            {/* Left: description + tags + trust badge */}
+          <div className="mt-12 flex flex-col lg:flex-row gap-12 lg:gap-8 items-start lg:items-start">
+            {/* Left: description + tags */}
             <Reveal className="max-w-md flex-shrink-0" delay={0.5}>
-              <p className="text-lg md:text-xl font-light text-foreground/70 leading-snug mb-6">
-                Zencyp is Arani, Tamil Nadu's leading full-service digital marketing and branding
-                agency. We help startups and established brands grow with SEO, web design, social
-                media, and creative video solutions.
-              </p>
-              <div className="flex flex-wrap gap-3 mb-6">
-                {["Branding", "SEO & PPC", "Web Dev"].map((t) => (
-                  <span
-                    key={t}
-                    className="px-3 py-1 rounded-full border border-foreground/10 bg-background/60 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest"
+              <div className="flex flex-col">
+                <p className="text-lg md:text-xl font-light text-foreground/70 leading-snug mb-6">
+                  Zencyp is Arani, Tamil Nadu's leading full-service digital marketing and branding
+                  agency. We help startups and established brands grow with SEO, web design, social
+                  media, and creative video solutions.
+                </p>
+
+                <div className="flex flex-wrap gap-3 mb-6">
+                  {["Branding", "SEO & PPC", "Web Dev"].map((t) => (
+                    <span
+                      key={t}
+                      className="px-3 py-1 rounded-full border border-foreground/10 bg-background/60 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="mt-6">
+                  <Link
+                    to="/contact"
+                    className="group inline-flex items-center gap-3 h-12 px-6 rounded-full bg-brand text-white font-bold text-sm uppercase tracking-widest transition-all duration-300 hover:translate-x-1.5"
                   >
-                    {t}
-                  </span>
-                ))}
+                    Contact Agency
+                    <span className="w-7 h-7 rounded-full bg-white/20 text-white flex items-center justify-center text-xs transition-all duration-300 group-hover:rotate-45 group-hover:bg-white/40">
+                      →
+                    </span>
+                  </Link>
+                </div>
               </div>
-              <TrustBadge />
             </Reveal>
 
             {/* Right: Glass feature cards (inspired by reference image) */}
-            <div className="lg:ml-auto flex gap-4 flex-wrap justify-end max-w-2xl">
-              {/* Card 1: SEO-Driven Growth */}
+            <div className="relative lg:ml-auto flex flex-nowrap items-end justify-end gap-6 w-full max-w-[840px]">
+              {/* Trust badge removed from desktop hero per request */}
+              {/* Card 1: Perfect Security */}
               <Reveal delay={0.5}>
-                <div className="group relative w-[220px] rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-5 shadow-[0_8px_32px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-transform duration-500 cursor-pointer overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-brand/5 via-transparent to-transparent pointer-events-none rounded-2xl" />
-                  <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="px-2.5 py-0.5 rounded-full bg-brand/10 text-brand text-[9px] font-bold uppercase tracking-wider">
-                        SEO Strategy
+                <div className="group relative self-end w-[260px] h-[170px] rounded-[30px] bg-white/10 backdrop-blur-3xl border border-white/15 p-5 shadow-[0_20px_60px_rgba(20,60,160,0.15)] hover:-translate-y-1 transition-transform duration-500 cursor-pointer overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand/10 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 rounded-[30px] border border-white/10" />
+                  <div className="relative z-10 h-full flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      <span className="px-3 py-1 rounded-full text-indigo-400 text-[10px] font-semibold uppercase tracking-[0.3em]">
+                        Premium Production
                       </span>
-                      <ArrowIcon />
+                      <ArrowIcon className="h-10 w-10 text-transparent" />
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand/20 to-brand/5 border border-brand/15 flex items-center justify-center mb-3">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6D33E2" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="11" cy="11" r="8" />
-                        <path d="M21 21l-4.35-4.35" />
-                        <path d="M11 8v6M8 11h6" />
-                      </svg>
+                    <div className="flex items-start gap-4">
+                      <div className="w-20 h-20 rounded-[24px] border border-white/20 bg-white/10 shadow-[inset_0_0_30px_rgba(255,255,255,0.2)] backdrop-blur-xl flex items-center justify-center text-brand/60">
+                        <svg
+                          width="28"
+                          height="28"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-brand/60"
+                        >
+                          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                          <circle cx="12" cy="13" r="4" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground/95 mb-1">
+                          Video content that converts
+                        </h4>
+                        <p className="text-[11px] text-foreground/60 leading-relaxed">
+                          Cinematic & high-performing video campaigns crafted to drive engagement.
+                        </p>
+                      </div>
                     </div>
-                    <h4 className="text-sm font-bold text-foreground mb-1">SEO-driven growth engine</h4>
-                    <p className="text-[11px] text-foreground/50 leading-relaxed">
-                      White-hat SEO tactics for maximum organic visibility and lead gen.
-                    </p>
                   </div>
                 </div>
               </Reveal>
 
-              {/* Card 2: Integrated Branding */}
-              <Reveal delay={0.6}>
-                <div className="group relative w-[220px] rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-5 shadow-[0_8px_32px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-transform duration-500 cursor-pointer overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent pointer-events-none rounded-2xl" />
-                  <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-3">
-                      <ArrowIcon />
+              {/* Card 2: Integrated AI Agent */}
+              <Reveal delay={0.5} y={20}>
+                <div
+                  className="group relative self-end w-[260px] h-[290px] bg-white/92 backdrop-blur-3xl border border-white/25 p-5 shadow-[0_20px_80px_rgba(14,74,206,0.08)] hover:-translate-y-1 transition-transform duration-500 cursor-pointer overflow-hidden"
+                  style={{
+                    clipPath:
+                      "path('M 46 10 L 104 10 A 36 36 0 0 1 140 46 L 140 280 L 140 280 L 46 280 A 36 36 0 0 1 10 244 L 10 46 A 36 36 0 0 1 46 10 Z M 140 90 L 214 90 A 36 36 0 0 1 250 126 L 250 244 A 36 36 0 0 1 214 280 L 140 280 L 140 280 L 140 90 L 140 90 Z M 140 54 C 140 81 147.2 90 176 90 H 140 Z')",
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand/10 via-transparent to-transparent pointer-events-none" />
+                  <div className="relative z-10 h-full flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="relative w-[56px] h-[56px] rounded-full bg-gradient-to-br from-brand/60 via-brand/40 to-white/70 border border-white/60 shadow-[0_0_40px_rgba(59,130,246,0.18)] backdrop-blur-2xl flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-white/70 via-brand/30 to-white/70 shadow-[inset_0_0_18px_rgba(255,255,255,0.65)]" />
+                        </div>
+                      </div>
+                      <ArrowIcon className="h-10 w-10" />
                     </div>
-                    <h4 className="text-base font-bold text-foreground mb-2">
-                      Integrated Branding
-                    </h4>
-                    <p className="text-[11px] text-foreground/50 leading-relaxed">
-                      End-to-end brand identity crafted for personalized client experiences across all touchpoints.
-                    </p>
+                    <div className="flex items-center gap-4">
+                      <div className="space-y-3">
+                        <h4 className="text-sm font-semibold text-slate-900">
+                          AI Marketing Engine
+                        </h4>
+                        <p className="text-[11px] text-slate-600 leading-relaxed">
+                         AI-powered audience targeting, campaign optimization, and content personalization that turns traffic into qualified leads.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Reveal>
 
-              {/* Card 3: Stat Card */}
+              {/* Card 3: Stat Card - 42% */}
               <Reveal delay={0.7}>
-                <div className="group relative w-[160px] rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-5 shadow-[0_8px_32px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-transform duration-500 cursor-pointer overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-brand/5 via-transparent to-transparent pointer-events-none rounded-2xl" />
-                  <div className="relative z-10">
-                    <div className="flex justify-end mb-2">
-                      <ArrowIcon />
+                <div className="group relative self-end w-[260px] h-[180px] rounded-[30px] bg-white/6 backdrop-blur-3xl border border-white/10 p-5 shadow-[0_20px_60px_rgba(15,40,100,0.12)] hover:-translate-y-1 transition-transform duration-500 cursor-pointer overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand/8 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 rounded-[30px] border border-white/10" />
+                  <div className="relative z-10 h-full flex flex-col justify-between">
+                    <div className="flex justify-end">
+                    
                     </div>
-                    <span className="block text-4xl font-extrabold tracking-tighter text-foreground">
-                      <CountUp to={150} suffix="%" duration={2.5} />
-                    </span>
-                    <p className="text-[10px] text-foreground/50 leading-relaxed mt-2">
-                      Average traffic boost with our SEO & branding solutions
-                    </p>
+                    <div>
+                      <span className="block text-[92px] font-extralight text-foreground leading-none">
+                        150<span className="text-[32px] font-bold">%</span>
+                      </span>
+                      <p className="mt-3 text-[11px] uppercase ml-24 text-slate-600">
+                        Avg. Traffic Boost
+                      </p>
+                    </div>
                   </div>
                 </div>
               </Reveal>
@@ -247,7 +300,7 @@ function Home() {
       </section>
 
       {/* ═══════ MOBILE HERO ═══════ */}
-      <section className="md:hidden relative min-h-screen overflow-hidden bg-background px-5 pt-24 pb-10">
+      <section className="md:hidden relative min-h-[85vh] overflow-hidden bg-background px-5 pt-24 pb-10">
         {/* Decorative gradient blobs */}
         <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-brand/10 blur-[100px] pointer-events-none" />
         <div className="absolute bottom-20 left-0 w-56 h-56 rounded-full bg-brand/15 blur-[80px] pointer-events-none" />
@@ -277,7 +330,8 @@ function Home() {
 
           <Reveal delay={0.2}>
             <p className="mt-6 text-base font-light text-foreground/60 leading-relaxed max-w-sm">
-              Zencyp is Arani's leading digital marketing and branding agency. We help brands grow with SEO, web design, social media, and creative video solutions.
+              Zencyp is Arani's leading digital marketing and branding agency. We help brands grow
+              with SEO, web design, social media, and creative video solutions.
             </p>
           </Reveal>
 
@@ -320,10 +374,18 @@ function Home() {
           {/* Mobile Glass Cards (compact) */}
           <Reveal delay={0.5}>
             <div className="mt-10 grid grid-cols-2 gap-3">
-
               <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-md border border-foreground/5 p-4">
                 <div className="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center mb-2">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D33E2" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#6D33E2"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <circle cx="11" cy="11" r="8" />
                     <path d="M21 21l-4.35-4.35" />
                   </svg>
@@ -338,7 +400,16 @@ function Home() {
 
               <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-md border border-foreground/5 p-4">
                 <div className="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center mb-2">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D33E2" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#6D33E2"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -355,25 +426,6 @@ function Home() {
             </div>
           </Reveal>
 
-          {/* Mobile trust badge */}
-          <Reveal delay={0.6}>
-            <div className="mt-6 flex items-center gap-3">
-              <div className="flex -space-x-2">
-                {["#6D33E2", "#9B59B6", "#3498DB", "#2ECC71"].map((c, i) => (
-                  <div
-                    key={i}
-                    className="w-7 h-7 rounded-full border-2 border-background flex items-center justify-center text-[9px] font-bold text-white"
-                    style={{ background: c, zIndex: 4 - i }}
-                  >
-                    {["J", "A", "K", "S"][i]}
-                  </div>
-                ))}
-              </div>
-              <span className="text-xs text-foreground/50">
-                <span className="font-bold text-foreground">323+</span> active clients trust us
-              </span>
-            </div>
-          </Reveal>
         </div>
       </section>
 
@@ -402,7 +454,10 @@ function Home() {
         </div>
       </div>
 
-      <section id="capabilities" className="py-12 mb-50 md:mb-34 md:py-28 px-6 md:px-10 bg-background">
+      <section
+        id="capabilities"
+        className=" mb-50 md:mb-34 px-6 md:px-10 bg-background"
+      >
         <div className="max-w-5xl mx-auto">
           <ScrollStack
             itemDistance={120}
@@ -468,8 +523,12 @@ function Home() {
       <HorizontalPortfolio items={portfolio} />
 
       {/* Metrics with glass cards */}
-      <section className="relative py-24 md:py-32 px-6 md:px-10 bg-brand text-brand-foreground overflow-hidden">
-        <div className="absolute -top-32 -left-32 size-[400px] rounded-full bg-white/20 blur-3xl" />
+<section
+  className="relative py-24 md:py-32 px-6 md:px-10 text-brand-foreground overflow-hidden bg-cover bg-center bg-no-repeat"
+  style={{
+    backgroundImage: `url(${bgImage})`,
+  }}
+>        <div className="absolute -top-32 -left-32 size-[400px] rounded-full bg-white/20 blur-3xl" />
         <div className="absolute -bottom-32 -right-32 size-[500px] rounded-full bg-black/10 blur-3xl" />
 
         <div className="relative max-w-7xl mx-auto">
