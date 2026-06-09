@@ -1,11 +1,16 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { Menu } from "lucide-react";
 
-const links = [
-  { to: "/services", label: "Services", n: "01" },
-  { to: "/philosophy", label: "Philosophy", n: "02" },
-  { to: "/contact", label: "Contact", n: "03" },
+
+const logoPath = "/logo.svg";
+
+const navLinks = [
+  { to: "/", label: "Home" },
+  { to: "/services", label: "Services" },
+  { to: "/about", label: "About" },
+  { to: "/contact", label: "Contact" },
 ] as const;
 
 export function SiteNav() {
@@ -14,7 +19,9 @@ export function SiteNav() {
   const panelRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<HTMLUListElement>(null);
 
-  // Lock body scroll
+  const routerState = useRouterState();
+  const currentPath = routerState.location.pathname;
+
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -24,7 +31,6 @@ export function SiteNav() {
     };
   }, [open]);
 
-  // Open / close animation
   useEffect(() => {
     const overlay = overlayRef.current;
     const panel = panelRef.current;
@@ -60,7 +66,6 @@ export function SiteNav() {
     });
   };
 
-  // Close on Escape
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
@@ -70,46 +75,46 @@ export function SiteNav() {
 
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full px-5 py-5 md:px-10 md:py-8 flex justify-between items-center bg-background/70 backdrop-blur-md">
-        <Link to="/" className="flex items-center gap-4">
-          <span className="text-xl md:text-2xl font-extrabold tracking-tighter">ZENCYP.</span>
-          <span className="hidden lg:inline-block h-px w-10 bg-foreground/10" />
-          <span className="hidden lg:inline text-[10px] font-bold uppercase tracking-widest text-foreground/40 underline decoration-brand decoration-2 underline-offset-4">
-            Available Q3 '26
-          </span>
+      <nav className="hidden md:block fixed top-4 left-1/2 z-50 w-[98vw] max-w-7xl -translate-x-1/2 rounded-full border border-white/15 bg-white/15 px-6 py-3 shadow-[0_28px_70px_rgba(15,23,42,0.14)] backdrop-blur-2xl">
+        <div className="relative flex items-center justify-center min-h-14">
+          <Link to="/" className="absolute left-5 flex items-center gap-3">
+            <img src={logoPath} alt="Zencyp logo" className="h-8 w-auto object-contain" />
+          </Link>
+
+          <div className="flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`text-lg font-semibold tracking-wide transition ${currentPath === link.to
+                    ? "text-foreground"
+                    : "text-foreground/70 hover:text-foreground"
+                  }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      <nav className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between gap-4 border-b border-white/10 bg-background/80 px-4 py-4 backdrop-blur-md shadow-sm">
+        <Link to="/" className="flex items-center gap-3">
+          <img src={logoPath} alt="Zencyp logo" className="h-12 w-auto object-contain" />
         </Link>
 
-        {/* Desktop links */}
-        <div className="hidden lg:flex gap-10 text-[11px] uppercase tracking-widest font-bold">
-          {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="hover:text-foreground/60 transition-colors"
-              activeProps={{
-                className: "underline decoration-brand decoration-2 underline-offset-4",
-              }}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Hamburger */}
         <button
           aria-label="Open menu"
           aria-expanded={open}
           onClick={() => setOpen(true)}
-          className="lg:hidden relative size-11 -mr-1 rounded-full border border-foreground/10 flex flex-col items-center justify-center gap-[5px] bg-background/60 backdrop-blur-md active:scale-95 transition-transform"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-foreground"
         >
-          <span className="block h-[2px] w-4 bg-foreground" />
-          <span className="block h-[2px] w-4 bg-foreground" />
+          <Menu size={20} />
         </button>
       </nav>
 
-      {/* Mobile overlay menu */}
       {open && (
-        <div className="fixed inset-0 z-[90] lg:hidden" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-90 md:hidden" role="dialog" aria-modal="true">
           <div
             ref={overlayRef}
             onClick={close}
@@ -117,40 +122,36 @@ export function SiteNav() {
           />
           <div
             ref={panelRef}
-            className="absolute top-0 right-0 h-full w-[88%] max-w-md bg-foreground text-background flex flex-col will-change-transform"
+            className="absolute top-0 right-0 h-full w-[88%] max-w-md bg-slate-950 text-white flex flex-col will-change-transform"
           >
-            <div className="flex justify-between items-center px-6 py-5 border-b border-background/10">
-              <span className="text-lg font-extrabold tracking-tighter">ZENCYP.</span>
+            <div className="flex justify-between items-center px-6 py-5 border-b border-white/10">
+              <span className="text-lg font-extrabold tracking-tighter text-white">ZENCYP.</span>
               <button
                 aria-label="Close menu"
                 onClick={close}
-                className="size-11 rounded-full border border-background/15 flex items-center justify-center hover:bg-brand hover:text-brand-foreground hover:border-brand transition-colors"
+                className="size-11 rounded-full border border-white/15 flex items-center justify-center text-white transition hover:bg-white/10"
               >
                 <span className="text-lg leading-none">✕</span>
               </button>
             </div>
 
-            <ul ref={itemsRef} className="flex-1 flex flex-col justify-center px-6 gap-2">
-              {links.map((l) => (
-                <li key={l.to} className="overflow-hidden">
+            <ul ref={itemsRef} className="flex-1 flex flex-col justify-center px-6 gap-4">
+              {navLinks.map((link) => (
+                <li key={link.to} className="overflow-hidden">
                   <Link
-                    to={l.to}
+                    to={link.to}
                     onClick={close}
                     data-mi
-                    className="group flex items-baseline gap-4 py-3 text-5xl sm:text-6xl font-extrabold tracking-tighter uppercase hover:text-brand transition-colors"
+                    className="block px-2 py-3 text-2xl font-semibold tracking-wide uppercase text-white transition hover:text-brand"
                   >
-                    <span className="text-[10px] font-bold tracking-widest opacity-40">{l.n}</span>
-                    <span>{l.label}</span>
-                    <span className="ml-auto text-2xl opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
-                      →
-                    </span>
+                    {link.label}
                   </Link>
                 </li>
               ))}
             </ul>
 
-            <div className="px-6 py-8 border-t border-background/10 text-[10px] uppercase tracking-widest font-bold opacity-60">
-              hello@zencyp.in · Available Q3 '26
+            <div className="px-6 py-8 border-t border-white/10 text-xs uppercase tracking-widest font-semibold text-white/70">
+              info@zencyp.in · Available Q3 '26
             </div>
           </div>
         </div>

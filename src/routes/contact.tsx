@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { toast } from "sonner";
+import { sendContactMessage } from "@/lib/api/contact.functions";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -28,6 +29,7 @@ function Contact() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
+  const [service, setService] = useState("Branding & Meta/Google Ads");
   const [message, setMessage] = useState("");
 
   // Parse message query parameter if set from the calculator
@@ -41,15 +43,33 @@ function Contact() {
     }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Simulate sending message
-    toast.success("Message sent successfully! We will reply within one business day.");
-    setName("");
-    setEmail("");
-    setPhone("");
-    setCompany("");
-    setMessage("");
+
+    try {
+      await sendContactMessage({
+        data: {
+          name,
+          email,
+          phone,
+          company,
+          enquiryType: service,
+          message,
+        },
+      });
+
+      toast.success("Message sent successfully! We will reply within one business day.");
+      setName("");
+      setEmail("");
+      setPhone("");
+      setCompany("");
+      setService("Branding & Meta/Google Ads");
+      setMessage("");
+    } catch (error) {
+      console.error(error);
+      const message = error instanceof Error ? error.message : "Unable to send message. Please try again later.";
+      toast.error(message);
+    }
   };
 
   return (
@@ -210,6 +230,29 @@ function Contact() {
 
                 <div className="space-y-2">
                   <label
+                    htmlFor="service"
+                    className="text-[10px] font-bold uppercase tracking-widest text-foreground/50"
+                  >
+                    Select service
+                  </label>
+                  <select
+                    id="service"
+                    value={service}
+                    onChange={(e) => setService(e.target.value)}
+                    className="w-full bg-background border border-foreground/10 rounded-xl px-4 py-3 text-sm focus:border-brand focus:outline-none transition-colors"
+                  >
+                    <option>Branding & Meta/Google Ads</option>
+                    <option>Video Production</option>
+                    <option>Digital Marketing & Ads</option>
+                    <option>Website Development</option>
+                    <option>Social Media Management</option>
+                    <option>Graphic Design</option>
+                    <option>General Inquiry</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label
                     htmlFor="message"
                     className="text-[10px] font-bold uppercase tracking-widest text-foreground/50"
                   >
@@ -221,7 +264,7 @@ function Contact() {
                     rows={5}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Tell us about your project or branding objectives..."
+                    placeholder="Tell us about your project, campaign type, or branding goals..."
                     className="w-full bg-background border border-foreground/10 rounded-xl px-4 py-3 text-sm focus:border-brand focus:outline-none transition-colors resize-none"
                   />
                 </div>

@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 const nav = [
   { to: "/", label: "Home" },
   { to: "/services", label: "Services" },
-  { to: "/philosophy", label: "Philosophy" },
+  { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ] as const;
 
@@ -96,10 +96,10 @@ export function SiteFooter() {
                 Contact
               </span>
               <a
-                href="mailto:hello@zencyp.in"
+                href="mailto:info@zencyp.in"
                 className="mt-5 block text-xl md:text-2xl font-extrabold tracking-tight transition-transform duration-300 hover:translate-x-1.5"
               >
-                hello@zencyp.in
+                info@zencyp.in
               </a>
               <p className="mt-3 text-sm font-light text-foreground/60">
                 Bengaluru · Mumbai · remote

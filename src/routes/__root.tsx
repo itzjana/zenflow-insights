@@ -87,9 +87,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "author", content: "Zencyp" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "/logo.svg" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "/logo.svg" },
     ],
     links: [
+      { rel: "icon", href: "/logo.svg" },
+      { rel: "apple-touch-icon", href: "/logo.svg" },
+      { rel: "mask-icon", href: "/logo.svg" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {

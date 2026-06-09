@@ -28,8 +28,8 @@
   --muted-foreground: oklch(0.55 0 0);
   --border: oklch(0.12 0 0 / 0.08);
 
-  /* Lime accent #C0FF00 */
-  --brand: oklch(0.93 0.236 124);
+  /* Director accent #6D33E2 */
+  --brand: #6D33E2;
   --brand-foreground: oklch(0.12 0 0);
 }
 
