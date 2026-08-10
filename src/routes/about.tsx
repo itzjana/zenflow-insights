@@ -70,7 +70,7 @@ function About() {
             We build digital brands,
             <br />
             platforms and campaigns that
-            <span className="font-serif italic font-semibold normal-case border-b-[6px] md:border-b-[10px] border-brand leading-none px-2 text-brand-foreground bg-brand/10">
+            <span className="font-serif italic font-semibold normal-case border-b-6 md:border-b-10 border-brand leading-none px-2 text-brand-foreground bg-brand/10">
               perform.
             </span>
           </h1>
@@ -110,11 +110,11 @@ function About() {
             {processSteps.map((t) => (
               <div
                 key={t.n}
-                className="grid grid-cols-1 md:grid-cols-12 gap-6 py-12 md:py-16 border-b border-foreground/10 group hover:bg-muted/40 transition-colors px-2 md:px-6 rounded-xl"
+                className="grid grid-cols-[2.5rem_1fr] md:grid-cols-12 items-baseline md:items-start gap-x-3 gap-y-5 md:gap-6 py-12 md:py-16 border-b border-foreground/10 group hover:bg-muted/40 transition-colors px-2 md:px-6 rounded-xl"
               >
                 <span className="md:col-span-2 font-serif italic text-2xl text-brand">{t.n}</span>
                 <h3 className="md:col-span-5 text-3xl md:text-4xl font-extrabold tracking-tight group-hover:translate-x-2 transition-transform">{t.title}</h3>
-                <p className="md:col-span-5 text-foreground/60 font-light leading-relaxed">{t.copy}</p>
+                <p className="col-span-2 md:col-span-5 text-foreground/60 font-light leading-relaxed">{t.copy}</p>
               </div>
             ))}
           </div>

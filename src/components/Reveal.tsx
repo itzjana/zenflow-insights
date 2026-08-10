@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode, type ElementType } from "react";
+import { useEffect, useRef, type ReactNode, type ElementType, type RefObject } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -10,6 +10,16 @@ type Props = {
   y?: number;
   /** if true, splits children text into words for staggered reveal (mask clip) */
   splitWords?: boolean;
+  /**
+   * Element to watch instead of this one. Point several Reveals at a shared
+   * wrapper so they fire together even when their own tops sit at different
+   * heights (e.g. bottom-aligned cards of different sizes).
+   */
+  trigger?: RefObject<HTMLElement | null>;
+  /** replay the reveal each time the trigger comes back into view, in either direction */
+  replay?: boolean;
+  /** ScrollTrigger start position — override when the default fires too early */
+  start?: string;
 };
 
 if (typeof window !== "undefined") {
@@ -23,6 +33,9 @@ export function Reveal({
   delay = 0,
   y = 40,
   splitWords = false,
+  trigger,
+  replay = false,
+  start,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -31,6 +44,9 @@ export function Reveal({
     if (!el) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
+
+    const triggerEl = trigger?.current ?? el;
+    const toggleActions = replay ? "restart none restart none" : "play none none none";
 
     const ctx = gsap.context(() => {
       if (splitWords) {
@@ -49,7 +65,7 @@ export function Reveal({
           ease: "power3.out",
           stagger: 0.06,
           delay,
-          scrollTrigger: { trigger: el, start: "top 88%" },
+          scrollTrigger: { trigger: triggerEl, start: start ?? "top 88%", toggleActions },
         });
       } else {
         gsap.from(el, {
@@ -58,13 +74,13 @@ export function Reveal({
           duration: 1,
           ease: "power3.out",
           delay,
-          scrollTrigger: { trigger: el, start: "top 90%" },
+          scrollTrigger: { trigger: triggerEl, start: start ?? "top 90%", toggleActions },
         });
       }
     }, ref);
 
     return () => ctx.revert();
-  }, [delay, y, splitWords]);
+  }, [delay, y, splitWords, trigger, replay, start]);
 
   return (
     <Tag ref={ref as never} className={className}>

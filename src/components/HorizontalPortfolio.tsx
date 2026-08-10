@@ -121,7 +121,7 @@ export function HorizontalPortfolio({ items, heading = "Selected Work" }: Props)
         className="relative h-screen overflow-hidden bg-background flex flex-col justify-between"
       >
         {/* Header */}
-        <div className="w-full px-6 md:px-10 pt-10 md:pt-14 lg:pt-16 flex items-end justify-between z-10 flex-shrink-0">
+        <div className="w-full px-6 md:px-10 pt-10 md:pt-14 lg:pt-16 flex items-end justify-between z-10 shrink-0">
           <div>
             <span className="text-xs font-bold uppercase tracking-[0.3em] flex items-center gap-4">
               <span className="size-2 bg-brand rounded-full" /> {heading}
@@ -149,7 +149,7 @@ export function HorizontalPortfolio({ items, heading = "Selected Work" }: Props)
                     relative
                     w-[80vw] md:w-[42vw] lg:w-[36vw]
                     h-[52vh] sm:h-[55vh] md:h-[58vh] lg:h-[62vh]
-                    min-w-[240px]
+                    min-w-60
                     bg-muted overflow-hidden rounded-2xl
                     outline outline-foreground/5
                   "
@@ -162,7 +162,7 @@ export function HorizontalPortfolio({ items, heading = "Selected Work" }: Props)
                     onLoad={() => {
                       ScrollTrigger.refresh();
                     }}
-                    className="w-full h-full object-cover transition-transform duration-[800ms] ease-[cubic-bezier(0.2,1,0.3,1)] group-hover:scale-110 will-change-transform"
+                    className="w-full h-full object-cover transition-transform duration-800 ease-[cubic-bezier(0.2,1,0.3,1)] group-hover:scale-110 will-change-transform"
                   />
                   <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-background/70 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest">
                     {String(i + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}

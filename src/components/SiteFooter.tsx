@@ -52,7 +52,7 @@ function ArrowLink({
 export function SiteFooter() {
   return (
     <footer className="px-4 md:px-6 pt-12 md:pt-16 pb-8 bg-muted/40">
-      <div className="max-w-[1600px] mx-auto">
+      <div className="max-w-400 mx-auto">
         {/* Top monogram */}
         <div className="rounded-3xl bg-foreground text-background px-6 md:px-12 pt-10 md:pt-14 pb-6 md:pb-8 mb-4 md:mb-6 overflow-hidden relative">
           <div className="flex flex-col md:flex-row gap-6 md:gap-10 md:items-end justify-between relative z-10">

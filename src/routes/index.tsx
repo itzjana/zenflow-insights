@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -127,12 +128,17 @@ function ArrowIcon({ className }: { className?: string }) {
 /* TrustBadge removed — replaced by inline CTA in hero left column */
 
 function Home() {
+  // Shared trigger for the three hero glass cards. They are bottom-aligned and have
+  // different heights, so watching each card individually would fire them at three
+  // different scroll positions.
+  const heroCardsRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className="bg-background text-foreground font-sans">
       <SiteNav />
 
       {/* ═══════ DESKTOP HERO ═══════ */}
-      <section className="hidden md:flex relative flex-col justify-end px-10 pb-16 pt-32 overflow-hidden">
+      <section className="hidden lg:flex relative flex-col justify-end px-10 pb-16 pt-32 overflow-hidden">
         <FloatingObject className="absolute top-0 right-0 w-full md:w-3/4 h-full z-0 opacity-60 md:opacity-70" />
 
         <div className="relative z-10 w-full mx-auto">
@@ -146,7 +152,7 @@ function Home() {
             <div className="flex items-center gap-3 md:gap-10 flex-wrap">
               <Reveal
                 as="span"
-                className="font-serif italic font-semibold normal-case tracking-tight border-b-[5px] md:border-b-[10px] border-brand leading-none px-2"
+                className="font-serif italic font-semibold normal-case tracking-tight border-b-5 md:border-b-10 border-brand leading-none px-2"
                 delay={0.1}
               >
                 growth
@@ -161,9 +167,11 @@ function Home() {
           </h1>
 
           {/* Bottom area: left copy + right glass cards */}
-          <div className="mt-12 flex flex-col lg:flex-row gap-12 lg:gap-8 items-start lg:items-start">
+          {/* Side by side needs 448 (copy) + 32 (gap) + 828 (cards) + 80 (gutters) = 1388px.
+              Below that the copy and the card trio stack so the cards are never clipped. */}
+          <div className="mt-12 flex flex-col min-[1400px]:flex-row gap-12 min-[1400px]:gap-8 items-start">
             {/* Left: description + tags */}
-            <Reveal className="max-w-md flex-shrink-0" delay={0.5}>
+            <Reveal className="max-w-md shrink-0" delay={0.5}>
               <div className="flex flex-col">
                 <p className="text-lg md:text-xl font-light text-foreground/70 leading-snug mb-6">
                   Zencyp is Arani, Tamil Nadu's leading full-service digital marketing and branding
@@ -197,13 +205,16 @@ function Home() {
             </Reveal>
 
             {/* Right: Glass feature cards (inspired by reference image) */}
-            <div className="relative lg:ml-auto flex flex-nowrap items-end justify-end gap-6 w-full max-w-[840px]">
+            <div
+              ref={heroCardsRef}
+              className="relative ml-auto flex flex-nowrap items-end justify-end gap-6 w-full max-w-210"
+            >
               {/* Trust badge removed from desktop hero per request */}
               {/* Card 1: Perfect Security */}
-              <Reveal delay={0.5}>
-                <div className="group relative self-end w-[260px] h-[170px] rounded-[30px] bg-white/10 backdrop-blur-3xl border border-white/15 p-5 shadow-[0_20px_60px_rgba(20,60,160,0.15)] hover:-translate-y-1 transition-transform duration-500 cursor-pointer overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-brand/10 via-transparent to-transparent pointer-events-none" />
-                  <div className="absolute inset-0 rounded-[30px] border border-white/10" />
+              <Reveal delay={0.5} trigger={heroCardsRef} replay start="bottom 95%">
+                <div className="group relative self-end w-65 h-42.5 rounded-3xl bg-white/10 backdrop-blur-3xl border border-white/15 p-5 shadow-[0_20px_60px_rgba(20,60,160,0.15)] hover:-translate-y-1 transition-transform duration-500 cursor-pointer overflow-hidden">
+                  <div className="absolute inset-0 bg-linear-to-br from-brand/10 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 rounded-3xl border border-white/10" />
                   <div className="relative z-10 h-full flex flex-col justify-between">
                     <div className="flex items-center justify-between">
                       <span className="px-3 py-1 rounded-full text-indigo-400 text-[10px] font-semibold uppercase tracking-[0.3em]">
@@ -212,7 +223,7 @@ function Home() {
                       <ArrowIcon className="h-10 w-10 text-transparent" />
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="w-20 h-20 rounded-[24px] border border-white/20 bg-white/10 shadow-[inset_0_0_30px_rgba(255,255,255,0.2)] backdrop-blur-xl flex items-center justify-center text-brand/60">
+                      <div className="w-20 h-20 rounded-3xl border border-white/20 bg-white/10 shadow-[inset_0_0_30px_rgba(255,255,255,0.2)] backdrop-blur-xl flex items-center justify-center text-brand/60">
                         <svg
                           width="28"
                           height="28"
@@ -242,20 +253,20 @@ function Home() {
               </Reveal>
 
               {/* Card 2: Integrated AI Agent */}
-              <Reveal delay={0.5} y={20}>
+              <Reveal delay={0.5} trigger={heroCardsRef} replay start="bottom 95%">
                 <div
-                  className="group relative self-end w-[260px] h-[290px] bg-white/92 backdrop-blur-3xl border border-white/25 p-5 shadow-[0_20px_80px_rgba(14,74,206,0.08)] hover:-translate-y-1 transition-transform duration-500 cursor-pointer overflow-hidden"
+                  className="group relative self-end w-65 h-72.5 bg-white/92 backdrop-blur-3xl border border-white/25 p-5 shadow-[0_20px_80px_rgba(14,74,206,0.08)] hover:-translate-y-1 transition-transform duration-500 cursor-pointer overflow-hidden"
                   style={{
                     clipPath:
                       "path('M 46 10 L 104 10 A 36 36 0 0 1 140 46 L 140 280 L 140 280 L 46 280 A 36 36 0 0 1 10 244 L 10 46 A 36 36 0 0 1 46 10 Z M 140 90 L 214 90 A 36 36 0 0 1 250 126 L 250 244 A 36 36 0 0 1 214 280 L 140 280 L 140 280 L 140 90 L 140 90 Z M 140 54 C 140 81 147.2 90 176 90 H 140 Z')",
                   }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-brand/10 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-linear-to-br from-brand/10 via-transparent to-transparent pointer-events-none" />
                   <div className="relative z-10 h-full flex flex-col justify-between">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="relative w-[56px] h-[56px] rounded-full bg-gradient-to-br from-brand/60 via-brand/40 to-white/70 border border-white/60 shadow-[0_0_40px_rgba(59,130,246,0.18)] backdrop-blur-2xl flex items-center justify-center">
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-white/70 via-brand/30 to-white/70 shadow-[inset_0_0_18px_rgba(255,255,255,0.65)]" />
+                        <div className="relative w-14 h-14 rounded-full bg-linear-to-br from-brand/60 via-brand/40 to-white/70 border border-white/60 shadow-[0_0_40px_rgba(59,130,246,0.18)] backdrop-blur-2xl flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-full bg-linear-to-br from-white/70 via-brand/30 to-white/70 shadow-[inset_0_0_18px_rgba(255,255,255,0.65)]" />
                         </div>
                       </div>
                       <ArrowIcon className="h-10 w-10" />
@@ -275,10 +286,10 @@ function Home() {
               </Reveal>
 
               {/* Card 3: Stat Card - 42% */}
-              <Reveal delay={0.7}>
-                <div className="group relative self-end w-[260px] h-[180px] rounded-[30px] bg-white/6 backdrop-blur-3xl border border-white/10 p-5 shadow-[0_20px_60px_rgba(15,40,100,0.12)] hover:-translate-y-1 transition-transform duration-500 cursor-pointer overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-brand/8 via-transparent to-transparent pointer-events-none" />
-                  <div className="absolute inset-0 rounded-[30px] border border-white/10" />
+              <Reveal delay={0.5} trigger={heroCardsRef} replay start="bottom 95%">
+                <div className="group relative self-end w-65 h-45 rounded-3xl bg-white/6 backdrop-blur-3xl border border-white/10 p-5 shadow-[0_20px_60px_rgba(15,40,100,0.12)] hover:-translate-y-1 transition-transform duration-500 cursor-pointer overflow-hidden">
+                  <div className="absolute inset-0 bg-linear-to-br from-brand/8 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 rounded-3xl border border-white/10" />
                   <div className="relative z-10 h-full flex flex-col justify-between">
                     <div className="flex justify-end">
                     
@@ -300,7 +311,8 @@ function Home() {
       </section>
 
       {/* ═══════ MOBILE HERO ═══════ */}
-      <section className="md:hidden relative min-h-[85vh] overflow-hidden bg-background px-5 pt-24 pb-10">
+      {/* pt clears the fixed nav: 80px tall on mobile, 98px (floating pill) from md up */}
+      <section className="lg:hidden relative min-h-[85vh] overflow-hidden bg-background px-5 pt-24 md:pt-32 pb-10">
         {/* Decorative gradient blobs */}
         <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-brand/10 blur-[100px] pointer-events-none" />
         <div className="absolute bottom-20 left-0 w-56 h-56 rounded-full bg-brand/15 blur-[80px] pointer-events-none" />
@@ -341,7 +353,7 @@ function Home() {
               {["Branding", "SEO & PPC", "Web Dev", "Video"].map((t) => (
                 <span
                   key={t}
-                  className="px-3 py-1.5 rounded-full border border-foreground/8 bg-foreground/[0.03] text-[10px] font-bold uppercase tracking-widest text-foreground/50"
+                  className="px-3 py-1.5 rounded-full border border-foreground/8 bg-foreground/3 text-[10px] font-bold uppercase tracking-widest text-foreground/50"
                 >
                   {t}
                 </span>
@@ -364,7 +376,7 @@ function Home() {
 
               <Link
                 to="/services"
-                className="flex-1 h-14 rounded-full border border-foreground/10 bg-foreground/[0.02] text-foreground font-semibold text-sm flex items-center justify-center gap-3 active:scale-[0.98] transition-transform"
+                className="flex-1 h-14 rounded-full border border-foreground/10 bg-foreground/2 text-foreground font-semibold text-sm flex items-center justify-center gap-3 active:scale-[0.98] transition-transform"
               >
                 Our Services
               </Link>
@@ -374,7 +386,7 @@ function Home() {
           {/* Mobile Glass Cards (compact) */}
           <Reveal delay={0.5}>
             <div className="mt-10 grid grid-cols-2 gap-3">
-              <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-md border border-foreground/5 p-4">
+              <div className="rounded-2xl bg-foreground/3 backdrop-blur-md border border-foreground/5 p-4">
                 <div className="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center mb-2">
                   <svg
                     width="16"
@@ -398,7 +410,7 @@ function Home() {
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-md border border-foreground/5 p-4">
+              <div className="rounded-2xl bg-foreground/3 backdrop-blur-md border border-foreground/5 p-4">
                 <div className="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center mb-2">
                   <svg
                     width="16"
@@ -454,10 +466,7 @@ function Home() {
         </div>
       </div>
 
-      <section
-        id="capabilities"
-        className=" mb-50 md:mb-34 px-6 md:px-10 bg-background"
-      >
+      <section id="capabilities" className="mb-16 md:mb-34 px-6 md:px-10 bg-background">
         <div className="max-w-5xl mx-auto">
           <ScrollStack
             itemDistance={120}
@@ -481,7 +490,7 @@ function Home() {
                 key={s.n}
                 itemClassName="relative overflow-hidden rounded-3xl border border-foreground/10 bg-background p-6 md:p-12 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.35)] w-full min-h-[300px] flex flex-col justify-between"
               >
-                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-brand/[0.06] via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 -z-10 bg-linear-to-br from-brand/6 via-transparent to-transparent pointer-events-none" />
 
                 <div className="flex items-baseline justify-between mb-6 md:mb-8 gap-4">
                   <span className="text-xs font-bold text-foreground/30 tracking-widest">
@@ -509,7 +518,7 @@ function Home() {
                     </p>
                   </div>
 
-                  <div className="hidden lg:flex flex-shrink-0 size-24 rounded-full bg-gradient-to-br from-brand/20 to-brand/5 border border-brand/20 items-center justify-center opacity-60">
+                  <div className="hidden lg:flex shrink-0 size-24 rounded-full bg-linear-to-br from-brand/20 to-brand/5 border border-brand/20 items-center justify-center opacity-60">
                     <div className="text-3xl font-bold text-brand/40">{s.n}</div>
                   </div>
                 </div>
@@ -528,8 +537,8 @@ function Home() {
   style={{
     backgroundImage: `url(${bgImage})`,
   }}
->        <div className="absolute -top-32 -left-32 size-[400px] rounded-full bg-white/20 blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 size-[500px] rounded-full bg-black/10 blur-3xl" />
+>        <div className="absolute -top-32 -left-32 size-100 rounded-full bg-white/20 blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 size-125 rounded-full bg-black/10 blur-3xl" />
 
         <div className="relative max-w-7xl mx-auto">
           <Reveal className="mb-16">

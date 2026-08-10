@@ -1,8 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 type Props = {
   to: number;
@@ -60,29 +57,28 @@ export function CountUp({
       tween.invalidate().restart(true);
     };
 
-    // Use the span itself as the trigger — not the section.
-    // This way the trigger position is exactly where the number lives.
-    const st = ScrollTrigger.create({
-      trigger: el,
-      start: "top 90%",
-      onEnter: play,
-      onEnterBack: play,
-    });
+    const reset = () => {
+      tween.pause(0);
+      obj.v = 0;
+      setDisplayValue(format(0));
+    };
 
-    // Fallback: if the element is already visible when the component mounts,
-    // ScrollTrigger won't fire onEnter. Check manually after two frames
-    // (one for layout, one for ScrollTrigger.refresh internals).
-    const raf1 = requestAnimationFrame(() => {
-      const raf2 = requestAnimationFrame(() => {
-        const rect = el.getBoundingClientRect();
-        const inView = rect.top < window.innerHeight * 0.9 && rect.bottom > 0;
-        if (inView) play();
-      });
-    });
+    // IntersectionObserver rather than ScrollTrigger: it re-fires on every entry in
+    // either scroll direction, and it can't go stale when the pinned sections above
+    // this one change the page height.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) play();
+        else reset();
+      },
+      // Mirrors ScrollTrigger's "top 90%" — starts once the number is a tenth of a
+      // viewport inside the bottom edge.
+      { threshold: 0, rootMargin: "0px 0px -10% 0px" },
+    );
+    io.observe(el);
 
     return () => {
-      cancelAnimationFrame(raf1);
-      st.kill();
+      io.disconnect();
       tween.kill();
     };
   }, [to, decimals, prefix, suffix, pad, duration]);

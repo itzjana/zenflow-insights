@@ -36,6 +36,13 @@ interface TransformData {
   blur: number;
 }
 
+/* Gap left between the bottom edge of the fixed nav and the pinned title */
+const NAV_GAP = 16;
+/* Used until the fixed nav can be measured (SSR / nav not mounted yet) */
+const FALLBACK_NAV_BOTTOM = 80;
+/* Clearance kept between the settled card pile and whatever follows the section */
+const PILE_CLEARANCE = 32;
+
 const ScrollStack: React.FC<ScrollStackProps> = ({
   children,
   className = "",
@@ -53,6 +60,8 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
   header,
 }) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
   const stackCompletedRef = useRef<boolean>(false);
   const animationFrameRef = useRef<number | null>(null);
   const lenisRef = useRef<Lenis | null>(null);
@@ -61,8 +70,13 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
   const isUpdatingRef = useRef<boolean>(false);
 
   const cardTopsRef = useRef<number[]>([]);
+  const cardHeightsRef = useRef<number[]>([]);
   const endElementTopRef = useRef<number>(0);
+  const anchorTopRef = useRef<number>(0);
+  const stackPositionPxRef = useRef<number>(0);
+  const stickyTopRef = useRef<number>(FALLBACK_NAV_BOTTOM + NAV_GAP);
   const titleHeightRef = useRef<number>(0);
+  const titleGapRef = useRef<number>(0);
   const titleNaturalTopRef = useRef<number>(0);
   const hasTitleRef = useRef<boolean>(false);
   const titleRef = useRef<HTMLDivElement>(null);
@@ -96,6 +110,24 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       };
     }
   }, [useWindowScroll]);
+
+  /* Bottom edge of whatever is docked to the top of the viewport (the site nav),
+     so the title parks just below it instead of sliding underneath. */
+  const measureStickyTop = useCallback(() => {
+    if (typeof document === "undefined") return FALLBACK_NAV_BOTTOM + NAV_GAP;
+    let navBottom = 0;
+    document.querySelectorAll("nav, header").forEach((node) => {
+      const el = node as HTMLElement;
+      if (!el.getClientRects().length) return;
+      const position = window.getComputedStyle(el).position;
+      if (position !== "fixed" && position !== "sticky") return;
+      const rect = el.getBoundingClientRect();
+      // Ignore anything that isn't docked near the top of the viewport
+      if (rect.top > window.innerHeight * 0.3) return;
+      navBottom = Math.max(navBottom, rect.bottom);
+    });
+    return (navBottom || FALLBACK_NAV_BOTTOM) + NAV_GAP;
+  }, []);
 
   const measureOffsets = useCallback(() => {
     const scroller = scrollerRef.current;
@@ -133,6 +165,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         return card.offsetTop;
       }
     });
+    cardHeightsRef.current = cards.map((card) => card.getBoundingClientRect().height);
 
     if (endElement) {
       if (useWindowScroll) {
@@ -143,26 +176,43 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       }
     }
 
+    if (anchorRef.current) {
+      const rect = anchorRef.current.getBoundingClientRect();
+      anchorTopRef.current = useWindowScroll
+        ? rect.top + window.scrollY
+        : anchorRef.current.offsetTop;
+    }
+
+    stickyTopRef.current = measureStickyTop();
+
     // Measure title natural document position
-    const titleEl = useWindowScroll
-      ? (document.querySelector(".scroll-stack-title") as HTMLElement)
-      : (scroller?.querySelector(".scroll-stack-title") as HTMLElement);
+    const titleEl = titleRef.current;
 
     if (titleEl) {
       hasTitleRef.current = true;
       // Clear transform temporarily to get true natural position
       const prevTransform = titleEl.style.transform;
       titleEl.style.transform = "none";
-      titleHeightRef.current = titleEl.getBoundingClientRect().height;
+      const titleRect = titleEl.getBoundingClientRect();
+      titleHeightRef.current = titleRect.height;
       if (useWindowScroll) {
-        const rect = titleEl.getBoundingClientRect();
-        titleNaturalTopRef.current = rect.top + window.scrollY;
+        titleNaturalTopRef.current = titleRect.top + window.scrollY;
       } else {
-        titleNaturalTopRef.current = (titleEl as HTMLElement).offsetTop;
+        titleNaturalTopRef.current = titleEl.offsetTop;
       }
+      // Keep the pinned title→card gap identical to the natural one, otherwise the
+      // stack jumps by the difference the moment the title parks under the nav.
+      titleGapRef.current = cards.length
+        ? Math.max(
+            0,
+            cardTopsRef.current[0] - (titleNaturalTopRef.current + titleHeightRef.current),
+          )
+        : 0;
       titleEl.style.transform = prevTransform;
     } else {
       hasTitleRef.current = false;
+      titleHeightRef.current = 0;
+      titleGapRef.current = 0;
     }
 
     // Restore transforms
@@ -172,47 +222,73 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     if (endElement) {
       endElement.style.transform = originalEndTransform;
     }
-  }, [useWindowScroll]);
+
+    const containerHeight = useWindowScroll ? window.innerHeight : (scroller?.clientHeight ?? 0);
+
+    stackPositionPxRef.current = hasTitleRef.current
+      ? stickyTopRef.current + titleHeightRef.current + titleGapRef.current
+      : parsePercentage(stackPosition, containerHeight);
+
+    // The pile freezes at `pinEnd = endTop - containerHeight / 2` and from there it
+    // scrolls away with the page, so its lowest card sits `pileReach` px below the end
+    // marker. Pad the section by that much so the pile can never land on top of
+    // whatever section follows.
+    const inner = innerRef.current;
+    if (inner && cards.length) {
+      const pileReach = Math.max(
+        ...cards.map(
+          (_, i) =>
+            stackPositionPxRef.current +
+            itemStackDistance * i +
+            (cardHeightsRef.current[i] ?? 0) -
+            containerHeight / 2,
+        ),
+      );
+      const requiredTail = Math.ceil(pileReach + PILE_CLEARANCE);
+      const tail = Math.max(Math.round(containerHeight * 0.1), requiredTail);
+      const tailPx = `${tail}px`;
+      if (inner.style.paddingBottom !== tailPx) {
+        inner.style.paddingBottom = tailPx;
+      }
+    }
+  }, [useWindowScroll, measureStickyTop, parsePercentage, stackPosition, itemStackDistance]);
 
   const updateCardTransforms = useCallback(() => {
     if (!cardsRef.current.length || isUpdatingRef.current) return;
     isUpdatingRef.current = true;
 
     const { scrollTop, containerHeight } = getScrollData();
-    // Cards pin 24px below the title bottom when title is at its sticky viewport position (96px = top-24)
-    const TITLE_STICKY_VIEWPORT_TOP = 96;
-    let stackPositionPx = parsePercentage(stackPosition, containerHeight);
-    if (hasTitleRef.current) {
-      stackPositionPx = TITLE_STICKY_VIEWPORT_TOP + titleHeightRef.current + 24;
+
+    // Anything above this section (hero imagery, fonts, lazy content) can shift the
+    // whole page after the offsets were taken. The anchor is never transformed, so any
+    // drift in its position is exactly the drift of every cached offset.
+    if (useWindowScroll && anchorRef.current) {
+      const anchorTop = anchorRef.current.getBoundingClientRect().top + scrollTop;
+      const drift = anchorTop - anchorTopRef.current;
+      if (Math.abs(drift) > 0.5) {
+        anchorTopRef.current = anchorTop;
+        cardTopsRef.current = cardTopsRef.current.map((t) => t + drift);
+        endElementTopRef.current += drift;
+        titleNaturalTopRef.current += drift;
+      }
     }
+
+    const stickyTop = stickyTopRef.current;
+    const stackPositionPx = stackPositionPxRef.current;
     const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
 
     const endElementTop = endElementTopRef.current;
     const pinEnd = endElementTop - containerHeight / 2;
 
-    // 3-phase JS-driven title positioning (no CSS sticky)
+    // Title: scrolls normally, parks just under the nav while the cards stack, then
+    // freezes with the pile so the whole section leaves together.
     const titleEl = titleRef.current;
-    if (titleEl && hasTitleRef.current && cardsRef.current.length > 0) {
-      const card0Top = cardTopsRef.current[0] ?? 0;
-      // The scroll position at which card[0] starts pinning
-      const pinStart0 = card0Top - stackPositionPx;
+    if (titleEl && hasTitleRef.current) {
       const titleNaturalTop = titleNaturalTopRef.current;
-      const titleHeight = titleHeightRef.current;
-
-      let titleTranslateY: number;
-      if (scrollTop < pinStart0) {
-        // Phase 1: before stacking starts — title stays at natural document position
-        titleTranslateY = 0;
-      } else if (scrollTop <= pinEnd) {
-        // Phase 2: cards are stacking — title sticks at TITLE_STICKY_VIEWPORT_TOP from viewport top
-        // Viewport pos = docPos - scrollTop  =>  docPos + translateY - scrollTop = stickyTop
-        titleTranslateY = scrollTop - titleNaturalTop + TITLE_STICKY_VIEWPORT_TOP;
-      } else {
-        // Phase 3: all cards piled — freeze title in document space so it scrolls off with the stack
-        // Frozen doc pos = pinEnd + stackPositionPx - titleHeight - 24  (maintains 24px gap above card[0])
-        titleTranslateY = pinEnd + stackPositionPx - titleHeight - 24 - titleNaturalTop;
-      }
-
+      const titleTranslateY = Math.max(
+        0,
+        Math.min(scrollTop, pinEnd) - titleNaturalTop + stickyTop,
+      );
       titleEl.style.transform = `translate3d(0, ${Math.round(titleTranslateY * 100) / 100}px, 0)`;
     }
 
@@ -292,7 +368,6 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
   }, [
     itemScale,
     itemStackDistance,
-    stackPosition,
     scaleEndPosition,
     baseScale,
     rotationAmount,
@@ -363,18 +438,44 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       (card.style as any).webkitPerspective = "1000px";
     });
 
+    let remeasureFrame: number | null = null;
+    const remeasure = () => {
+      remeasureFrame = null;
+      measureOffsets();
+      lastTransformsRef.current.clear();
+      updateCardTransforms();
+    };
+    const scheduleRemeasure = () => {
+      if (remeasureFrame !== null) return;
+      remeasureFrame = requestAnimationFrame(remeasure);
+    };
+
     measureOffsets();
     if (useWindowScroll) {
-      window.addEventListener("scroll", handleScroll);
+      window.addEventListener("scroll", handleScroll, { passive: true });
     } else {
       setupLenis();
     }
     updateCardTransforms();
 
-    window.addEventListener("resize", measureOffsets);
+    window.addEventListener("resize", scheduleRemeasure);
+    window.addEventListener("load", scheduleRemeasure);
+    // Late layout shifts (images above the section, webfonts, hydration) would
+    // otherwise leave the cached offsets pointing at the wrong scroll positions.
+    document.fonts?.ready.then(scheduleRemeasure).catch(() => {});
+
+    let observer: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      observer = new ResizeObserver(scheduleRemeasure);
+      if (innerRef.current) observer.observe(innerRef.current);
+      if (useWindowScroll) observer.observe(document.body);
+    }
 
     return () => {
-      window.removeEventListener("resize", measureOffsets);
+      if (remeasureFrame !== null) cancelAnimationFrame(remeasureFrame);
+      observer?.disconnect();
+      window.removeEventListener("resize", scheduleRemeasure);
+      window.removeEventListener("load", scheduleRemeasure);
       if (useWindowScroll) {
         window.removeEventListener("scroll", handleScroll);
       }
@@ -412,7 +513,8 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       className={`scroll-stack-scroller ${useWindowScroll ? "window-scroll" : ""} ${className}`.trim()}
       ref={scrollerRef}
     >
-      <div className="scroll-stack-inner">
+      <div className="scroll-stack-inner" ref={innerRef}>
+        <div className="scroll-stack-anchor" ref={anchorRef} aria-hidden="true" />
         {header && (
           <div
             ref={titleRef}
