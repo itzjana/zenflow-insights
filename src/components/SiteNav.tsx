@@ -85,10 +85,11 @@ export function SiteNav() {
               <Link
                 key={link.to}
                 to={link.to}
-                className={`text-lg font-semibold tracking-wide transition ${currentPath === link.to
+                className={`text-lg font-semibold tracking-wide transition ${
+                  currentPath === link.to
                     ? "text-foreground"
                     : "text-foreground/70 hover:text-foreground"
-                  }`}
+                }`}
               >
                 {link.label}
               </Link>

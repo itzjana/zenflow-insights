@@ -101,9 +101,7 @@ export function SiteFooter() {
               >
                 info@zencyp.in
               </a>
-              <p className="mt-3 text-sm font-light text-foreground/60">
-                Arani, Tamil Nadu, India
-              </p>
+              <p className="mt-3 text-sm font-light text-foreground/60">Arani, Tamil Nadu, India</p>
               <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.25em] text-foreground/40">
                 Available Q3 '26
               </p>

@@ -404,7 +404,8 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         syncTouch: true,
         syncTouchLerp: 0.075,
         touchInertia: 0.6,
-      } as any);
+        // Lenis' published types omit several runtime-supported touch options
+      } as ConstructorParameters<typeof Lenis>[0]);
       lenis.on("scroll", handleScroll);
       const raf = (time: number) => {
         lenis.raf(time);
@@ -433,9 +434,10 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       card.style.transformOrigin = "top center";
       card.style.backfaceVisibility = "hidden";
       card.style.transform = "translateZ(0)";
-      (card.style as any).webkitTransform = "translateZ(0)";
+      // Vendor-prefixed properties are not in CSSStyleDeclaration's type
+      card.style.setProperty("-webkit-transform", "translateZ(0)");
       card.style.perspective = "1000px";
-      (card.style as any).webkitPerspective = "1000px";
+      card.style.setProperty("-webkit-perspective", "1000px");
     });
 
     let remeasureFrame: number | null = null;

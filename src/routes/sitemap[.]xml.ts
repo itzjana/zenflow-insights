@@ -1,7 +1,10 @@
+import process from "node:process";
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
-const BASE_URL = "";
+/** Sitemaps require absolute URLs, so fall back to the canonical host when the
+ *  request origin is unavailable. Override with SITE_URL at deploy time. */
+const FALLBACK_ORIGIN = "https://zencyp.in";
 
 interface SitemapEntry {
   path: string;
@@ -12,13 +15,21 @@ interface SitemapEntry {
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
-      GET: async () => {
+      GET: async ({ request }) => {
+        const origin = (
+          process.env.SITE_URL ?? (request ? new URL(request.url).origin : FALLBACK_ORIGIN)
+        ).replace(/\/$/, "");
+
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/services", changefreq: "weekly", priority: "0.9" },
           { path: "/about", changefreq: "monthly", priority: "0.7" },
           { path: "/contact", changefreq: "monthly", priority: "0.8" },
+          { path: "/work/branding", changefreq: "monthly", priority: "0.7" },
+          { path: "/work/digital-marketing", changefreq: "monthly", priority: "0.7" },
+          { path: "/work/web-production", changefreq: "monthly", priority: "0.7" },
         ];
+        const BASE_URL = origin;
         const urls = entries.map((e) =>
           [
             `  <url>`,

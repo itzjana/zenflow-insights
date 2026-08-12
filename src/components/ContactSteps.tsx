@@ -50,6 +50,7 @@ export function ContactSteps() {
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
   const [message, setMessage] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -87,7 +88,7 @@ export function ContactSteps() {
     setSending(true);
     try {
       await sendContactMessage({
-        data: { name, email, phone, company, services, message },
+        data: { name, email, phone, company, services, message, website: honeypot },
       });
       toast.success("Message sent. We'll reply within one business day.");
       setSent(true);
@@ -324,6 +325,20 @@ export function ContactSteps() {
                 className={field}
               />
             </div>
+          </div>
+
+          {/* Honeypot: off-screen and skipped by tabbing, so only bots fill it. */}
+          <div aria-hidden="true" className="absolute left-[-9999px] w-px h-px overflow-hidden">
+            <label htmlFor="website">Website</label>
+            <input
+              id="website"
+              name="website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+            />
           </div>
 
           <div className="space-y-2">

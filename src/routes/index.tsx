@@ -296,7 +296,8 @@ function Home() {
                           AI Marketing Engine
                         </h4>
                         <p className="text-[11px] text-slate-600 leading-relaxed">
-                         AI-powered audience targeting, campaign optimization, and content personalization that turns traffic into qualified leads.
+                          AI-powered audience targeting, campaign optimization, and content
+                          personalization that turns traffic into qualified leads.
                         </p>
                       </div>
                     </div>
@@ -310,9 +311,7 @@ function Home() {
                   <div className="absolute inset-0 bg-linear-to-br from-brand/8 via-transparent to-transparent pointer-events-none" />
                   <div className="absolute inset-0 rounded-3xl border border-white/10" />
                   <div className="relative z-10 h-full flex flex-col justify-between">
-                    <div className="flex justify-end">
-                    
-                    </div>
+                    <div className="flex justify-end"></div>
                     <div>
                       <span className="block text-[92px] font-extralight text-foreground leading-none">
                         150<span className="text-[32px] font-bold">%</span>
@@ -458,7 +457,6 @@ function Home() {
               </div>
             </div>
           </Reveal>
-
         </div>
       </section>
 
@@ -553,14 +551,15 @@ function Home() {
       <HorizontalPortfolio items={portfolio} />
 
       {/* Metrics with glass cards */}
-<section
-  className="relative py-24 md:py-32 px-6 md:px-10 text-foreground overflow-hidden bg-cover bg-center bg-no-repeat"
-  style={{
-    backgroundImage: `url(${bgImage})`,
-  }}
->        <div className="absolute -top-32 -left-32 size-100 rounded-full bg-white/20 blur-3xl" />
+      <section
+        className="relative py-24 md:py-32 px-6 md:px-10 text-foreground overflow-hidden bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url(${bgImage})`,
+        }}
+      >
+        {" "}
+        <div className="absolute -top-32 -left-32 size-100 rounded-full bg-white/20 blur-3xl" />
         <div className="absolute -bottom-32 -right-32 size-125 rounded-full bg-black/10 blur-3xl" />
-
         <div className="relative max-w-7xl mx-auto">
           <Reveal className="mb-16">
             <h2 className="text-4xl md:text-6xl font-extrabold tracking-tighter leading-[0.95] max-w-3xl">

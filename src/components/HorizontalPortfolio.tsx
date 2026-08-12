@@ -169,6 +169,21 @@ export function HorizontalPortfolio({ items, heading = "Selected Work" }: Props)
               );
 
               const cls = "shrink-0 flex flex-col gap-3 md:gap-4 group";
+              // An unset external destination must not ship as a dead "#" link.
+              const unresolved = it.external && (!it.href || it.href === "#");
+
+              if (unresolved) {
+                return (
+                  <div
+                    key={`${it.name}-${i}`}
+                    data-port-card
+                    className={`${cls} cursor-default`}
+                    aria-disabled="true"
+                  >
+                    {inner}
+                  </div>
+                );
+              }
 
               return it.external ? (
                 <a

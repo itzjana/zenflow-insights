@@ -24,10 +24,15 @@ export const sendContactMessage = createServerFn({ method: "POST" })
       company: z.string().optional(),
       /** Every service the visitor picked in step one. */
       services: z.array(z.enum(SERVICE_OPTIONS)).min(1).default(["General Inquiry"]),
-      message: z.string().min(10),
+      message: z.string().min(10).max(5000),
+      /** Honeypot — hidden from real users, so any value means a bot filled it in. */
+      website: z.string().max(0).optional(),
     }),
   )
   .handler(async ({ data }) => {
+    // Silently accept and drop bot submissions so the bot gets no useful signal.
+    if (data.website) return { success: true };
+
     const config = getServerConfig();
     const apiKey = config.sendgridApiKey;
     const fromEmail = config.sendgridFromEmail;
