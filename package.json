@@ -9,7 +9,8 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build:vercel": "DEPLOY_TARGET=vercel vite build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -86,5 +87,8 @@
     "typescript-eslint": "^8.56.1",
     "vite": "^7.3.1"
   },
-  "description": "Marketing site for Zencyp, a digital agency in Arani, Tamil Nadu."
+  "description": "Marketing site for Zencyp, a digital agency in Arani, Tamil Nadu.",
+  "engines": {
+    "node": "22.x"
+  }
 }

@@ -1,9 +1,16 @@
 import { defineConfig } from "vite";
 import { fileURLToPath } from "node:url";
+import process from "node:process";
 import tailwindcss from "@tailwindcss/vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
+import { nitro } from "nitro/vite";
+
+// Vercel sets VERCEL=1 during its builds. Locally `npm run build` stays fast and
+// produces dist/; on Vercel the nitro plugin emits .vercel/output (Build Output API v3).
+// Force it locally with `npm run build:vercel`.
+const isVercelBuild = !!process.env.VERCEL || process.env.DEPLOY_TARGET === "vercel";
 
 export default defineConfig({
   plugins: [
@@ -19,6 +26,7 @@ export default defineConfig({
         },
       },
     }),
+    ...(isVercelBuild ? [nitro({ preset: "vercel" })] : []),
     viteReact(),
   ],
   resolve: {
