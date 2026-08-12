@@ -5,13 +5,10 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
 import { MagneticButton } from "@/components/MagneticButton";
 import ScrollStack, { ScrollStackItem } from "@/components/ScrollStack";
-import { HorizontalPortfolio } from "@/components/HorizontalPortfolio";
+import { HorizontalPortfolio, type PortfolioItem } from "@/components/HorizontalPortfolio";
 import { FloatingObject } from "@/components/FloatingObject";
 import { CountUp } from "@/components/CountUp";
-import workVault from "@/assets/work-vault.jpg";
-import workLumina from "@/assets/work-lumina.jpg";
-import workAether from "@/assets/work-aether.jpg";
-import bgImage from "@/assets/bg.jpg";
+import bgImage from "@/assets/bg.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -72,11 +69,33 @@ const services = [
   },
 ];
 
-const portfolio = [
-  { name: "Vault 01", tag: "Web Dev & Platform Design", img: workVault },
-  { name: "Lumina", tag: "Search Marketing (SEM)", img: workLumina },
-  { name: "Aether", tag: "Branding & Social Campaign", img: workAether },
-  { name: "Vault 01", tag: "Web Dev & Platform Design", img: workVault },
+/* TODO — paste the real Google Drive folder URL for the graphic design archive. */
+const GRAPHIC_DESIGN_DRIVE_URL = "#";
+/* TODO — paste the real Instagram profile URL. */
+const INSTAGRAM_URL = "#";
+
+const portfolio: PortfolioItem[] = [
+  { name: "Branding", tag: "Identity & Visual Systems", art: "layers", href: "/work/branding" },
+  {
+    name: "Digital Marketing",
+    tag: "Performance & Growth",
+    art: "spectrum",
+    href: "/work/digital-marketing",
+  },
+  {
+    name: "Web Production",
+    tag: "Design & Engineering",
+    art: "grid",
+    href: "/work/web-production",
+  },
+  {
+    name: "Graphic Design",
+    tag: "Creative Archive",
+    art: "type",
+    href: GRAPHIC_DESIGN_DRIVE_URL,
+    external: true,
+  },
+  { name: "Social", tag: "Follow the Journey", art: "orbit", href: INSTAGRAM_URL, external: true },
 ];
 
 const metrics = [
@@ -217,7 +236,7 @@ function Home() {
                   <div className="absolute inset-0 rounded-3xl border border-white/10" />
                   <div className="relative z-10 h-full flex flex-col justify-between">
                     <div className="flex items-center justify-between">
-                      <span className="px-3 py-1 rounded-full text-indigo-400 text-[10px] font-semibold uppercase tracking-[0.3em]">
+                      <span className="px-3 py-1 rounded-full text-brand text-[10px] font-semibold uppercase tracking-[0.3em]">
                         Premium Production
                       </span>
                       <ArrowIcon className="h-10 w-10 text-transparent" />
@@ -389,11 +408,12 @@ function Home() {
               <div className="rounded-2xl bg-foreground/3 backdrop-blur-md border border-foreground/5 p-4">
                 <div className="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center mb-2">
                   <svg
+                    className="text-brand"
                     width="16"
                     height="16"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="#6D33E2"
+                    stroke="currentColor"
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -413,11 +433,12 @@ function Home() {
               <div className="rounded-2xl bg-foreground/3 backdrop-blur-md border border-foreground/5 p-4">
                 <div className="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center mb-2">
                   <svg
+                    className="text-brand"
                     width="16"
                     height="16"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="#6D33E2"
+                    stroke="currentColor"
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -533,7 +554,7 @@ function Home() {
 
       {/* Metrics with glass cards */}
 <section
-  className="relative py-24 md:py-32 px-6 md:px-10 text-brand-foreground overflow-hidden bg-cover bg-center bg-no-repeat"
+  className="relative py-24 md:py-32 px-6 md:px-10 text-foreground overflow-hidden bg-cover bg-center bg-no-repeat"
   style={{
     backgroundImage: `url(${bgImage})`,
   }}

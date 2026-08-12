@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
-import { toast } from "sonner";
-import { sendContactMessage } from "@/lib/api/contact.functions";
+import { ContactSteps } from "@/components/ContactSteps";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -25,53 +23,6 @@ export const Route = createFileRoute("/contact")({
 });
 
 function Contact() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [company, setCompany] = useState("");
-  const [service, setService] = useState("Branding & Meta/Google Ads");
-  const [message, setMessage] = useState("");
-
-  // Parse message query parameter if set from the calculator
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const msg = params.get("message");
-      if (msg) {
-        setMessage(msg);
-      }
-    }
-  }, []);
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      await sendContactMessage({
-        data: {
-          name,
-          email,
-          phone,
-          company,
-          enquiryType: service,
-          message,
-        },
-      });
-
-      toast.success("Message sent successfully! We will reply within one business day.");
-      setName("");
-      setEmail("");
-      setPhone("");
-      setCompany("");
-      setService("Branding & Meta/Google Ads");
-      setMessage("");
-    } catch (error) {
-      console.error(error);
-      const message = error instanceof Error ? error.message : "Unable to send message. Please try again later.";
-      toast.error(message);
-    }
-  };
-
   return (
     <div className="bg-background text-foreground min-h-screen flex flex-col font-sans">
       <SiteNav />
@@ -92,7 +43,7 @@ function Contact() {
             Get in Touch
             <br />
             with{" "}
-            <span className="font-serif italic font-semibold lowercase underline decoration-brand decoration-[8px] underline-offset-[12px] text-brand-foreground bg-brand/5 px-2">
+            <span className="font-serif italic font-semibold lowercase underline decoration-brand decoration-[8px] underline-offset-[12px] text-foreground bg-brand/5 px-2">
               zencyp.
             </span>
           </h1>
@@ -151,133 +102,9 @@ function Contact() {
               </div>
             </div>
 
-            {/* Right side: Interactive Contact Form */}
-            <div className="lg:col-span-7 bg-muted/20 border border-foreground/5 rounded-3xl p-6 md:p-10 shadow-sm">
-              <h3 className="text-xl font-bold tracking-tight mb-8">Send a Message</h3>
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="name"
-                      className="text-[10px] font-bold uppercase tracking-widest text-foreground/50"
-                    >
-                      Full Name *
-                    </label>
-                    <input
-                      id="name"
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Your name"
-                      className="w-full bg-background border border-foreground/10 rounded-xl px-4 py-3 text-sm focus:border-brand focus:outline-none transition-colors"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="email"
-                      className="text-[10px] font-bold uppercase tracking-widest text-foreground/50"
-                    >
-                      Email Address *
-                    </label>
-                    <input
-                      id="email"
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@company.com"
-                      className="w-full bg-background border border-foreground/10 rounded-xl px-4 py-3 text-sm focus:border-brand focus:outline-none transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="phone"
-                      className="text-[10px] font-bold uppercase tracking-widest text-foreground/50"
-                    >
-                      Phone Number
-                    </label>
-                    <input
-                      id="phone"
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="e.g. +91 98765 43210"
-                      className="w-full bg-background border border-foreground/10 rounded-xl px-4 py-3 text-sm focus:border-brand focus:outline-none transition-colors"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="company"
-                      className="text-[10px] font-bold uppercase tracking-widest text-foreground/50"
-                    >
-                      Company Name
-                    </label>
-                    <input
-                      id="company"
-                      type="text"
-                      value={company}
-                      onChange={(e) => setCompany(e.target.value)}
-                      placeholder="e.g. Acme Corp"
-                      className="w-full bg-background border border-foreground/10 rounded-xl px-4 py-3 text-sm focus:border-brand focus:outline-none transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label
-                    htmlFor="service"
-                    className="text-[10px] font-bold uppercase tracking-widest text-foreground/50"
-                  >
-                    Select service
-                  </label>
-                  <select
-                    id="service"
-                    value={service}
-                    onChange={(e) => setService(e.target.value)}
-                    className="w-full bg-background border border-foreground/10 rounded-xl px-4 py-3 text-sm focus:border-brand focus:outline-none transition-colors"
-                  >
-                    <option>Branding & Meta/Google Ads</option>
-                    <option>Video Production</option>
-                    <option>Digital Marketing & Ads</option>
-                    <option>Website Development</option>
-                    <option>Social Media Management</option>
-                    <option>Graphic Design</option>
-                    <option>General Inquiry</option>
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label
-                    htmlFor="message"
-                    className="text-[10px] font-bold uppercase tracking-widest text-foreground/50"
-                  >
-                    Message or Brief Details *
-                  </label>
-                  <textarea
-                    id="message"
-                    required
-                    rows={5}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Tell us about your project, campaign type, or branding goals..."
-                    className="w-full bg-background border border-foreground/10 rounded-xl px-4 py-3 text-sm focus:border-brand focus:outline-none transition-colors resize-none"
-                  />
-                </div>
-
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    className="inline-flex items-center gap-3 bg-foreground text-background rounded-full px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-brand hover:text-brand-foreground transition-all duration-500 cursor-pointer w-full justify-center sm:w-auto"
-                  >
-                    Send Message <span>→</span>
-                  </button>
-                </div>
-              </form>
+            {/* Right side: two-step enquiry form */}
+            <div className="lg:col-span-7">
+              <ContactSteps />
             </div>
           </div>
         </div>

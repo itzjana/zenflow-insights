@@ -14,6 +14,9 @@ import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WorkWebProductionRouteImport } from './routes/work.web-production'
+import { Route as WorkDigitalMarketingRouteImport } from './routes/work.digital-marketing'
+import { Route as WorkBrandingRouteImport } from './routes/work.branding'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -40,6 +43,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkWebProductionRoute = WorkWebProductionRouteImport.update({
+  id: '/work/web-production',
+  path: '/work/web-production',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkDigitalMarketingRoute = WorkDigitalMarketingRouteImport.update({
+  id: '/work/digital-marketing',
+  path: '/work/digital-marketing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkBrandingRoute = WorkBrandingRouteImport.update({
+  id: '/work/branding',
+  path: '/work/branding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +65,9 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/work/branding': typeof WorkBrandingRoute
+  '/work/digital-marketing': typeof WorkDigitalMarketingRoute
+  '/work/web-production': typeof WorkWebProductionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +75,9 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/work/branding': typeof WorkBrandingRoute
+  '/work/digital-marketing': typeof WorkDigitalMarketingRoute
+  '/work/web-production': typeof WorkWebProductionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +86,41 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/work/branding': typeof WorkBrandingRoute
+  '/work/digital-marketing': typeof WorkDigitalMarketingRoute
+  '/work/web-production': typeof WorkWebProductionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/contact' | '/services' | '/sitemap.xml'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/services'
+    | '/sitemap.xml'
+    | '/work/branding'
+    | '/work/digital-marketing'
+    | '/work/web-production'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/contact' | '/services' | '/sitemap.xml'
-  id: '__root__' | '/' | '/about' | '/contact' | '/services' | '/sitemap.xml'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/services'
+    | '/sitemap.xml'
+    | '/work/branding'
+    | '/work/digital-marketing'
+    | '/work/web-production'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/services'
+    | '/sitemap.xml'
+    | '/work/branding'
+    | '/work/digital-marketing'
+    | '/work/web-production'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +129,9 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  WorkBrandingRoute: typeof WorkBrandingRoute
+  WorkDigitalMarketingRoute: typeof WorkDigitalMarketingRoute
+  WorkWebProductionRoute: typeof WorkWebProductionRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +171,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/work/web-production': {
+      id: '/work/web-production'
+      path: '/work/web-production'
+      fullPath: '/work/web-production'
+      preLoaderRoute: typeof WorkWebProductionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/work/digital-marketing': {
+      id: '/work/digital-marketing'
+      path: '/work/digital-marketing'
+      fullPath: '/work/digital-marketing'
+      preLoaderRoute: typeof WorkDigitalMarketingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/work/branding': {
+      id: '/work/branding'
+      path: '/work/branding'
+      fullPath: '/work/branding'
+      preLoaderRoute: typeof WorkBrandingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +201,9 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  WorkBrandingRoute: WorkBrandingRoute,
+  WorkDigitalMarketingRoute: WorkDigitalMarketingRoute,
+  WorkWebProductionRoute: WorkWebProductionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

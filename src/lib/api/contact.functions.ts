@@ -3,6 +3,18 @@ import { z } from "zod";
 
 import { getServerConfig } from "../config.server";
 
+export const SERVICE_OPTIONS = [
+  "Branding",
+  "Video Production",
+  "Digital Marketing & Ads",
+  "Website Development",
+  "Social Media Management",
+  "Graphic Design",
+  "General Inquiry",
+] as const;
+
+export type ServiceOption = (typeof SERVICE_OPTIONS)[number];
+
 export const sendContactMessage = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
@@ -10,17 +22,8 @@ export const sendContactMessage = createServerFn({ method: "POST" })
       email: z.string().email(),
       phone: z.string().optional(),
       company: z.string().optional(),
-      enquiryType: z
-        .enum([
-          "Branding & Meta/Google Ads",
-          "Video Production",
-          "Digital Marketing & Ads",
-          "Website Development",
-          "Social Media Management",
-          "Graphic Design",
-          "General Inquiry",
-        ])
-        .default("General Inquiry"),
+      /** Every service the visitor picked in step one. */
+      services: z.array(z.enum(SERVICE_OPTIONS)).min(1).default(["General Inquiry"]),
       message: z.string().min(10),
     }),
   )
@@ -36,11 +39,18 @@ export const sendContactMessage = createServerFn({ method: "POST" })
       );
     }
 
+    const serviceList = data.services.join(", ");
+    // Keep the subject scannable when several services are selected
+    const subjectServices =
+      data.services.length > 2
+        ? `${data.services[0]} +${data.services.length - 1} more`
+        : serviceList;
+
     const payload = {
       personalizations: [
         {
           to: [{ email: toEmail }],
-          subject: `New inquiry: ${data.enquiryType} from ${data.name}`,
+          subject: `New inquiry: ${subjectServices} from ${data.name}`,
         },
       ],
       from: { email: fromEmail },
@@ -48,7 +58,7 @@ export const sendContactMessage = createServerFn({ method: "POST" })
       content: [
         {
           type: "text/plain",
-          value: `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone ?? "N/A"}\nCompany: ${data.company ?? "N/A"}\nService: ${data.enquiryType}\n\nMessage:\n${data.message}`,
+          value: `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone ?? "N/A"}\nCompany: ${data.company ?? "N/A"}\nServices: ${serviceList}\n\nMessage:\n${data.message}`,
         },
       ],
     };

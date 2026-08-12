@@ -162,6 +162,21 @@ const steps = [
   },
 ];
 
+const problems = [
+  "You run ads but the leads never come",
+  "You get visitors but very few enquiries",
+  "You post content that never turns into sales",
+  "Your website looks fine but builds no trust",
+];
+
+const systemFlow = [
+  "Targeted ads",
+  "Landing page",
+  "Lead captured",
+  "Content nurture",
+  "Client closed",
+];
+
 const faqs = [
   {
     q: "How does Zencyp help improve our organic search visibility?",
@@ -186,7 +201,6 @@ const faqs = [
 ];
 
 function Services() {
-  const [activePillar, setActivePillar] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -310,113 +324,154 @@ function Services() {
         </div>
       </section>
 
-      {/* Interactive Service Pillars Section */}
-      <section className="py-24 md:py-32 px-6 md:px-10 bg-muted/20 border-y border-foreground/5">
-        <div className="max-w-7xl mx-auto">
-          <Reveal className="mb-12">
-            <span className="text-xs font-bold uppercase tracking-[0.3em] flex items-center gap-4">
-              <span className="size-2 bg-brand rounded-full" /> Capabilities
-            </span>
-            <h2 className="mt-4 text-4xl md:text-6xl font-extrabold tracking-tighter uppercase">
-              Core Specialties
-            </h2>
-            <p className="mt-4 max-w-xl text-foreground/60 font-light">
-              Explore our comprehensive toolkit designed to improve search rankings, craft identity,
-              and drive growth.
-            </p>
+      {/* ═══════ THE REAL PROBLEM ═══════ */}
+      <section className="py-20 md:py-28 px-6 md:px-10 border-t border-foreground/5">
+        <div className="max-w-[1128px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+          <Reveal>
+            <div className="flex flex-col gap-4">
+              <span className="text-xs font-bold uppercase tracking-[0.3em] flex items-center gap-4">
+                <span className="size-2 bg-brand rounded-full" /> The real problem
+              </span>
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tighter uppercase leading-[1.05]">
+                Why most businesses never get steady leads
+              </h2>
+              <p className="text-sm md:text-base font-light text-foreground/60 leading-relaxed max-w-lg">
+                Getting traffic is the easy part. Turning that traffic into customers is where most
+                budgets quietly disappear. When someone lands on your site, they decide in seconds
+                whether to trust you.
+              </p>
+            </div>
           </Reveal>
 
-          {/* Interactive tabs */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 mt-12">
-            {/* Left list controls */}
-            <div className="lg:col-span-5 flex flex-col gap-4">
-              {servicesPillars.map((p, i) => {
-                const IconComponent = p.icon;
-                const active = activePillar === i;
-                return (
-                  <button
-                    key={p.n}
-                    onClick={() => setActivePillar(i)}
-                    className={`text-left p-6 rounded-2xl border transition-all duration-300 flex items-center justify-between group ${
-                      active
-                        ? "bg-foreground text-background border-foreground shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)]"
-                        : "bg-background text-foreground border-foreground/10 hover:border-brand"
-                    }`}
-                  >
-                    <div className="flex items-center gap-5">
-                      <span
-                        className={`text-[10px] font-bold tracking-widest ${active ? "text-brand" : "text-foreground/40"}`}
-                      >
-                        {p.n}
-                      </span>
-                      <div>
-                        <h3 className="text-lg md:text-xl font-bold tracking-tight">{p.title}</h3>
-                        <p
-                          className={`text-xs mt-1 ${active ? "text-background/60" : "text-foreground/50"} line-clamp-1`}
-                        >
-                          {p.tagline}
-                        </p>
-                      </div>
-                    </div>
-                    <IconComponent
-                      className={`size-5 transition-transform duration-300 ${active ? "text-brand" : "text-foreground/30 group-hover:scale-110"}`}
-                    />
-                  </button>
-                );
-              })}
+          <Reveal delay={0.1}>
+            <div className="flex flex-col">
+              {problems.map((p, i) => (
+                <div
+                  key={p}
+                  className="flex items-start gap-4 py-5 border-b border-foreground/10 first:border-t"
+                >
+                  <span className="text-[10px] font-bold tabular-nums text-brand pt-1.5">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="text-base font-light text-foreground/75 leading-relaxed">
+                    {p}
+                  </span>
+                </div>
+              ))}
+              <p className="mt-8 text-lg md:text-xl font-serif italic text-foreground/80 leading-snug">
+                Traffic was never the problem. Turning attention into customers is.
+              </p>
             </div>
+          </Reveal>
+        </div>
+      </section>
 
-            {/* Right details content card */}
-            <div className="lg:col-span-7">
-              <div className="h-full bg-background border border-foreground/10 rounded-3xl p-6 md:p-10 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.05)] flex flex-col justify-between relative overflow-hidden">
-                <div className="absolute top-0 right-0 -z-10 bg-gradient-to-br from-brand/[0.08] to-transparent size-64 rounded-full blur-3xl pointer-events-none" />
+      {/* ═══════ THE SYSTEM — flow chain ═══════ */}
+      <section className="py-20 md:py-28 px-6 md:px-10 bg-muted/30 border-y border-foreground/[0.06]">
+        <div className="max-w-[1128px] mx-auto">
+          <Reveal className="mb-10 md:mb-14 flex flex-col gap-4">
+            <span className="text-xs font-bold uppercase tracking-[0.3em] flex items-center gap-4">
+              <span className="size-2 bg-brand rounded-full" /> The Zencyp system
+            </span>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tighter uppercase leading-[1.05] max-w-2xl">
+              How we turn traffic into real enquiries
+            </h2>
+          </Reveal>
 
-                <div>
-                  <div className="flex items-center justify-between border-b border-foreground/5 pb-6">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand bg-foreground px-3 py-1 rounded-full">
-                      Capability {servicesPillars[activePillar].n}
+          <Reveal delay={0.08}>
+            <ol className="flex flex-col md:flex-row md:items-stretch gap-3 md:gap-2">
+              {systemFlow.map((s, i) => (
+                <li key={s} className="flex md:flex-1 items-center gap-3 md:gap-2 min-w-0">
+                  <div className="flex-1 flex flex-col gap-2 p-5 rounded-2xl bg-background border border-foreground/[0.07] h-full">
+                    <span className="text-[10px] font-bold tabular-nums text-brand">
+                      {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="text-xs text-foreground/40 font-serif italic">
-                      Zencyp Marketing
-                    </span>
+                    <span className="text-sm font-extrabold tracking-tight leading-snug">{s}</span>
                   </div>
+                  {i < systemFlow.length - 1 && (
+                    <span
+                      aria-hidden
+                      className="shrink-0 text-foreground/25 rotate-90 md:rotate-0 text-lg"
+                    >
+                      →
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </Reveal>
+        </div>
+      </section>
 
-                  <h3 className="mt-8 text-2xl md:text-3xl font-extrabold tracking-tight">
-                    {servicesPillars[activePillar].title}
-                  </h3>
-                  <p className="mt-4 text-foreground/70 font-light leading-relaxed text-balance">
-                    {servicesPillars[activePillar].desc}
-                  </p>
+      {/* ═══════ CAPABILITIES — sticky left, scrolling right ═══════ */}
+      <section className="py-20 md:py-28 px-6 md:px-10">
+        <div className="max-w-[1128px] mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-10 lg:gap-16 items-start">
+          {/* Sticky column. top clears the fixed nav (98px) with breathing room. */}
+          <div className="lg:sticky lg:top-32">
+            <Reveal>
+              <div className="flex flex-col gap-4">
+                <span className="text-xs font-bold uppercase tracking-[0.3em] flex items-center gap-4">
+                  <span className="size-2 bg-brand rounded-full" /> Capabilities
+                </span>
+                <h2 className="text-3xl md:text-5xl font-extrabold tracking-tighter uppercase leading-[1.05]">
+                  Core specialties
+                </h2>
+                <p className="text-sm md:text-base font-light text-foreground/60 leading-relaxed max-w-md">
+                  Six disciplines that operate as one system. Most engagements start with two or
+                  three and grow from there.
+                </p>
+                <Link
+                  to="/contact"
+                  className="mt-2 self-start inline-flex items-center gap-2.5 h-12 px-7 rounded-full bg-brand text-brand-foreground text-sm font-bold tracking-wide transition-transform duration-300 hover:-translate-y-0.5"
+                >
+                  Book a free strategy call
+                  <ArrowRight className="size-4" />
+                </Link>
+              </div>
+            </Reveal>
+          </div>
 
-                  <div className="mt-8">
-                    <h4 className="text-xs font-bold uppercase tracking-widest text-foreground/40 mb-4">
-                      Deliverables:
-                    </h4>
-                    <ul className="space-y-3">
-                      {servicesPillars[activePillar].bullets.map((b, bi) => (
+          {/* Scrolling column */}
+          <div className="flex flex-col gap-6">
+            {servicesPillars.map((p, i) => {
+              const IconComponent = p.icon;
+              return (
+                <Reveal key={p.n} delay={0.05}>
+                  <article className="group rounded-3xl border border-foreground/[0.07] bg-muted/60 p-6 md:p-8 transition-colors hover:border-brand/40">
+                    <header className="flex items-start justify-between gap-4 pb-5 mb-5 border-b border-foreground/[0.07]">
+                      <div className="flex flex-col gap-1.5 min-w-0">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-foreground/35 tabular-nums">
+                          {p.n} / {String(servicesPillars.length).padStart(2, "0")}
+                        </span>
+                        <h3 className="text-2xl md:text-3xl font-extrabold tracking-tighter uppercase leading-tight">
+                          {p.title}
+                        </h3>
+                        <p className="text-xs font-medium text-foreground/50">{p.tagline}</p>
+                      </div>
+                      <span className="shrink-0 size-11 rounded-full border border-foreground/10 flex items-center justify-center text-foreground/40 group-hover:bg-brand group-hover:text-brand-foreground group-hover:border-brand transition-colors">
+                        <IconComponent className="size-4.5" />
+                      </span>
+                    </header>
+
+                    <p className="text-sm font-light leading-relaxed text-foreground/65">
+                      {p.desc}
+                    </p>
+
+                    <ul className="mt-5 flex flex-col gap-2.5">
+                      {p.bullets.map((b, bi) => (
                         <li
                           key={bi}
-                          className="flex items-start gap-3 text-sm text-foreground/80 leading-snug"
+                          className="flex items-start gap-3 text-sm text-foreground/70 leading-snug"
                         >
                           <Check className="size-4 text-brand shrink-0 mt-0.5" />
                           <span>{b}</span>
                         </li>
                       ))}
                     </ul>
-                  </div>
-                </div>
-
-                <div className="mt-10 pt-6 border-t border-foreground/5 flex items-center justify-between">
-                  <span className="text-xs text-foreground/40">Custom-tailored campaigns</span>
-                  <Link
-                    to="/contact"
-                    className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-foreground hover:text-brand transition-colors"
-                  >
-                    Inquire about this module <ArrowRight className="size-3.5" />
-                  </Link>
-                </div>
-              </div>
-            </div>
+                  </article>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>

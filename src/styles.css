@@ -28,9 +28,10 @@
   --muted-foreground: oklch(0.55 0 0);
   --border: oklch(0.12 0 0 / 0.08);
 
-  /* Director accent #6D33E2 */
-  --brand: #6D33E2;
-  --brand-foreground: oklch(0.12 0 0);
+  /* Brand accent — deep teal */
+  --brand: #00272c;
+  /* Text/icon colour to sit ON a solid --brand surface (the accent is dark, so white) */
+  --brand-foreground: #ffffff;
 }
 
 @layer base {
@@ -55,6 +56,11 @@
   ::selection {
     background: var(--brand);
     color: var(--brand-foreground);
+  }
+  /* Set by <CustomCursor> only on fine pointers with motion allowed */
+  html.cursor-none,
+  html.cursor-none * {
+    cursor: none !important;
   }
   /* Respect reduced motion */
   @media (prefers-reduced-motion: reduce) {

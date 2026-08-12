@@ -3,8 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { Menu } from "lucide-react";
 
-
-const logoPath = "/logo.svg";
+import logoPath from "@/assets/logo.png";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -78,7 +77,7 @@ export function SiteNav() {
       <nav className="hidden md:block fixed top-4 left-1/2 z-50 w-[98vw] max-w-7xl -translate-x-1/2 rounded-full border border-white/15 bg-white/15 px-6 py-3 shadow-[0_28px_70px_rgba(15,23,42,0.14)] backdrop-blur-2xl">
         <div className="relative flex items-center justify-center min-h-14">
           <Link to="/" className="absolute left-5 flex items-center gap-3">
-            <img src={logoPath} alt="Zencyp logo" className="h-8 w-auto object-contain" />
+            <img src={logoPath} alt="Zencyp logo" className="h-36 w-auto object-contain" />
           </Link>
 
           <div className="flex items-center gap-8">
@@ -98,9 +97,11 @@ export function SiteNav() {
         </div>
       </nav>
 
-      <nav className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between gap-4 border-b border-white/10 bg-background/80 px-4 py-4 backdrop-blur-md shadow-sm">
+      {/* py-3 keeps the bar at ~80px tall now that the mark is 56px, so the fixed-nav
+          clearance the hero and pinned sections rely on is unchanged */}
+      <nav className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between gap-4 border-b border-white/10 bg-background/80 px-4 py-3 backdrop-blur-md shadow-sm">
         <Link to="/" className="flex items-center gap-3">
-          <img src={logoPath} alt="Zencyp logo" className="h-12 w-auto object-contain" />
+          <img src={logoPath} alt="Zencyp logo" className="h-14 w-auto object-contain" />
         </Link>
 
         <button
