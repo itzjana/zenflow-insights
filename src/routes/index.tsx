@@ -10,7 +10,6 @@ import { FloatingObject } from "@/components/FloatingObject";
 import { CountUp } from "@/components/CountUp";
 import { ArrowUpRight } from "lucide-react";
 import { CaseStudies } from "@/components/CaseStudies";
-import { CrtScreen } from "@/components/CrtScreen";
 import bgImage from "@/assets/bg.png";
 
 
@@ -335,7 +334,6 @@ function Home() {
       <section className="lg:hidden bg-background px-4 pt-24 pb-10">
         <Reveal>
           <div className="relative flex min-h-[78vh] flex-col justify-end overflow-hidden rounded-[2rem]">
-            <CrtScreen className="absolute inset-0 h-full w-full" />
             {/* Scrim: opaque at the base for the copy, clearing toward the top */}
             <div className="absolute inset-0 bg-linear-to-t from-brand-deep via-brand-deep/70 to-transparent" />
 
