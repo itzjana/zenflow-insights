@@ -12,6 +12,10 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-soft: var(--brand-soft);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --color-border: var(--border);
   --color-ink: var(--ink);
 
@@ -28,9 +32,22 @@
   --muted-foreground: oklch(0.55 0 0);
   --border: oklch(0.12 0 0 / 0.08);
 
-  /* Brand accent — deep teal */
-  --brand: #00272c;
-  /* Text/icon colour to sit ON a solid --brand surface (the accent is dark, so white) */
+  /* Brand palette, sampled from the Zencyp logo.
+
+     --brand        #0A2E33  the dark teal panel. Primary surface and the accent
+                             colour for text on light backgrounds (14.5:1 on white).
+     --accent       #D0FD0A  the lime wordmark. 12.2:1 on --brand but only 1.2:1 on
+                             white — never use it as text on a light surface. Use it
+                             as a fill (with --accent-foreground on top) or as text
+                             on --brand / --brand-deep.
+     --brand-soft   #2596BE  supporting cyan for charts, meters and graphic accents.
+     --brand-deep   #06232A  deepest tone for scrims and full-bleed dark sections. */
+  --brand: #0a2e33;
+  --brand-deep: #06232a;
+  --brand-soft: #2596be;
+  --accent: #d0fd0a;
+  --accent-foreground: #0a2e33;
+  /* Text/icon colour to sit ON a solid --brand surface */
   --brand-foreground: #ffffff;
 }
 

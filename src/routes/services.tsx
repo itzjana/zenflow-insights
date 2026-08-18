@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
+import { ComparisonSection } from "@/components/ComparisonSection";
 import { MagneticButton } from "@/components/MagneticButton";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -475,6 +476,28 @@ function Services() {
           </div>
         </div>
       </section>
+
+      <ComparisonSection
+        eyebrow="Why us"
+        title="Marketing that compounds, not"
+        accent="marketing that churns"
+        them={[
+          "Quote per deliverable and move on",
+          "Optimise a channel in isolation",
+          "Report impressions and reach",
+          "Hand over a site with no tracking wired up",
+          "Rebuild from scratch every campaign",
+          "Leave you guessing what happens next",
+        ]}
+        us={[
+          "Scope around the outcome you need",
+          "Tune the whole journey end to end",
+          "Report enquiries, cost per lead and revenue",
+          "Ship analytics and conversion tracking on day one",
+          "Compound what already works",
+          "Tell you exactly what we are doing and why",
+        ]}
+      />
 
       {/* Engagement Workflow ("How it Works") with Snake Scroll Line */}
       <section

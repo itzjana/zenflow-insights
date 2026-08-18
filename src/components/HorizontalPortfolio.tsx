@@ -118,7 +118,8 @@ export function HorizontalPortfolio({ items, heading = "Selected Work" }: Props)
               <span className="size-2 bg-brand rounded-full" /> {heading}
             </span>
             <h2 className="mt-4 text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tighter uppercase">
-              Scroll <span className="font-serif italic font-semibold normal-case">across</span>
+              Scroll{" "}
+              <span className="font-serif italic font-semibold normal-case text-brand">across</span>
             </h2>
           </div>
           <span className="hidden lg:block text-[10px] font-bold uppercase tracking-widest text-foreground/40">

@@ -89,7 +89,7 @@ export function SiteFooter() {
             </ul>
           </Card>
 
-          {/* Contact + Newsletter stack */}
+          {/* Contact stack */}
           <div className="md:col-span-4 flex flex-col gap-4 md:gap-6">
             <Card>
               <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/40">
@@ -106,31 +106,26 @@ export function SiteFooter() {
                 Available Q3 '26
               </p>
             </Card>
-            <Card>
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/40">
-                Newsletter
+
+            {/* Primary action, in place of the old newsletter signup */}
+            <Card className="relative overflow-hidden bg-brand! text-white">
+              <div className="pointer-events-none absolute -right-16 -bottom-16 size-48 rounded-full bg-accent/15 blur-3xl" />
+              <span className="relative text-[10px] font-bold uppercase tracking-[0.3em] text-white/50">
+                Start a project
               </span>
-              <p className="mt-3 text-sm font-light text-foreground/60">
-                Quarterly dispatch. Process notes &amp; work in progress.
+              <p className="relative mt-4 text-lg font-extrabold leading-snug tracking-tight">
+                Tell us where you want to grow.
               </p>
-              <form
-                className="mt-4 flex items-center gap-2 rounded-full border border-foreground/10 bg-background pl-4 pr-1 py-1 focus-within:border-foreground/40 transition-colors"
-                onSubmit={(e) => e.preventDefault()}
+              <p className="relative mt-2 text-sm font-light leading-relaxed text-white/60">
+                We reply to every brief within one working day.
+              </p>
+              <Link
+                to="/contact"
+                className="relative mt-5 inline-flex h-12 items-center gap-2 rounded-full bg-accent px-6 text-xs font-extrabold uppercase tracking-widest text-accent-foreground transition-transform duration-300 hover:-translate-y-0.5"
               >
-                <input
-                  type="email"
-                  required
-                  placeholder="you@studio.com"
-                  className="flex-1 bg-transparent text-sm py-2 outline-none placeholder:text-foreground/30"
-                />
-                <button
-                  type="submit"
-                  className="shrink-0 size-9 rounded-full bg-foreground text-background flex items-center justify-center hover:bg-brand hover:text-brand-foreground transition-colors"
-                  aria-label="Subscribe"
-                >
-                  →
-                </button>
-              </form>
+                Book a call
+                <span aria-hidden>→</span>
+              </Link>
             </Card>
           </div>
 

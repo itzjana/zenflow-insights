@@ -43,7 +43,7 @@ function Contact() {
             Get in Touch
             <br />
             with{" "}
-            <span className="font-serif italic font-semibold lowercase underline decoration-brand decoration-[8px] underline-offset-[12px] text-foreground bg-brand/5 px-2">
+            <span className="font-serif italic font-semibold lowercase underline decoration-accent decoration-[8px] underline-offset-[12px] text-brand bg-accent/15 px-2">
               zencyp.
             </span>
           </h1>

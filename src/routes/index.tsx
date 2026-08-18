@@ -8,7 +8,11 @@ import ScrollStack, { ScrollStackItem } from "@/components/ScrollStack";
 import { HorizontalPortfolio, type PortfolioItem } from "@/components/HorizontalPortfolio";
 import { FloatingObject } from "@/components/FloatingObject";
 import { CountUp } from "@/components/CountUp";
+import { ArrowUpRight } from "lucide-react";
+import { CaseStudies } from "@/components/CaseStudies";
+import { CrtScreen } from "@/components/CrtScreen";
 import bgImage from "@/assets/bg.png";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -71,8 +75,6 @@ const services = [
 
 /* TODO — paste the real Google Drive folder URL for the graphic design archive. */
 const GRAPHIC_DESIGN_DRIVE_URL = "#";
-/* TODO — paste the real Instagram profile URL. */
-const INSTAGRAM_URL = "#";
 
 const portfolio: PortfolioItem[] = [
   { name: "Branding", tag: "Identity & Visual Systems", art: "layers", href: "/work/branding" },
@@ -95,7 +97,6 @@ const portfolio: PortfolioItem[] = [
     href: GRAPHIC_DESIGN_DRIVE_URL,
     external: true,
   },
-  { name: "Social", tag: "Follow the Journey", art: "orbit", href: INSTAGRAM_URL, external: true },
 ];
 
 const metrics = [
@@ -171,7 +172,7 @@ function Home() {
             <div className="flex items-center gap-3 md:gap-10 flex-wrap">
               <Reveal
                 as="span"
-                className="font-serif italic font-semibold normal-case tracking-tight border-b-5 md:border-b-10 border-brand leading-none px-2"
+                className="font-serif italic font-semibold normal-case tracking-tight text-brand border-b-5 md:border-b-10 border-accent leading-none px-2"
                 delay={0.1}
               >
                 growth
@@ -328,136 +329,45 @@ function Home() {
         </div>
       </section>
 
-      {/* ═══════ MOBILE HERO ═══════ */}
-      {/* pt clears the fixed nav: 80px tall on mobile, 98px (floating pill) from md up */}
-      <section className="lg:hidden relative min-h-[85vh] overflow-hidden bg-background px-5 pt-24 md:pt-32 pb-10">
-        {/* Decorative gradient blobs */}
-        <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-brand/10 blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-20 left-0 w-56 h-56 rounded-full bg-brand/15 blur-[80px] pointer-events-none" />
+      {/* ═══════ MOBILE HERO ═══════
+          Full-bleed image card with the copy anchored to the bottom over a gradient
+          scrim, so the type stays legible whatever the photo underneath is doing. */}
+      <section className="lg:hidden bg-background px-4 pt-24 pb-10">
+        <Reveal>
+          <div className="relative flex min-h-[78vh] flex-col justify-end overflow-hidden rounded-[2rem]">
+            <CrtScreen className="absolute inset-0 h-full w-full" />
+            {/* Scrim: opaque at the base for the copy, clearing toward the top */}
+            <div className="absolute inset-0 bg-linear-to-t from-brand-deep via-brand-deep/70 to-transparent" />
 
-        {/* Hero Content */}
-        <div className="relative z-10">
-          <Reveal className="flex items-center gap-3 mb-8" y={15}>
-            <span className="size-2 bg-brand rounded-full" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/40">
-              Digital Agency
-            </span>
-            <div className="h-px flex-1 bg-foreground/5" />
-          </Reveal>
+            <div className="relative flex flex-col gap-4 p-6 pb-8 text-white">
+              <span className="font-serif text-base italic text-white/75">
+                Trusted by 100+ brands
+              </span>
 
-          <Reveal>
-            <h1 className="text-[2.75rem] font-extrabold leading-[0.9] tracking-tighter uppercase text-foreground">
-              Digital
-              <br />
-              <span className="font-serif italic font-semibold normal-case tracking-tight text-brand">
-                growth
-              </span>{" "}
-              partner
-              <br />
-              <span className="text-[2.25rem] text-foreground/15">in Tamil Nadu.</span>
-            </h1>
-          </Reveal>
-
-          <Reveal delay={0.2}>
-            <p className="mt-6 text-base font-light text-foreground/60 leading-relaxed max-w-sm">
-              Zencyp is Arani's leading digital marketing and branding agency. We help brands grow
-              with SEO, web design, social media, and creative video solutions.
-            </p>
-          </Reveal>
-
-          {/* Service Tags */}
-          <Reveal delay={0.3}>
-            <div className="flex flex-wrap gap-2 mt-5">
-              {["Branding", "SEO & PPC", "Web Dev", "Video"].map((t) => (
-                <span
-                  key={t}
-                  className="px-3 py-1.5 rounded-full border border-foreground/8 bg-foreground/3 text-[10px] font-bold uppercase tracking-widest text-foreground/50"
-                >
-                  {t}
+              <h1 className="text-[2.4rem] font-extrabold leading-[1.02] tracking-tighter">
+                Turn attention
+                <br />
+                into{" "}
+                <span className="font-serif italic font-semibold tracking-tight text-accent">
+                  enquiries.
                 </span>
-              ))}
-            </div>
-          </Reveal>
+              </h1>
 
-          {/* CTA Buttons */}
-          <Reveal delay={0.4}>
-            <div className="mt-10 flex flex-row gap-3">
+              <p className="max-w-xs text-sm font-light leading-relaxed text-white/70">
+                Branding, websites and campaigns built as one system — so the right people find you,
+                trust you, and get in touch.
+              </p>
+
               <Link
                 to="/contact"
-                className="flex-1 h-14 rounded-full bg-brand text-white font-bold text-sm uppercase tracking-widest flex items-center justify-center gap-3 active:scale-[0.98] transition-transform"
+                className="mt-2 inline-flex h-13 w-fit items-center gap-2.5 rounded-full bg-accent px-7 text-sm font-bold text-accent-foreground"
               >
-                Get Started
-                <span className="w-7 h-7 rounded-full bg-white/20 text-white flex items-center justify-center text-xs">
-                  →
-                </span>
-              </Link>
-
-              <Link
-                to="/services"
-                className="flex-1 h-14 rounded-full border border-foreground/10 bg-foreground/2 text-foreground font-semibold text-sm flex items-center justify-center gap-3 active:scale-[0.98] transition-transform"
-              >
-                Our Services
+                Start a project
+                <ArrowUpRight className="size-4" />
               </Link>
             </div>
-          </Reveal>
-
-          {/* Mobile Glass Cards (compact) */}
-          <Reveal delay={0.5}>
-            <div className="mt-10 grid grid-cols-2 gap-3">
-              <div className="rounded-2xl bg-foreground/3 backdrop-blur-md border border-foreground/5 p-4">
-                <div className="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center mb-2">
-                  <svg
-                    className="text-brand"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="M21 21l-4.35-4.35" />
-                  </svg>
-                </div>
-                <span className="text-2xl font-extrabold tracking-tighter text-foreground">
-                  <CountUp to={150} suffix="%" duration={2} />
-                </span>
-                <p className="text-[9px] font-medium uppercase tracking-wider text-foreground/40 mt-1">
-                  Avg. Traffic Boost
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-foreground/3 backdrop-blur-md border border-foreground/5 p-4">
-                <div className="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center mb-2">
-                  <svg
-                    className="text-brand"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                </div>
-                <span className="text-2xl font-extrabold tracking-tighter text-foreground">
-                  <CountUp to={100} suffix="+" duration={2} />
-                </span>
-                <p className="text-[9px] font-medium uppercase tracking-wider text-foreground/40 mt-1">
-                  Happy Clients
-                </p>
-              </div>
-            </div>
-          </Reveal>
-        </div>
+          </div>
+        </Reveal>
       </section>
 
       {/* Marquee */}
@@ -550,16 +460,21 @@ function Home() {
       {/* Horizontal portfolio with pinned scroll */}
       <HorizontalPortfolio items={portfolio} />
 
+      {/* Case studies — targeted by the nav's #case-studies link */}
+      <CaseStudies />
+
       {/* Metrics with glass cards */}
       <section
-        className="relative py-24 md:py-32 px-6 md:px-10 text-foreground overflow-hidden bg-cover bg-center bg-no-repeat"
+        className="relative py-24 md:py-32 px-6 md:px-10 text-white overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${bgImage})`,
         }}
       >
         {" "}
-        <div className="absolute -top-32 -left-32 size-100 rounded-full bg-white/20 blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 size-125 rounded-full bg-black/10 blur-3xl" />
+        {/* Scrim: the photo is light, so white type needs a tinted wash behind it */}
+        <div className="absolute inset-0 bg-brand-deep/70 pointer-events-none" />
+        <div className="absolute -top-32 -left-32 size-100 rounded-full bg-accent/20 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -right-32 size-125 rounded-full bg-black/20 blur-3xl pointer-events-none" />
         <div className="relative max-w-7xl mx-auto">
           <Reveal className="mb-16">
             <h2 className="text-4xl md:text-6xl font-extrabold tracking-tighter leading-[0.95] max-w-3xl">
@@ -569,11 +484,11 @@ function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {metrics.map((m, i) => (
               <Reveal key={m.label} delay={i * 0.08}>
-                <div className="rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 p-6 md:p-8 h-full transition-transform duration-500 hover:-translate-y-1.5">
+                <div className="rounded-2xl bg-white/12 backdrop-blur-xl border border-white/25 p-6 md:p-8 h-full transition-transform duration-500 hover:-translate-y-1.5">
                   <span className="block text-5xl md:text-6xl font-extrabold tracking-tighter tabular-nums">
                     <CountUp to={m.to} suffix={m.suffix} duration={2.5} />
                   </span>
-                  <p className="text-[10px] font-bold uppercase tracking-widest mt-3 opacity-60">
+                  <p className="text-[10px] font-bold uppercase tracking-widest mt-3 text-white/75">
                     {m.label}
                   </p>
                 </div>

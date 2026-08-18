@@ -1,22 +1,32 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { Menu } from "lucide-react";
+import { Menu, ChevronDown, ArrowUpRight } from "lucide-react";
 
 import logoPath from "@/assets/logo.png";
 
+/** Work pages listed under the Services dropdown. */
+const serviceLinks = [
+  { to: "/work/branding", label: "Branding", blurb: "Identity & visual systems" },
+  { to: "/work/digital-marketing", label: "Digital Marketing", blurb: "Performance & growth" },
+  { to: "/work/web-production", label: "Web Production", blurb: "Design & engineering" },
+] as const;
+
 const navLinks = [
   { to: "/", label: "Home" },
-  { to: "/services", label: "Services" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
+  { to: "/services", label: "Services", children: serviceLinks },
+  { to: "/about", label: "Portfolio" },
+  { to: "/", hash: "case-studies", label: "Case Studies" },
 ] as const;
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<HTMLUListElement>(null);
+  const servicesRef = useRef<HTMLDivElement>(null);
 
   const routerState = useRouterState();
   const currentPath = routerState.location.pathname;
@@ -51,6 +61,7 @@ export function SiteNav() {
   const close = () => {
     const overlay = overlayRef.current;
     const panel = panelRef.current;
+    setMobileServicesOpen(false);
     if (!overlay || !panel) {
       setOpen(false);
       return;
@@ -70,51 +81,134 @@ export function SiteNav() {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
+  // Close the desktop dropdown on outside click or Escape
+  useEffect(() => {
+    if (!servicesOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (!servicesRef.current?.contains(e.target as Node)) setServicesOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setServicesOpen(false);
+    document.addEventListener("mousedown", onDown);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [servicesOpen]);
+
+  const isActive = (to: string, hash?: string) =>
+    hash ? false : to === "/" ? currentPath === "/" : currentPath.startsWith(to);
+
+  const linkCls = (active: boolean) =>
+    `text-base font-bold tracking-wide transition ${
+      active ? "text-accent" : "text-white/75 hover:text-white"
+    }`;
 
   return (
     <>
-      <nav className="hidden md:block fixed top-4 left-1/2 z-50 w-[98vw] max-w-7xl -translate-x-1/2 rounded-full border border-white/15 bg-white/15 px-6 py-3 shadow-[0_28px_70px_rgba(15,23,42,0.14)] backdrop-blur-2xl">
-        <div className="relative flex items-center justify-center min-h-14">
-          <Link to="/" className="absolute left-5 flex items-center gap-3">
-            <img src={logoPath} alt="Zencyp logo" className="h-36 w-auto object-contain" />
+      {/* Desktop */}
+      <nav className="hidden md:block fixed top-4 left-1/2 z-50 w-[98vw] max-w-7xl -translate-x-1/2 rounded-full border border-white/20 bg-brand px-6 py-3 shadow-[0_28px_70px_rgba(10,46,51,0.35)]">
+        <div className="relative flex items-center justify-between gap-6 min-h-14">
+          <Link to="/" className="flex items-center shrink-0">
+            <img src={logoPath} alt="Zencyp" className="h-12 w-auto object-contain" />
           </Link>
 
-          <div className="flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`text-lg font-semibold tracking-wide transition ${
-                  currentPath === link.to
-                    ? "text-foreground"
-                    : "text-foreground/70 hover:text-foreground"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+          <div className="flex items-center gap-7">
+            {navLinks.map((link) =>
+              "children" in link ? (
+                <div
+                  key={link.label}
+                  ref={servicesRef}
+                  className="relative"
+                  onMouseEnter={() => setServicesOpen(true)}
+                  onMouseLeave={() => setServicesOpen(false)}
+                >
+                  <button
+                    type="button"
+                    aria-expanded={servicesOpen}
+                    aria-haspopup="true"
+                    onClick={() => setServicesOpen((v) => !v)}
+                    className={`${linkCls(isActive(link.to))} inline-flex items-center gap-1.5 cursor-pointer`}
+                  >
+                    {link.label}
+                    <ChevronDown
+                      className={`size-4 transition-transform duration-300 ${servicesOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+
+                  {servicesOpen && (
+                    <div className="absolute left-1/2 top-full w-72 -translate-x-1/2 pt-4">
+                      <div className="rounded-2xl border border-white/15 bg-brand-deep p-2 shadow-[0_30px_80px_rgba(6,35,42,0.5)]">
+                        {link.children.map((c) => (
+                          <Link
+                            key={c.to}
+                            to={c.to}
+                            onClick={() => setServicesOpen(false)}
+                            className="group flex items-start gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-white/10"
+                          >
+                            <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent" />
+                            <span className="flex flex-col">
+                              <span className="text-sm font-bold text-white">{c.label}</span>
+                              <span className="text-xs text-white/55">{c.blurb}</span>
+                            </span>
+                          </Link>
+                        ))}
+                        <Link
+                          to="/services"
+                          onClick={() => setServicesOpen(false)}
+                          className="mt-1 flex items-center justify-between rounded-xl border-t border-white/10 px-3 py-3 text-xs font-bold uppercase tracking-widest text-accent transition-colors hover:bg-white/10"
+                        >
+                          All services <ArrowUpRight className="size-3.5" />
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  hash={"hash" in link ? link.hash : undefined}
+                  className={linkCls(isActive(link.to, "hash" in link ? link.hash : undefined))}
+                >
+                  {link.label}
+                </Link>
+              ),
+            )}
           </div>
+
+          <Link
+            to="/contact"
+            className="hidden lg:inline-flex shrink-0 items-center gap-2 rounded-full bg-accent px-5 py-3 text-[11px] font-extrabold uppercase tracking-widest text-accent-foreground transition-transform duration-300 hover:-translate-y-0.5"
+          >
+            Get a free strategy call
+            <span className="flex size-6 items-center justify-center rounded-full bg-accent-foreground/15">
+              <ArrowUpRight className="size-3.5" />
+            </span>
+          </Link>
         </div>
       </nav>
 
-      {/* py-3 keeps the bar at ~80px tall now that the mark is 56px, so the fixed-nav
-          clearance the hero and pinned sections rely on is unchanged */}
-      <nav className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between gap-4 border-b border-white/10 bg-background/80 px-4 py-3 backdrop-blur-md shadow-sm">
+      {/* Mobile bar */}
+      <nav className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between gap-4 border-b border-white/15 bg-brand px-4 py-3 shadow-sm">
         <Link to="/" className="flex items-center gap-3">
-          <img src={logoPath} alt="Zencyp logo" className="h-14 w-auto object-contain" />
+          <img src={logoPath} alt="Zencyp" className="h-11 w-auto object-contain" />
         </Link>
 
         <button
           aria-label="Open menu"
           aria-expanded={open}
           onClick={() => setOpen(true)}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-foreground"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/15 text-white"
         >
           <Menu size={20} />
         </button>
       </nav>
 
+      {/* Mobile drawer */}
       {open && (
         <div className="fixed inset-0 z-90 md:hidden" role="dialog" aria-modal="true">
           <div
@@ -124,7 +218,7 @@ export function SiteNav() {
           />
           <div
             ref={panelRef}
-            className="absolute top-0 right-0 h-full w-[88%] max-w-md bg-slate-950 text-white flex flex-col will-change-transform"
+            className="absolute top-0 right-0 h-full w-[88%] max-w-md bg-brand-deep text-white flex flex-col will-change-transform"
           >
             <div className="flex justify-between items-center px-6 py-5 border-b border-white/10">
               <span className="text-lg font-extrabold tracking-tighter text-white">ZENCYP.</span>
@@ -137,23 +231,75 @@ export function SiteNav() {
               </button>
             </div>
 
-            <ul ref={itemsRef} className="flex-1 flex flex-col justify-center px-6 gap-4">
-              {navLinks.map((link) => (
-                <li key={link.to} className="overflow-hidden">
-                  <Link
-                    to={link.to}
-                    onClick={close}
-                    data-mi
-                    className="block px-2 py-3 text-2xl font-semibold tracking-wide uppercase text-white transition hover:text-brand"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+            <ul
+              ref={itemsRef}
+              className="flex-1 flex flex-col justify-center px-6 gap-2 overflow-y-auto"
+            >
+              {navLinks.map((link) =>
+                "children" in link ? (
+                  <li key={link.label} className="overflow-hidden" data-mi>
+                    <button
+                      type="button"
+                      aria-expanded={mobileServicesOpen}
+                      onClick={() => setMobileServicesOpen((v) => !v)}
+                      className="flex w-full items-center justify-between px-2 py-3 text-2xl font-semibold tracking-wide uppercase text-white transition hover:text-accent"
+                    >
+                      {link.label}
+                      <ChevronDown
+                        className={`size-5 transition-transform duration-300 ${mobileServicesOpen ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                    {mobileServicesOpen && (
+                      <div className="flex flex-col gap-1 pb-2 pl-4">
+                        {link.children.map((c) => (
+                          <Link
+                            key={c.to}
+                            to={c.to}
+                            onClick={close}
+                            className="flex items-center gap-3 rounded-lg px-2 py-2.5 text-base font-medium text-white/70 transition hover:text-accent"
+                          >
+                            <span className="size-1.5 rounded-full bg-accent" />
+                            {c.label}
+                          </Link>
+                        ))}
+                        <Link
+                          to="/services"
+                          onClick={close}
+                          className="px-2 py-2.5 text-xs font-bold uppercase tracking-widest text-accent"
+                        >
+                          All services
+                        </Link>
+                      </div>
+                    )}
+                  </li>
+                ) : (
+                  <li key={link.label} className="overflow-hidden">
+                    <Link
+                      to={link.to}
+                      hash={"hash" in link ? link.hash : undefined}
+                      onClick={close}
+                      data-mi
+                      className="block px-2 py-3 text-2xl font-semibold tracking-wide uppercase text-white transition hover:text-accent"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
 
-            <div className="px-6 py-8 border-t border-white/10 text-xs uppercase tracking-widest font-semibold text-white/70">
-              info@zencyp.in · Available Q3 '26
+            <div className="px-6 pb-6">
+              <Link
+                to="/contact"
+                onClick={close}
+                className="flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-4 text-xs font-extrabold uppercase tracking-widest text-accent-foreground"
+              >
+                Get a free strategy call <ArrowUpRight className="size-4" />
+              </Link>
+            </div>
+
+            <div className="px-6 py-6 border-t border-white/10 text-xs uppercase tracking-widest font-semibold text-white/70">
+              info@zencyp.in
             </div>
           </div>
         </div>
