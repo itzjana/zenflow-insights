@@ -4,6 +4,13 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
 import { CountUp } from "@/components/CountUp";
 import { WorkHero, WorkCTA, Eyebrow, CARD } from "@/components/work/WorkPageParts";
+import marketingHero from "@/assets/img/work-marketing-hero.webp";
+import proof34 from "@/assets/img/proof/proof-34-campaigns.webp";
+import proofWebsiteLeads from "@/assets/img/proof/proof-website-leads.webp";
+import proofFbLeads from "@/assets/img/proof/proof-fb-leads.webp";
+import proofFbDashboard from "@/assets/img/proof/proof-fb-dashboard.webp";
+import proofPerfChart from "@/assets/img/proof/proof-performance-chart.webp";
+import proofCampaignTable from "@/assets/img/proof/proof-campaign-table.webp";
 
 export const Route = createFileRoute("/work/digital-marketing")({
   head: () => ({
@@ -23,36 +30,47 @@ export const Route = createFileRoute("/work/digital-marketing")({
  * Illustrative engagement figures. TODO — replace with audited numbers from real
  * client reporting before this page goes live.
  */
-const comparisons = [
+/**
+ * Real campaign reporting, exported from Meta Ads Manager. Client names are redacted in
+ * the source screenshots. The figures below are transcribed from those same screenshots
+ * so the copy and the evidence can never drift apart.
+ */
+const proof = [
   {
-    client: "Retail brand",
-    sector: "Fashion — Chennai",
-    window: "6 months",
-    rows: [
-      { label: "Monthly enquiries", before: 18, after: 74, unit: "" },
-      { label: "Cost per lead", before: 640, after: 210, unit: "₹", lowerIsBetter: true },
-      { label: "Organic sessions", before: 2100, after: 9400, unit: "" },
-    ],
+    image: proof34,
+    alt: "Meta Ads Manager showing results across 34 campaigns",
+    headline: "1,939,999 results",
+    detail: "Across 34 campaigns — 6,987,423 impressions at a ₹35 CPM.",
   },
   {
-    client: "Wellness clinic",
-    sector: "Health — Bengaluru",
-    window: "4 months",
-    rows: [
-      { label: "Monthly enquiries", before: 26, after: 91, unit: "" },
-      { label: "Cost per lead", before: 480, after: 175, unit: "₹", lowerIsBetter: true },
-      { label: "Organic sessions", before: 3400, after: 12800, unit: "" },
-    ],
+    image: proofWebsiteLeads,
+    alt: "Meta Ads Manager performance overview for a website-leads campaign",
+    headline: "₹14.97 per lead",
+    detail: "168 website leads from ₹2,514 of spend on a traffic-to-leads campaign.",
   },
   {
-    client: "Café group",
-    sector: "F&B — Arani",
-    window: "3 months",
-    rows: [
-      { label: "Monthly footfall", before: 900, after: 2600, unit: "" },
-      { label: "Cost per reach", before: 95, after: 34, unit: "₹", lowerIsBetter: true },
-      { label: "Reel views", before: 12000, after: 380000, unit: "" },
-    ],
+    image: proofFbLeads,
+    alt: "Meta Ads Manager performance overview for an on-Facebook leads campaign",
+    headline: "₹38.36 per lead",
+    detail: "170 on-Facebook leads delivered from ₹6,521 of spend.",
+  },
+  {
+    image: proofFbDashboard,
+    alt: "Facebook Ads reporting dashboard with impression and click trends",
+    headline: "258.7K impressions",
+    detail: "Up 72.3% period-on-period, with link clicks up 42.4% and a 1.42% CTR.",
+  },
+  {
+    image: proofPerfChart,
+    alt: "Campaign performance chart showing conversions, CPC and link clicks",
+    headline: "5,235 conversions",
+    detail: "Up 23% over 45 days at a ₹12.45 CPC and 45,235 link clicks.",
+  },
+  {
+    image: proofCampaignTable,
+    alt: "Campaign-level breakdown of results, reach, frequency and cost per result",
+    headline: "Cost per result, by campaign",
+    detail: "Purchases and landing-page views tracked per campaign against daily budgets.",
   },
 ];
 
@@ -64,20 +82,10 @@ const channels = [
 ];
 
 const headline = [
-  { value: 150, suffix: "%", label: "Avg. traffic lift" },
-  { value: 62, suffix: "%", label: "Avg. cost-per-lead drop" },
-  { value: 3, suffix: "×", label: "Avg. enquiry volume" },
+  { value: 34, prefix: "", suffix: "", decimals: 0, label: "Campaigns managed" },
+  { value: 6.9, prefix: "", suffix: "M+", decimals: 1, label: "Impressions delivered" },
+  { value: 14.97, prefix: "₹", suffix: "", decimals: 2, label: "Lowest cost per lead" },
 ];
-
-function pct(before: number, after: number, lowerIsBetter?: boolean) {
-  if (before === 0) return 0;
-  const change = ((after - before) / before) * 100;
-  return Math.round(lowerIsBetter ? -change : change);
-}
-
-function fmt(n: number, unit: string) {
-  return `${unit}${n.toLocaleString("en-IN")}`;
-}
 
 function DigitalMarketingPage() {
   return (
@@ -96,7 +104,8 @@ function DigitalMarketingPage() {
           </>
         }
         copy="We don't report impressions. Every campaign is judged on enquiries, cost per lead and revenue — measured against where the business actually started."
-        art="spectrum"
+        image={marketingHero}
+        imageAlt="Layered panels representing campaign performance"
       />
 
       {/* ─── Headline stats ─── */}
@@ -106,7 +115,13 @@ function DigitalMarketingPage() {
             <Reveal key={h.label} delay={i * 0.08}>
               <div className={`flex flex-col gap-2 p-7 rounded-2xl h-full ${CARD}`}>
                 <span className="text-4xl md:text-5xl font-extrabold tracking-tighter tabular-nums">
-                  <CountUp to={h.value} suffix={h.suffix} duration={2} />
+                  <CountUp
+                    to={h.value}
+                    prefix={h.prefix}
+                    suffix={h.suffix}
+                    decimals={h.decimals}
+                    duration={2}
+                  />
                 </span>
                 <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/40">
                   {h.label}
@@ -117,96 +132,44 @@ function DigitalMarketingPage() {
         </div>
       </section>
 
-      {/* ─── Before / after comparisons ─── */}
+      {/* ─── Campaign proof: real reporting screenshots ─── */}
       <section className="px-5 md:px-6 py-16 md:py-24 bg-muted/30 border-y border-foreground/[0.06]">
         <div className="max-w-[1128px] mx-auto">
           <Reveal className="mb-10 md:mb-14 flex flex-col gap-4">
-            <Eyebrow>Before / after</Eyebrow>
+            <Eyebrow>Campaign proof</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tighter uppercase leading-[1.05] max-w-2xl">
-              What changed once the system was in place
+              Straight from the ads manager
             </h2>
+            <p className="max-w-xl text-sm md:text-base font-light text-foreground/60 leading-relaxed">
+              Exports from live client accounts rather than numbers we typed ourselves. Client names
+              are redacted; every figure quoted below is visible in the screenshot beside it.
+            </p>
           </Reveal>
 
-          <div className="flex flex-col gap-6">
-            {comparisons.map((c, ci) => (
-              <Reveal key={c.client} delay={ci * 0.06}>
-                <article className={`rounded-3xl p-6 md:p-8 ${CARD}`}>
-                  <header className="flex flex-wrap items-baseline justify-between gap-3 pb-6 mb-6 border-b border-foreground/[0.07]">
-                    <div className="flex flex-col gap-1">
-                      <h3 className="text-xl md:text-2xl font-extrabold tracking-tight">
-                        {c.client}
-                      </h3>
-                      <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/40">
-                        ///{c.sector}
-                      </span>
-                    </div>
-                    <span className="px-3 py-1 rounded-full bg-brand/10 text-brand text-[10px] font-bold uppercase tracking-[0.2em]">
-                      {c.window}
-                    </span>
-                  </header>
-
-                  <div className="flex flex-col gap-7">
-                    {c.rows.map((r) => {
-                      const delta = pct(r.before, r.after, r.lowerIsBetter);
-                      const max = Math.max(r.before, r.after);
-                      return (
-                        <div key={r.label} className="flex flex-col gap-3">
-                          <div className="flex items-baseline justify-between gap-4">
-                            <span className="text-sm font-medium text-foreground/70">
-                              {r.label}
-                            </span>
-                            <span className="text-xs font-bold tabular-nums text-brand">
-                              {delta > 0 ? "+" : ""}
-                              {delta}%
-                            </span>
-                          </div>
-
-                          {/* Before */}
-                          <div className="flex items-center gap-3">
-                            <span className="w-14 shrink-0 text-[10px] font-bold uppercase tracking-widest text-foreground/35">
-                              Before
-                            </span>
-                            <div className="flex-1 h-2.5 rounded-full bg-foreground/[0.07] overflow-hidden">
-                              <span
-                                className="block h-full rounded-full bg-foreground/25"
-                                style={{ width: `${(r.before / max) * 100}%` }}
-                              />
-                            </div>
-                            <span className="w-20 shrink-0 text-right text-xs font-bold tabular-nums text-foreground/50">
-                              {fmt(r.before, r.unit)}
-                            </span>
-                          </div>
-
-                          {/* After */}
-                          <div className="flex items-center gap-3">
-                            <span className="w-14 shrink-0 text-[10px] font-bold uppercase tracking-widest text-brand">
-                              After
-                            </span>
-                            <div className="flex-1 h-2.5 rounded-full bg-foreground/[0.07] overflow-hidden">
-                              <span
-                                className="block h-full rounded-full bg-brand"
-                                style={{ width: `${(r.after / max) * 100}%` }}
-                              />
-                            </div>
-                            <span className="w-20 shrink-0 text-right text-xs font-bold tabular-nums">
-                              {fmt(r.after, r.unit)}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {proof.map((item, i) => (
+              <Reveal key={item.headline} delay={(i % 2) * 0.06}>
+                <figure className={`group h-full flex flex-col rounded-3xl p-3 ${CARD}`}>
+                  <div className="overflow-hidden rounded-2xl border border-foreground/[0.07] bg-white">
+                    <img
+                      src={item.image}
+                      alt={item.alt}
+                      loading={i < 2 ? "eager" : "lazy"}
+                      className="w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.2,1,0.3,1)] group-hover:scale-[1.03]"
+                    />
                   </div>
-                </article>
+                  <figcaption className="flex flex-col gap-1.5 px-3 pt-5 pb-3">
+                    <span className="text-lg font-extrabold tracking-tight tabular-nums">
+                      {item.headline}
+                    </span>
+                    <span className="text-sm font-light leading-relaxed text-foreground/60">
+                      {item.detail}
+                    </span>
+                  </figcaption>
+                </figure>
               </Reveal>
             ))}
           </div>
-
-          <Reveal>
-            <p className="mt-8 text-[11px] font-medium text-foreground/35 leading-relaxed max-w-2xl">
-              Figures are illustrative of typical engagements and are pending replacement with
-              audited client reporting.
-            </p>
-          </Reveal>
         </div>
       </section>
 

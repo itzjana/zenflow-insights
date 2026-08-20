@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportError } from "../lib/report-error";
 import { useSmoothScroll } from "@/hooks/useSmoothScroll";
+import { useScrollReset } from "@/hooks/useScrollReset";
 import { PageTransition } from "@/components/PageTransition";
 import { CustomCursor } from "@/components/CustomCursor";
 
@@ -128,6 +129,7 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   useSmoothScroll();
+  useScrollReset();
 
   return (
     <QueryClientProvider client={queryClient}>

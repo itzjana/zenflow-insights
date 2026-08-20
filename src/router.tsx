@@ -8,7 +8,9 @@ export const getRouter = () => {
   const router = createRouter({
     routeTree,
     context: { queryClient },
-    scrollRestoration: true,
+    // Off by design: Lenis owns the scroll and GSAP pinning changes page height after
+    // navigation, so a restored offset lands in the wrong place. useScrollReset handles it.
+    scrollRestoration: false,
     defaultPreloadStaleTime: 0,
   });
 

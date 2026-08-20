@@ -3,7 +3,18 @@ import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
 import { CountUp } from "@/components/CountUp";
-import { WorkArt } from "@/components/WorkArt";
+import webHero from "@/assets/img/work-web-hero.webp";
+import { ClientScrollStory, type ClientProject } from "@/components/ClientScrollStory";
+/* Screenshots live in src/assets/clients-raw as full-size PNGs; these are the
+   web-optimised WebP versions. Drop a new capture in clients-raw with the same name
+   and ask for a re-optimise to refresh these. */
+import shotNalan from "@/assets/img/clients/shot-nalan.webp";
+import shotPvpinn from "@/assets/img/clients/shot-pvpinn.webp";
+import shotPaary from "@/assets/img/clients/shot-parry.webp";
+import shotFlorastra from "@/assets/img/clients/shot-florastra.webp";
+import shotSaianjali from "@/assets/img/clients/shot-saianjali.webp";
+import shotRathna from "@/assets/img/clients/shot-rathna.webp";
+import shotVaranchi from "@/assets/img/clients/shot-varanchi.webp";
 import { WorkHero, WorkCTA, Eyebrow, CARD } from "@/components/work/WorkPageParts";
 
 export const Route = createFileRoute("/work/web-production")({
@@ -26,27 +37,69 @@ const specs = [
   { value: 100, suffix: "%", label: "Responsive coverage", note: "320px to ultrawide" },
 ];
 
-const builds = [
+const projects: ClientProject[] = [
   {
-    name: "Vault 01",
-    sector: "Fintech platform",
-    art: "grid" as const,
-    stack: ["Next.js", "Design system", "CMS"],
-    note: "A marketing site and product surface sharing one component library, so the brand never drifts between them.",
+    name: "Varanchi",
+    url: "https://varanchi.com/",
+    sector: "Silk sarees — E-commerce",
+    image: shotVaranchi,
+    summary:
+      "A premium silk saree storefront where the catalogue has to carry the craft. Built around large imagery, fast collection browsing and a checkout that stays out of the way.",
+    stack: ["Storefront", "Catalogue", "Payments"],
   },
   {
-    name: "Meridian",
-    sector: "Commerce",
-    art: "layers" as const,
-    stack: ["Storefront", "Payments", "Analytics"],
-    note: "Built around the checkout path first — every other page exists to get people there with intent.",
+    name: "Nalan Coffee Bar",
+    url: "https://nalancoffeebar.com/",
+    sector: "Franchise — Food & beverage",
+    image: shotNalan,
+    summary:
+      "A franchise-enquiry site rather than a menu site. The whole structure funnels toward one action: getting prospective franchisees to submit their details.",
+    stack: ["Lead capture", "Landing pages", "SEO"],
   },
   {
-    name: "Achieve",
-    sector: "Education",
-    art: "waves" as const,
-    stack: ["Landing pages", "Lead capture", "SEO"],
-    note: "A page-per-programme structure that ranks individually and funnels into one enquiry system.",
+    name: "PVP Inn",
+    url: "https://pvpinn.com/",
+    sector: "Hospitality — Arani",
+    image: shotPvpinn,
+    summary:
+      "A hotel and events venue that needed to look credible before anyone would call. Rooms, hall and amenities laid out so a booking decision takes one scroll.",
+    stack: ["Local SEO", "Enquiry flow", "Gallery"],
+  },
+  {
+    name: "Florastra Herbal",
+    url: "https://florastraherbal.com/",
+    sector: "Organic skincare — Retail",
+    image: shotFlorastra,
+    summary:
+      "Chemical-free skincare sold on trust. Ingredient storytelling sits alongside the product grid so the claims land before the price does.",
+    stack: ["WooCommerce", "Content", "Product SEO"],
+  },
+  {
+    name: "Paary Sweets",
+    url: "https://paarysweets.com/",
+    sector: "Sweets & bakery — E-commerce",
+    image: shotPaary,
+    summary:
+      "A traditional sweets and bakery range brought online with appetite-first photography and categories that mirror how people actually shop in store.",
+    stack: ["Storefront", "Categories", "Checkout"],
+  },
+  {
+    name: "Sai Anjali Events",
+    url: "https://saianjalievents.in/",
+    sector: "Event management — Arani",
+    image: shotSaianjali,
+    summary:
+      "Two decades of weddings and celebrations, finally documented. A portfolio-led site where past work does the selling and the enquiry form is never far away.",
+    stack: ["Portfolio", "Enquiry flow", "Local SEO"],
+  },
+  {
+    name: "Rathna Aromatics",
+    url: "https://rathnaaromaticsexporters.com/",
+    sector: "Incense & exports — B2B",
+    image: shotRathna,
+    summary:
+      "An exporter site built for buyers, not browsers. Product specifications, certifications and bulk enquiry paths are the priority throughout.",
+    stack: ["B2B catalogue", "Export enquiry", "Specs"],
   },
 ];
 
@@ -90,7 +143,8 @@ function WebProductionPage() {
           </>
         }
         copy="Fast, accessible, mobile-first builds where the engineering serves the business case. Performance budgets and conversion tracking are part of the build, not a retrofit."
-        art="grid"
+        image={webHero}
+        imageAlt="Devices displaying a responsive website build"
       />
 
       {/* ─── Build specs ─── */}
@@ -112,54 +166,21 @@ function WebProductionPage() {
         </div>
       </section>
 
-      {/* ─── Recent builds ─── */}
+      {/* ─── Live client builds: pinned media, scrolling copy ─── */}
       <section className="px-5 md:px-6 py-16 md:py-24 bg-muted/30 border-y border-foreground/[0.06]">
         <div className="max-w-[1128px] mx-auto">
-          <Reveal className="mb-10 md:mb-14 flex flex-col gap-4">
-            <Eyebrow>Recent builds</Eyebrow>
+          <Reveal className="mb-10 md:mb-16 flex flex-col gap-4">
+            <Eyebrow>Live builds</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tighter uppercase leading-[1.05] max-w-2xl">
-              Three problems, three very different structures
+              Seven sites, seven different jobs to do
             </h2>
+            <p className="max-w-xl text-sm md:text-base font-light text-foreground/60 leading-relaxed">
+              Storefronts, franchise funnels, B2B catalogues and venue sites — every one live today.
+              Scroll to walk through them.
+            </p>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {builds.map((b, i) => (
-              <Reveal key={b.name} delay={i * 0.08}>
-                <article
-                  className={`group h-full flex flex-col gap-5 p-5 rounded-3xl ${CARD} transition-colors hover:border-brand/40`}
-                >
-                  <div className="relative overflow-hidden rounded-2xl aspect-[4/3] bg-muted">
-                    <WorkArt
-                      variant={b.art}
-                      label={b.name}
-                      className="w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.2,1,0.3,1)] group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-3 px-1 pb-1">
-                    <div className="flex flex-col gap-1">
-                      <h3 className="text-xl font-extrabold tracking-tight">{b.name}</h3>
-                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/40">
-                        ///{b.sector}
-                      </span>
-                    </div>
-                    <p className="text-sm font-light leading-relaxed text-foreground/60">
-                      {b.note}
-                    </p>
-                    <div className="flex flex-wrap gap-2 pt-1">
-                      {b.stack.map((s) => (
-                        <span
-                          key={s}
-                          className="px-2.5 py-1 rounded-full border border-foreground/10 text-[9px] font-bold uppercase tracking-widest text-foreground/50"
-                        >
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
+          <ClientScrollStory projects={projects} />
         </div>
       </section>
 

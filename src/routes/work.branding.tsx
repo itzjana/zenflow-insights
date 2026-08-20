@@ -3,6 +3,7 @@ import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
 import { WorkArt } from "@/components/WorkArt";
+import brandingHero from "@/assets/img/work-branding-hero.webp";
 import { WorkHero, WorkCTA, Eyebrow, CARD } from "@/components/work/WorkPageParts";
 import {
   Carousel,
@@ -92,7 +93,8 @@ function BrandingPage() {
           </>
         }
         copy="A logo is the smallest part of it. We build the whole system — colour, type, layout and voice — so your brand stays recognisable on a billboard, a business card and a 40px avatar."
-        art="layers"
+        image={brandingHero}
+        imageAlt="Brand identity system laid out flat"
       />
 
       {/* ─── Carousel of identity work ─── */}

@@ -10,8 +10,12 @@ import { FloatingObject } from "@/components/FloatingObject";
 import { CountUp } from "@/components/CountUp";
 import { ArrowUpRight } from "lucide-react";
 import { CaseStudies } from "@/components/CaseStudies";
-import bgImage from "@/assets/bg.png";
-
+import homeBanner from "@/assets/img/home-banner.webp";
+import cardBranding from "@/assets/img/card-branding.webp";
+import cardMarketing from "@/assets/img/card-marketing.webp";
+import cardWeb from "@/assets/img/card-web.webp";
+import cardGraphicDesign from "@/assets/img/card-graphic-design.webp";
+import mobileHero from "@/assets/img/mobile-hero.webp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -76,23 +80,28 @@ const services = [
 const GRAPHIC_DESIGN_DRIVE_URL = "#";
 
 const portfolio: PortfolioItem[] = [
-  { name: "Branding", tag: "Identity & Visual Systems", art: "layers", href: "/work/branding" },
+  {
+    name: "Branding",
+    tag: "Identity & Visual Systems",
+    image: cardBranding,
+    href: "/work/branding",
+  },
   {
     name: "Digital Marketing",
     tag: "Performance & Growth",
-    art: "spectrum",
+    image: cardMarketing,
     href: "/work/digital-marketing",
   },
   {
     name: "Web Production",
     tag: "Design & Engineering",
-    art: "grid",
+    image: cardWeb,
     href: "/work/web-production",
   },
   {
     name: "Graphic Design",
     tag: "Creative Archive",
-    art: "type",
+    image: cardGraphicDesign,
     href: GRAPHIC_DESIGN_DRIVE_URL,
     external: true,
   },
@@ -329,41 +338,46 @@ function Home() {
       </section>
 
       {/* ═══════ MOBILE HERO ═══════
-          Full-bleed image card with the copy anchored to the bottom over a gradient
-          scrim, so the type stays legible whatever the photo underneath is doing. */}
-      <section className="lg:hidden bg-background px-4 pt-24 pb-10">
-        <Reveal>
-          <div className="relative flex min-h-[78vh] flex-col justify-end overflow-hidden rounded-[2rem]">
-            {/* Scrim: opaque at the base for the copy, clearing toward the top */}
-            <div className="absolute inset-0 bg-linear-to-t from-brand-deep via-brand-deep/70 to-transparent" />
+          Full-viewport image, edge to edge, with the copy anchored to the bottom over a
+          gradient scrim so the type stays legible whatever the photo is doing. The nav
+          drops to transparent over this section. */}
+      <section className="lg:hidden relative flex min-h-dvh flex-col justify-end overflow-hidden bg-brand-deep">
+        <img
+          src={mobileHero}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        {/* Scrim: solid at the base for the copy, clearing toward the nav */}
+        <div className="absolute inset-0 bg-linear-to-t from-brand-deep via-brand-deep/70 to-brand-deep/20" />
 
-            <div className="relative flex flex-col gap-4 p-6 pb-8 text-white">
-              <span className="font-serif text-base italic text-white/75">
-                Trusted by 100+ brands
+        <Reveal className="relative z-10 px-6 pt-28 pb-14">
+          <div className="flex flex-col gap-4 text-white">
+            <span className="font-serif text-base italic text-white/75">
+              Trusted by 100+ brands
+            </span>
+
+            <h1 className="text-[2.4rem] font-extrabold leading-[1.02] tracking-tighter">
+              Turn attention
+              <br />
+              into{" "}
+              <span className="font-serif italic font-semibold tracking-tight text-accent">
+                enquiries.
               </span>
+            </h1>
 
-              <h1 className="text-[2.4rem] font-extrabold leading-[1.02] tracking-tighter">
-                Turn attention
-                <br />
-                into{" "}
-                <span className="font-serif italic font-semibold tracking-tight text-accent">
-                  enquiries.
-                </span>
-              </h1>
+            <p className="max-w-xs text-sm font-light leading-relaxed text-white/70">
+              Branding, websites and campaigns built as one system — so the right people find you,
+              trust you, and get in touch.
+            </p>
 
-              <p className="max-w-xs text-sm font-light leading-relaxed text-white/70">
-                Branding, websites and campaigns built as one system — so the right people find you,
-                trust you, and get in touch.
-              </p>
-
-              <Link
-                to="/contact"
-                className="mt-2 inline-flex h-13 w-fit items-center gap-2.5 rounded-full bg-accent px-7 text-sm font-bold text-accent-foreground"
-              >
-                Start a project
-                <ArrowUpRight className="size-4" />
-              </Link>
-            </div>
+            <Link
+              to="/contact"
+              className="mt-2 inline-flex h-13 w-fit items-center gap-2.5 rounded-full bg-accent px-7 text-sm font-bold text-accent-foreground"
+            >
+              Start a project
+              <ArrowUpRight className="size-4" />
+            </Link>
           </div>
         </Reveal>
       </section>
@@ -465,7 +479,7 @@ function Home() {
       <section
         className="relative py-24 md:py-32 px-6 md:px-10 text-white overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(${bgImage})`,
+          backgroundImage: `url(${homeBanner})`,
         }}
       >
         {" "}

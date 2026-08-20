@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
-import { WorkArt, type ArtVariant } from "@/components/WorkArt";
+import { type ArtVariant } from "@/components/WorkArt";
 
 /** Shared surface treatment, matching the About page. */
 export const CARD = "bg-muted/60 border border-foreground/[0.07]";
@@ -20,11 +20,15 @@ type HeroProps = {
   eyebrow: string;
   title: ReactNode;
   copy: string;
-  art: ArtVariant;
+  /** Retained for callers that have no photograph yet. */
+  art?: ArtVariant;
+  /** Imported image URL for the hero panel. */
+  image?: string;
+  imageAlt?: string;
 };
 
 /** Split hero shared by every work detail page. */
-export function WorkHero({ eyebrow, title, copy, art }: HeroProps) {
+export function WorkHero({ eyebrow, title, copy, image, imageAlt }: HeroProps) {
   return (
     <section className="px-5 md:px-6 pt-32 md:pt-40 pb-16 md:pb-24 overflow-hidden">
       <div className="max-w-[1128px] mx-auto grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-10 lg:gap-16 items-center">
@@ -64,8 +68,15 @@ export function WorkHero({ eyebrow, title, copy, art }: HeroProps) {
         <Reveal delay={0.12}>
           <div className="relative">
             <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-brand/10 blur-3xl" />
-            <div className="relative aspect-[440/460] w-full rounded-[20px] overflow-hidden border border-foreground/10">
-              <WorkArt variant={art} className="w-full h-full" />
+            <div className="relative aspect-[440/460] w-full rounded-[20px] overflow-hidden border border-foreground/10 bg-muted">
+              {image ? (
+                <img
+                  src={image}
+                  alt={imageAlt ?? ""}
+                  loading="eager"
+                  className="h-full w-full object-cover"
+                />
+              ) : null}
             </div>
           </div>
         </Reveal>

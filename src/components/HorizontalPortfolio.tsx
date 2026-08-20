@@ -2,13 +2,16 @@ import { useEffect, useRef, useCallback } from "react";
 import { Link } from "@tanstack/react-router";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { WorkArt, type ArtVariant } from "@/components/WorkArt";
+import { type ArtVariant } from "@/components/WorkArt";
 import { useNavClearance } from "@/hooks/useNavClearance";
 
 export type PortfolioItem = {
   name: string;
   tag: string;
-  art: ArtVariant;
+  /** Kept for cards that still fall back to generated art. */
+  art?: ArtVariant;
+  /** Imported cover image. */
+  image?: string;
   /** Internal route path, or an absolute URL for an external destination. */
   href: string;
   /** Absolute URLs open in a new tab and get an ↗ affordance. */
@@ -143,11 +146,14 @@ export function HorizontalPortfolio({ items, heading = "Selected Work" }: Props)
                       outline outline-foreground/5
                     "
                   >
-                    <WorkArt
-                      variant={it.art}
-                      label={it.name}
-                      className="w-full h-full object-cover transition-transform duration-800 ease-[cubic-bezier(0.2,1,0.3,1)] group-hover:scale-110 will-change-transform"
-                    />
+                    {it.image ? (
+                      <img
+                        src={it.image}
+                        alt={it.name}
+                        loading={i === 0 ? "eager" : "lazy"}
+                        className="w-full h-full object-cover transition-transform duration-800 ease-[cubic-bezier(0.2,1,0.3,1)] group-hover:scale-110 will-change-transform"
+                      />
+                    ) : null}
                     <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-background/70 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest">
                       {String(i + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}
                     </div>

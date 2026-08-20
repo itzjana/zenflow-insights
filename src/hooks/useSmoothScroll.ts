@@ -6,6 +6,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 let lenis: Lenis | null = null;
 let registered = false;
 
+/** The live Lenis instance, or null when smooth scrolling is off (reduced motion). */
+export function getLenis() {
+  return lenis;
+}
+
 export function useSmoothScroll() {
   useEffect(() => {
     if (typeof window === "undefined") return;

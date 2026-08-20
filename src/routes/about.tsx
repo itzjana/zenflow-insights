@@ -3,6 +3,7 @@ import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
 import { CountUp } from "@/components/CountUp";
+import studioCard from "@/assets/img/studio-card.webp";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -149,31 +150,34 @@ function About() {
             <Reveal>
               <div className="relative">
                 <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-brand/10 blur-3xl" />
-                <div className="relative aspect-[350/460] lg:aspect-[532/620] w-full rounded-[20px] overflow-hidden border border-foreground/10 bg-linear-to-br from-brand/25 via-muted to-background flex flex-col items-center justify-center gap-8 px-8">
+                <div className="relative aspect-[350/460] lg:aspect-[532/620] w-full rounded-[20px] overflow-hidden border border-foreground/10 bg-muted">
                   <img
-                    src="/logo.svg"
-                    alt="Zencyp"
-                    className="w-40 md:w-52 opacity-90 select-none"
+                    src={studioCard}
+                    alt="Inside the Zencyp studio"
+                    className="absolute inset-0 h-full w-full object-cover"
                   />
-                  <div className="flex flex-wrap justify-center gap-2">
+                  {/* Scrim so the badges and chips stay readable over the photo */}
+                  <div className="absolute inset-0 bg-linear-to-t from-brand-deep/85 via-brand-deep/25 to-brand-deep/40" />
+
+                  <div className="absolute inset-x-6 bottom-24 flex flex-wrap justify-center gap-2">
                     {studio.disciplines.map((d) => (
                       <span
                         key={d}
-                        className="px-3 py-1 rounded-full bg-background/70 backdrop-blur-md border border-foreground/10 text-[10px] font-bold uppercase tracking-widest text-foreground/60"
+                        className="px-3 py-1 rounded-full bg-white/12 backdrop-blur-md border border-white/25 text-[10px] font-bold uppercase tracking-widest text-white/85"
                       >
                         {d}
                       </span>
                     ))}
                   </div>
 
-                  <div className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2.5 rounded-full bg-background/80 backdrop-blur-md border border-foreground/10 text-xs font-bold">
-                    <span className="size-1.5 rounded-full bg-brand animate-pulse" />
+                  <div className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2.5 rounded-full bg-brand-deep/80 backdrop-blur-md border border-white/20 text-xs font-bold text-white">
+                    <span className="size-1.5 rounded-full bg-accent animate-pulse" />
                     The agency
                   </div>
 
-                  <div className="absolute bottom-6 left-6 right-6 flex items-center gap-3 px-4.5 py-3.5 rounded-2xl bg-background/80 backdrop-blur-md border border-foreground/10">
-                    <span className="size-2 rounded-full bg-brand shrink-0" />
-                    <span className="text-xs font-medium text-foreground/70 leading-snug">
+                  <div className="absolute bottom-6 left-6 right-6 flex items-center gap-3 px-4.5 py-3.5 rounded-2xl bg-brand-deep/80 backdrop-blur-md border border-white/20">
+                    <span className="size-2 rounded-full bg-accent shrink-0" />
+                    <span className="text-xs font-medium text-white/80 leading-snug">
                       Based in {studio.basedIn} — working with brands across India
                     </span>
                   </div>

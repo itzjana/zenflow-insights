@@ -28,8 +28,22 @@ export function SiteNav() {
   const itemsRef = useRef<HTMLUListElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
 
+  const [scrolled, setScrolled] = useState(false);
+
   const routerState = useRouterState();
   const currentPath = routerState.location.pathname;
+
+  /* Mobile only, and only on the home route: the mobile hero is a full-bleed dark
+     image, so the bar can drop away over it. Every other hero is white — white links
+     there would vanish — and the desktop pill stays solid by design. */
+  const transparentBar = currentPath === "/" && !scrolled;
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -81,7 +95,6 @@ export function SiteNav() {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   // Close the desktop dropdown on outside click or Escape
@@ -113,7 +126,7 @@ export function SiteNav() {
       <nav className="hidden md:block fixed top-4 left-1/2 z-50 w-[98vw] max-w-7xl -translate-x-1/2 rounded-full border border-white/20 bg-brand px-6 py-3 shadow-[0_28px_70px_rgba(10,46,51,0.35)]">
         <div className="relative flex items-center justify-between gap-6 min-h-14">
           <Link to="/" className="flex items-center shrink-0">
-            <img src={logoPath} alt="Zencyp" className="h-12 w-auto object-contain" />
+            <img src={logoPath} alt="Zencyp" className="h-8 w-auto object-contain" />
           </Link>
 
           <div className="flex items-center gap-7">
@@ -126,18 +139,29 @@ export function SiteNav() {
                   onMouseEnter={() => setServicesOpen(true)}
                   onMouseLeave={() => setServicesOpen(false)}
                 >
-                  <button
-                    type="button"
-                    aria-expanded={servicesOpen}
-                    aria-haspopup="true"
-                    onClick={() => setServicesOpen((v) => !v)}
-                    className={`${linkCls(isActive(link.to))} inline-flex items-center gap-1.5 cursor-pointer`}
-                  >
-                    {link.label}
-                    <ChevronDown
-                      className={`size-4 transition-transform duration-300 ${servicesOpen ? "rotate-180" : ""}`}
-                    />
-                  </button>
+                  {/* The label navigates to /services; the chevron only opens the menu,
+                      so keyboard users can reach the sub-items without leaving the page. */}
+                  <span className="inline-flex items-center gap-1.5">
+                    <Link
+                      to={link.to}
+                      onClick={() => setServicesOpen(false)}
+                      className={linkCls(isActive(link.to))}
+                    >
+                      {link.label}
+                    </Link>
+                    <button
+                      type="button"
+                      aria-expanded={servicesOpen}
+                      aria-haspopup="true"
+                      aria-label="Show services menu"
+                      onClick={() => setServicesOpen((v) => !v)}
+                      className={`cursor-pointer ${isActive(link.to) ? "text-accent" : "text-white/75 hover:text-white"}`}
+                    >
+                      <ChevronDown
+                        className={`size-4 transition-transform duration-300 ${servicesOpen ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                  </span>
 
                   {servicesOpen && (
                     <div className="absolute left-1/2 top-full w-72 -translate-x-1/2 pt-4">
@@ -193,9 +217,22 @@ export function SiteNav() {
       </nav>
 
       {/* Mobile bar */}
-      <nav className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between gap-4 border-b border-white/15 bg-brand px-4 py-3 shadow-sm">
+      <nav
+        className={`md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between gap-4 px-4 py-3 transition-colors duration-500 ${
+          transparentBar
+            ? "border-b border-transparent bg-transparent"
+            : "border-b border-white/15 bg-brand shadow-sm"
+        }`}
+      >
+        {/* Keeps the white mark and menu button readable over a bright photo */}
+        {transparentBar && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-black/45 to-transparent"
+          />
+        )}
         <Link to="/" className="flex items-center gap-3">
-          <img src={logoPath} alt="Zencyp" className="h-11 w-auto object-contain" />
+          <img src={logoPath} alt="Zencyp" className="h-7 w-auto object-contain" />
         </Link>
 
         <button
