@@ -31,6 +31,25 @@
   }
 }
 
+/* The section title parks under the fixed nav using real CSS sticky.
+   This was previously a per-frame translate3d written from the scroll handler, which on
+   phones ran a frame or more behind the compositor's own scrolling: the title visibly
+   wobbled during a fast swipe and dragged the apparent position of the whole card pile
+   with it. Sticky is resolved on the compositor, so it cannot fall behind. */
+.scroll-stack-title {
+  position: sticky;
+  top: var(--stack-sticky-top, 96px);
+}
+
+/* backdrop-filter on a element that moves every frame is one of the most expensive
+   things a phone GPU can be asked to do, and the dropped frames read as judder. Opaque
+   background on small screens, blur only where there is headroom for it. */
+@media (max-width: 767px) {
+  .scroll-stack-title {
+    backdrop-filter: none;
+  }
+}
+
 /* Never transformed — used as a stable reference to detect page-level layout shifts */
 .scroll-stack-anchor {
   width: 100%;

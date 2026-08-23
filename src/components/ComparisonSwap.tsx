@@ -19,13 +19,15 @@ type Props = {
 };
 
 /**
- * "What most agencies do" against "what we do", as two halves the reader can pull focus
- * between. The centre control swaps them; either panel can also be brought forward by
- * clicking it.
+ * "What most agencies do" against "what we do".
  *
- * Both panels stay in the DOM at every breakpoint, including the one hidden on phones —
- * a crawler has to be able to read the whole comparison, so this deliberately avoids
- * conditional rendering and hides with CSS instead.
+ * Below lg only one half is on screen and a centre control swaps between them, because
+ * two columns of six lines each is more than a phone can show at once. From lg up both
+ * sit side by side at equal width with no control — the original static comparison.
+ *
+ * Both halves stay in the DOM at every breakpoint, including the one hidden on phones: a
+ * crawler has to be able to read the whole comparison, so this hides with CSS rather
+ * than mounting conditionally.
  */
 export function ComparisonSwap({
   eyebrow = "The difference",
@@ -61,20 +63,8 @@ export function ComparisonSwap({
         </Reveal>
 
         <div className="relative flex flex-col gap-5 lg:flex-row lg:items-stretch lg:gap-6">
-          <Panel
-            side="them"
-            label={themLabel}
-            items={them}
-            focused={focus === "them"}
-            onFocus={() => setFocus("them")}
-          />
-          <Panel
-            side="us"
-            label={usLabel}
-            items={us}
-            focused={focus === "us"}
-            onFocus={() => setFocus("us")}
-          />
+          <Panel side="them" label={themLabel} items={them} focused={focus === "them"} />
+          <Panel side="us" label={usLabel} items={us} focused={focus === "us"} />
 
           {/* Swap control. Centred between the halves on desktop; on phones it straddles
               the bottom edge of the visible card so it never sits on top of the copy. */}
@@ -82,7 +72,7 @@ export function ComparisonSwap({
             type="button"
             onClick={swap}
             aria-label={focus === "us" ? `Show ${themLabel}` : `Show ${usLabel}`}
-            className="absolute left-1/2 z-20 grid size-12 -translate-x-1/2 place-items-center rounded-full border border-accent/40 bg-brand-deep text-accent shadow-[0_10px_30px_rgba(0,0,0,0.45)] transition-transform duration-500 hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent max-lg:bottom-0 max-lg:translate-y-1/2 lg:top-1/2 lg:-translate-y-1/2"
+            className="absolute bottom-0 left-1/2 z-20 grid size-12 -translate-x-1/2 translate-y-1/2 place-items-center rounded-full border border-accent/40 bg-brand-deep text-accent shadow-[0_10px_30px_rgba(0,0,0,0.45)] transition-transform duration-500 hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent lg:hidden"
           >
             <ArrowLeftRight
               className={`size-5 transition-transform duration-500 ${
@@ -105,21 +95,21 @@ function Panel({
   label,
   items,
   focused,
-  onFocus,
 }: {
   side: Side;
   label: string;
   items: string[];
   focused: boolean;
-  onFocus: () => void;
 }) {
   const isUs = side === "us";
   return (
     <div
       // Only the focused half is on screen below lg; from lg up both show and the
       // focused one simply takes more of the row.
-      className={`relative min-w-0 transition-[flex-basis,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] lg:flex-1 ${
-        focused ? "lg:basis-[58%]" : "max-lg:hidden lg:basis-[42%] lg:opacity-60"
+      // From lg up both halves are equal and always lit; the focus state only drives
+      // the phone layout, where one of them is off screen.
+      className={`relative min-w-0 lg:flex-1 lg:basis-1/2 lg:opacity-100 ${
+        focused ? "" : "max-lg:hidden"
       }`}
     >
       <div
@@ -158,17 +148,6 @@ function Panel({
           ))}
         </ul>
       </div>
-
-      {/* Clicking anywhere on an unfocused half brings it forward. Rendered as a sibling
-          overlay rather than wrapping the content, so the list stays outside a button. */}
-      {!focused && (
-        <button
-          type="button"
-          onClick={onFocus}
-          aria-label={`Show ${label}`}
-          className="absolute inset-0 z-10 hidden rounded-3xl lg:block"
-        />
-      )}
     </div>
   );
 }

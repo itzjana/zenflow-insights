@@ -17,7 +17,15 @@ export type ProcessStep = {
 type Props = { steps: ProcessStep[]; eyebrow?: string; heading?: React.ReactNode };
 
 /** Extra viewport-heights of scroll granted per step. Higher = slower advance. */
-const SCROLL_PER_STEP = 0.9;
+const SCROLL_PER_STEP = 1.35;
+/**
+ * Share of a single step spent handing over to the next one.
+ *
+ * The rest of the step is a plateau where exactly one panel is at full opacity. Keep this
+ * small: while it runs, two panels are on screen at once, and since they are stacked on
+ * top of each other any generous value means reading two headings superimposed.
+ */
+const HANDOVER = 0.2;
 
 /**
  * Scroll-telling process stage.
@@ -63,20 +71,40 @@ export function ProcessScrollStage({ steps, eyebrow = "Process", heading }: Prop
     };
 
     const apply = (progress: number) => {
-      // Position along the whole sequence, e.g. 1.4 = 40% of the way from step 2 to 3
-      const pos = Math.min(count - 1, Math.max(0, progress * count - 0.5));
-      const active = Math.round(pos);
+      /* Position along the whole sequence, e.g. 1.4 = 40% of the way from step 2 to 3.
+         No offset here on purpose: subtracting half a step gave the first step a dwell
+         two and a half times the last one's. */
+      const pos = Math.min(count - 1, Math.max(0, progress * count));
+
+      /* Split into "which step" and "how far through it". Only that step and the one
+         after it are ever on screen, and only during the handover at the very end of the
+         step — everywhere else exactly one panel is visible, so the copy is never read
+         through another panel's copy. */
+      const base = Math.min(count - 1, Math.floor(pos));
+      const through = pos - base;
+      const plateau = 1 - HANDOVER;
+      const t = through <= plateau ? 0 : (through - plateau) / HANDOVER;
 
       panels.forEach((panel, i) => {
-        const d = pos - i;
-        const dist = Math.abs(d);
-        // Only the nearest panel is legible; neighbours slide away and fade out
-        const opacity = dist >= 1 ? 0 : 1 - dist;
+        let opacity = 0;
+        let shift = 0;
+        if (i === base) {
+          // Outgoing: holds at full opacity, then lifts away
+          opacity = 1 - t;
+          shift = t * -26;
+        } else if (i === base + 1) {
+          // Incoming: rises into place as the outgoing one leaves
+          opacity = t;
+          shift = (1 - t) * 26;
+        }
         panel.style.opacity = `${opacity}`;
-        panel.style.transform = `translate3d(0, ${d * -22}px, 0)`;
-        panel.style.pointerEvents = dist < 0.5 ? "auto" : "none";
-        panel.setAttribute("aria-hidden", dist < 0.5 ? "false" : "true");
+        panel.style.transform = `translate3d(0, ${Math.round(shift * 10) / 10}px, 0)`;
+        const shown = opacity > 0.5;
+        panel.style.pointerEvents = shown ? "auto" : "none";
+        panel.setAttribute("aria-hidden", shown ? "false" : "true");
       });
+
+      const active = t > 0.5 ? Math.min(count - 1, base + 1) : base;
 
       rails.forEach((rail, i) => {
         rail.style.transform = `scaleX(${i <= active ? 1 : 0})`;

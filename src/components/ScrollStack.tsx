@@ -193,9 +193,10 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 
     if (titleEl) {
       hasTitleRef.current = true;
-      // Clear transform temporarily to get true natural position
-      const prevTransform = titleEl.style.transform;
-      titleEl.style.transform = "none";
+      // Suspend sticky so the rect reports the title's place in the flow rather than
+      // wherever it is currently parked.
+      const prevPosition = titleEl.style.position;
+      titleEl.style.position = "static";
       const titleRect = titleEl.getBoundingClientRect();
       titleHeightRef.current = titleRect.height;
       if (useWindowScroll) {
@@ -211,7 +212,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
             cardTopsRef.current[0] - (titleNaturalTopRef.current + titleHeightRef.current),
           )
         : 0;
-      titleEl.style.transform = prevTransform;
+      titleEl.style.position = prevPosition;
     } else {
       hasTitleRef.current = false;
       titleHeightRef.current = 0;
@@ -228,6 +229,9 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 
     const containerHeight = useWindowScroll ? window.innerHeight : (scroller?.clientHeight ?? 0);
     containerHeightRef.current = containerHeight;
+
+    // The title's park position is a CSS variable so the browser owns the pinning.
+    innerRef.current?.style.setProperty("--stack-sticky-top", `${stickyTopRef.current}px`);
 
     stackPositionPxRef.current = hasTitleRef.current
       ? stickyTopRef.current + titleHeightRef.current + titleGapRef.current
@@ -282,24 +286,11 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       }
     }
 
-    const stickyTop = stickyTopRef.current;
     const stackPositionPx = stackPositionPxRef.current;
     const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
 
     const endElementTop = endElementTopRef.current;
     const pinEnd = endElementTop - containerHeight / 2;
-
-    // Title: scrolls normally, parks just under the nav while the cards stack, then
-    // freezes with the pile so the whole section leaves together.
-    const titleEl = titleRef.current;
-    if (titleEl && hasTitleRef.current) {
-      const titleNaturalTop = titleNaturalTopRef.current;
-      const titleTranslateY = Math.max(
-        0,
-        Math.min(scrollTop, pinEnd) - titleNaturalTop + stickyTop,
-      );
-      titleEl.style.transform = `translate3d(0, ${Math.round(titleTranslateY * 100) / 100}px, 0)`;
-    }
 
     cardsRef.current.forEach((card, i) => {
       if (!card) return;
@@ -574,8 +565,9 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         {header && (
           <div
             ref={titleRef}
-            className="scroll-stack-title relative z-30 bg-background/90 backdrop-blur-md py-6 mb-12 border-b border-foreground/5"
-            style={{ willChange: "transform" }}
+            // Sticky positioning and the mobile blur override live in ScrollStack.css.
+            // Opaque background below md; translucent + blurred where it is affordable.
+            className="scroll-stack-title z-30 border-b border-foreground/5 bg-background py-6 mb-12 md:bg-background/90 md:backdrop-blur-md"
           >
             {header}
           </div>

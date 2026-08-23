@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
 import { ComparisonSwap } from "@/components/ComparisonSwap";
 import { FlowBeamGraph } from "@/components/FlowBeamGraph";
-import { ProgressiveCarousel } from "@/components/ProgressiveCarousel";
+import { CapabilityShowcase } from "@/components/CapabilityShowcase";
 import { ProcessScrollStage } from "@/components/ProcessScrollStage";
 import { MagneticButton } from "@/components/MagneticButton";
 import {
@@ -341,41 +341,71 @@ function Services() {
             </h2>
           </Reveal>
 
-          <FlowBeamGraph
-            stages={systemFlow}
-            outcome="Five stages, one loop. Every stage is measured, so we can tell which one is costing you money."
-          />
+          {/* Phones get the scroll-drawn beam; from md up this is the original chain. */}
+          <div className="md:hidden">
+            <FlowBeamGraph
+              stages={systemFlow}
+              outcome="Five stages, one loop. Every stage is measured, so we can tell which one is costing you money."
+            />
+          </div>
+
+          <Reveal delay={0.08} className="hidden md:block">
+            <ol className="flex flex-col gap-3 md:flex-row md:items-stretch md:gap-2">
+              {systemFlow.map((s, i) => (
+                <li key={s.label} className="flex min-w-0 items-center gap-3 md:flex-1 md:gap-2">
+                  <div className="flex h-full flex-1 flex-col gap-2 rounded-2xl border border-foreground/[0.07] bg-background p-5">
+                    <span className="text-[10px] font-bold tabular-nums text-brand">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-sm font-extrabold leading-snug tracking-tight">
+                      {s.label}
+                    </span>
+                  </div>
+                  {i < systemFlow.length - 1 && (
+                    <span
+                      aria-hidden
+                      className="shrink-0 rotate-90 text-lg text-foreground/25 md:rotate-0"
+                    >
+                      →
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </Reveal>
         </div>
       </section>
 
-      {/* ═══════ CAPABILITIES — auto-advancing slider ═══════ */}
+      {/* ═══════ CAPABILITIES — sticky heading, cards beside it ═══════ */}
       <section className="px-6 py-20 md:px-10 md:py-28">
-        <div className="mx-auto max-w-[1128px]">
-          <Reveal className="mb-10 flex flex-col gap-5 md:mb-14 lg:flex-row lg:items-end lg:justify-between">
-            <div className="flex flex-col gap-4">
-              <span className="flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em]">
-                <span className="size-2 rounded-full bg-brand" /> Capabilities
-              </span>
-              <h2 className="text-3xl font-extrabold uppercase leading-[1.05] tracking-tighter md:text-5xl">
-                Core specialties
-              </h2>
-              <p className="max-w-md text-sm font-light leading-relaxed text-foreground/60 md:text-base">
-                Six disciplines that operate as one system. Most engagements start with two or three
-                and grow from there.
-              </p>
-            </div>
-            <Link
-              to="/contact"
-              className="inline-flex h-12 shrink-0 items-center gap-2.5 self-start rounded-full bg-brand px-7 text-sm font-bold tracking-wide text-brand-foreground transition-transform duration-300 hover:-translate-y-0.5 lg:self-end"
-            >
-              Book a free strategy call
-              <ArrowRight className="size-4" />
-            </Link>
-          </Reveal>
+        <div className="mx-auto grid max-w-[1128px] grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
+          {/* Sticky column. top clears the fixed nav (98px) with breathing room. */}
+          <div className="lg:sticky lg:top-32">
+            <Reveal>
+              <div className="flex flex-col gap-4">
+                <span className="flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em]">
+                  <span className="size-2 rounded-full bg-brand" /> Capabilities
+                </span>
+                <h2 className="text-3xl font-extrabold uppercase leading-[1.05] tracking-tighter md:text-5xl">
+                  Core specialties
+                </h2>
+                <p className="max-w-md text-sm font-light leading-relaxed text-foreground/60 md:text-base">
+                  Six disciplines that operate as one system. Most engagements start with two or
+                  three and grow from there.
+                </p>
+                <Link
+                  to="/contact"
+                  className="mt-2 inline-flex h-12 items-center gap-2.5 self-start rounded-full bg-brand px-7 text-sm font-bold tracking-wide text-brand-foreground transition-transform duration-300 hover:-translate-y-0.5"
+                >
+                  Book a free strategy call
+                  <ArrowRight className="size-4" />
+                </Link>
+              </div>
+            </Reveal>
+          </div>
 
-          <Reveal delay={0.08}>
-            <ProgressiveCarousel slides={servicesPillars} />
-          </Reveal>
+          {/* Carousel below lg, full scrolling column from lg up */}
+          <CapabilityShowcase items={servicesPillars} />
         </div>
       </section>
 
