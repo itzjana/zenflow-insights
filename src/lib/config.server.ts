@@ -17,10 +17,19 @@ import process from "node:process";
 //     VITE_ prefix. Never put secrets here — they ship to the browser.
 
 export function getServerConfig() {
+  // Hostinger's own documented endpoint and port are the defaults, so a deploy
+  // only strictly needs the mailbox credentials set.
+  const smtpPort = Number(process.env.SMTP_PORT ?? 465);
+
   return {
     nodeEnv: process.env.NODE_ENV,
-    sendgridApiKey: process.env.SENDGRID_API_KEY,
-    sendgridFromEmail: process.env.SENDGRID_FROM_EMAIL,
-    sendgridToEmail: process.env.SENDGRID_TO_EMAIL,
+    smtpHost: process.env.SMTP_HOST ?? "smtp.hostinger.com",
+    smtpPort: Number.isFinite(smtpPort) ? smtpPort : 465,
+    smtpUser: process.env.SMTP_USER,
+    smtpPass: process.env.SMTP_PASS,
+    // The envelope sender must be the authenticated mailbox itself — Hostinger
+    // rejects a From that it does not host.
+    mailFrom: process.env.MAIL_FROM ?? process.env.SMTP_USER,
+    mailTo: process.env.MAIL_TO ?? process.env.SMTP_USER,
   };
 }

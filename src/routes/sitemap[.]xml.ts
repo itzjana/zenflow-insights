@@ -28,6 +28,10 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/work/branding", changefreq: "monthly", priority: "0.7" },
           { path: "/work/digital-marketing", changefreq: "monthly", priority: "0.7" },
           { path: "/work/web-production", changefreq: "monthly", priority: "0.7" },
+          { path: "/privacy-policy", changefreq: "monthly", priority: "0.3" },
+          { path: "/terms", changefreq: "monthly", priority: "0.3" },
+          { path: "/cookie-policy", changefreq: "monthly", priority: "0.3" },
+          { path: "/copyright", changefreq: "monthly", priority: "0.3" },
         ];
         const BASE_URL = origin;
         const urls = entries.map((e) =>

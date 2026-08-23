@@ -440,6 +440,24 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       card.style.setProperty("-webkit-perspective", "1000px");
     });
 
+    /* Mobile browsers collapse the URL bar while scrolling, which fires `resize` and
+       changes innerHeight. Remeasuring on that recomputes the stack padding, which
+       changes body height, which trips the ResizeObserver, which remeasures again — the
+       feedback loop that made this section vibrate on phones. Only a width change (or a
+       height jump big enough to be a rotation) is a real layout change. */
+    let lastW = window.innerWidth;
+    let lastH = window.innerHeight;
+    const viewportChanged = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const real = w !== lastW || Math.abs(h - lastH) > 160;
+      if (real) {
+        lastW = w;
+        lastH = h;
+      }
+      return real;
+    };
+
     let remeasureFrame: number | null = null;
     const remeasure = () => {
       remeasureFrame = null;
@@ -451,6 +469,10 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       if (remeasureFrame !== null) return;
       remeasureFrame = requestAnimationFrame(remeasure);
     };
+    /** Only remeasure when the viewport genuinely changed shape. */
+    const scheduleIfViewportChanged = () => {
+      if (viewportChanged()) scheduleRemeasure();
+    };
 
     measureOffsets();
     if (useWindowScroll) {
@@ -460,23 +482,30 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     }
     updateCardTransforms();
 
-    window.addEventListener("resize", scheduleRemeasure);
+    window.addEventListener("resize", scheduleIfViewportChanged);
     window.addEventListener("load", scheduleRemeasure);
     // Late layout shifts (images above the section, webfonts, hydration) would
     // otherwise leave the cached offsets pointing at the wrong scroll positions.
     document.fonts?.ready.then(scheduleRemeasure).catch(() => {});
 
     let observer: ResizeObserver | null = null;
+    let bodyObserver: ResizeObserver | null = null;
     if (typeof ResizeObserver !== "undefined") {
+      // Content-size changes inside the stack (webfonts, wrapping) are real and rare.
       observer = new ResizeObserver(scheduleRemeasure);
       if (innerRef.current) observer.observe(innerRef.current);
-      if (useWindowScroll) observer.observe(document.body);
+      // Body height, by contrast, moves every time the mobile URL bar slides.
+      if (useWindowScroll) {
+        bodyObserver = new ResizeObserver(scheduleIfViewportChanged);
+        bodyObserver.observe(document.body);
+      }
     }
 
     return () => {
       if (remeasureFrame !== null) cancelAnimationFrame(remeasureFrame);
       observer?.disconnect();
-      window.removeEventListener("resize", scheduleRemeasure);
+      bodyObserver?.disconnect();
+      window.removeEventListener("resize", scheduleIfViewportChanged);
       window.removeEventListener("load", scheduleRemeasure);
       if (useWindowScroll) {
         window.removeEventListener("scroll", handleScroll);

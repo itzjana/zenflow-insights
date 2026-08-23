@@ -1,23 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { seo, breadcrumbSchema } from "@/lib/seo";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ContactSteps } from "@/components/ContactSteps";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
-    meta: [
-      { title: "Contact Zencyp – Digital Marketing Agency Tamil Nadu" },
-      {
-        name: "description",
-        content:
-          "Ready to grow? Contact Zencyp today for a free consultation. Call +91 8056496547 or email info@zencyp.in. We look forward to helping your business succeed online!",
-      },
-      { property: "og:title", content: "Contact Zencyp – Digital Marketing Agency Tamil Nadu" },
-      {
-        property: "og:description",
-        content: "Start a project with Zencyp or schedule a free consultation.",
-      },
-    ],
+    ...seo({
+      title: "Contact Zencyp | Talk to a Digital Marketing Agency in Tamil Nadu",
+      description:
+        "Start a project with Zencyp. Call +91 80564 96547 or email contact@zencyp.in for SEO, Google Ads, Meta Ads, branding, video and web development enquiries.",
+      path: "/contact",
+      schema: [
+        breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Contact", path: "/contact" },
+        ]),
+      ],
+    }),
   }),
   component: Contact,
 });
@@ -84,10 +84,10 @@ function Contact() {
                   Email Us
                 </span>
                 <a
-                  href="mailto:info@zencyp.in"
+                  href="mailto:contact@zencyp.in"
                   className="block text-2xl md:text-3xl font-extrabold tracking-tight underline decoration-brand decoration-2 underline-offset-4 hover:text-brand transition-colors break-all"
                 >
-                  info@zencyp.in
+                  contact@zencyp.in
                 </a>
               </div>
 

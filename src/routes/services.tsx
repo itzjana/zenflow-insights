@@ -1,12 +1,12 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useMemo, useEffect, useRef } from "react";
+import { seo, serviceSchema, breadcrumbSchema, faqSchema } from "@/lib/seo";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
 import { ComparisonSection } from "@/components/ComparisonSection";
+import { ProcessScrollStage } from "@/components/ProcessScrollStage";
 import { MagneticButton } from "@/components/MagneticButton";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   Sparkles,
   Server,
@@ -18,29 +18,26 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
 export const Route = createFileRoute("/services")({
   head: () => ({
-    meta: [
-      { title: "Our Services – SEO, Web Dev, Social Media & More | Zencyp" },
-      {
-        name: "description",
-        content:
-          "Discover Zencyp’s services: web development, branding, SEO, PPC, social media, video, and graphic design. We craft solutions that elevate brands.",
-      },
-      {
-        property: "og:title",
-        content: "Our Services – SEO, Web Dev, Social Media & More | Zencyp",
-      },
-      {
-        property: "og:description",
-        content:
-          "Detailed services breakdown, interactive process roadmap, and marketing solutions from Zencyp.",
-      },
-    ],
+    ...seo({
+      title: "Digital Marketing Services | SEO, Google Ads, Meta Ads & Branding — Zencyp",
+      description:
+        "Explore Zencyp's services: search engine optimisation, Google Ads management, Meta Ads, branding, video production, content marketing, social media and web development for brands across India.",
+      path: "/services",
+      schema: [
+        serviceSchema(
+          "Digital Marketing Services",
+          "SEO, Google Ads, Meta Ads, branding, video production, content marketing and web development.",
+          "/services",
+        ),
+        breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+        ]),
+        faqSchema(faqs),
+      ],
+    }),
   }),
   component: Services,
 });
@@ -204,66 +201,9 @@ const faqs = [
 function Services() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const pathRef = useRef<SVGPathElement>(null);
-
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
   };
-
-  // Snake scroll timeline animations
-  useEffect(() => {
-    const el = containerRef.current;
-    const path = pathRef.current;
-    if (!el || !path) return;
-
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
-
-    const ctx = gsap.context(() => {
-      // 1. Snake stroke drawing setup
-      const pathLength = path.getTotalLength();
-      gsap.set(path, {
-        strokeDasharray: pathLength,
-        strokeDashoffset: pathLength,
-      });
-
-      // Animate path drawing on scroll
-      gsap.to(path, {
-        strokeDashoffset: 0,
-        ease: "none",
-        scrollTrigger: {
-          trigger: el,
-          start: "top 35%",
-          end: "bottom 70%",
-          scrub: 0.5,
-        },
-      });
-
-      // 2. Individual card scroll highlights
-      const cards = el.querySelectorAll(".process-card");
-      cards.forEach((card) => {
-        gsap.fromTo(
-          card,
-          { opacity: 0, y: 50, scale: 0.96 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.75,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 80%",
-              toggleActions: "play none none reverse",
-            },
-          },
-        );
-      });
-    }, el);
-
-    return () => ctx.revert();
-  }, []);
 
   return (
     <div className="bg-background text-foreground selection:bg-brand selection:text-brand-foreground font-sans">
@@ -499,86 +439,19 @@ function Services() {
         ]}
       />
 
-      {/* Engagement Workflow ("How it Works") with Snake Scroll Line */}
-      <section
-        ref={containerRef}
-        className="py-16 md:py-20 px-6 md:px-10 relative overflow-hidden border-b border-foreground/5"
-      >
-        {/* Animated Snake Path SVG (desktop only) */}
-        <div className="hidden md:block absolute left-1/2 -translate-x-1/2 top-32 bottom-16 w-32 z-0 pointer-events-none">
-          <svg
-            className="w-full h-full"
-            viewBox="0 0 100 1000"
-            fill="none"
-            preserveAspectRatio="none"
-          >
-            {/* Background path track */}
-            <path
-              d="M 50,0 C 20,150 20,150 50,280 C 80,410 80,410 50,540 C 20,670 20,670 50,800 C 80,930 80,930 50,1000"
-              className="stroke-foreground/10 stroke-[2.5]"
-            />
-            {/* Animated drawing line (snake) */}
-            <path
-              ref={pathRef}
-              d="M 50,0 C 20,150 20,150 50,280 C 80,410 80,410 50,540 C 20,670 20,670 50,800 C 80,930 80,930 50,1000"
-              className="stroke-brand stroke-[4.5]"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
-
-        <div className="max-w-7xl mx-auto relative z-10">
-          <Reveal className="mb-16 text-left">
-            <span className="text-xs font-bold uppercase tracking-[0.3em] flex items-center justify-start gap-4">
-              <span className="size-2 bg-brand rounded-full" /> Operational Workflow
+      {/* ─── Process: pinned stage, steps advance with scroll ─── */}
+      <ProcessScrollStage
+        steps={steps}
+        eyebrow="Work process"
+        heading={
+          <h2 className="max-w-2xl text-3xl font-extrabold uppercase leading-[1.05] tracking-tighter md:text-5xl">
+            How an engagement{" "}
+            <span className="border-b-4 border-accent font-serif font-semibold normal-case italic tracking-tight text-brand md:border-b-6">
+              actually runs
             </span>
-            <h2 className="mt-4 text-4xl md:text-6xl font-extrabold tracking-tighter uppercase">
-              Our Process
-            </h2>
-            <p className="mt-4 max-w-xl text-foreground/60 font-light">
-              How we onboard, execute, and deliver continuous digital growth.
-            </p>
-          </Reveal>
-
-          {/* Timeline Zigzag steps */}
-          <div className="space-y-12 md:space-y-16">
-            {steps.map((s, index) => {
-              const isEven = index % 2 === 0;
-              return (
-                <div key={s.n} className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                  {/* Left Column (shows card if even, empty on odd) */}
-                  <div className={`md:col-span-5 ${isEven ? "" : "md:order-2 md:col-start-8"}`}>
-                    <div
-                      className={`process-card bg-background border border-foreground/10 p-6 md:p-8 rounded-3xl hover:border-brand transition-all duration-500 flex flex-col justify-between min-h-[190px] group shadow-[0_20px_50px_-30px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_70px_-20px_rgba(192,255,0,0.1)]`}
-                    >
-                      <div>
-                        <div className="flex items-center justify-between border-b border-foreground/5 pb-4 mb-5">
-                          <span className="text-xs font-serif italic text-foreground/30">
-                            {s.phase}
-                          </span>
-                          <span className="text-sm font-extrabold text-brand group-hover:scale-110 transition-transform">
-                            {s.n}
-                          </span>
-                        </div>
-                        <h3 className="font-bold tracking-tight text-xl mb-3">{s.title}</h3>
-                        <p className="text-sm text-foreground/60 font-light leading-relaxed">
-                          {s.copy}
-                        </p>
-                      </div>
-                      <div className="mt-6 pt-3 border-t border-foreground/5 text-[10px] font-bold uppercase tracking-widest text-brand">
-                        {s.time}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Empty Spacer Column matching the timeline line */}
-                  <div className="hidden md:block md:col-span-2 md:order-1" />
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+          </h2>
+        }
+      />
 
       {/* FAQ Section */}
       <section className="py-24 md:py-32 px-6 md:px-10 bg-muted/20 border-t border-foreground/5">

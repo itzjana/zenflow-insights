@@ -96,12 +96,12 @@ export function SiteFooter() {
                 Contact
               </span>
               <a
-                href="mailto:info@zencyp.in"
+                href="mailto:contact@zencyp.in"
                 className="mt-5 block text-xl md:text-2xl font-extrabold tracking-tight transition-transform duration-300 hover:translate-x-1.5"
               >
-                info@zencyp.in
+                contact@zencyp.in
               </a>
-              <p className="mt-3 text-sm font-light text-foreground/60">Arani, Tamil Nadu, India</p>
+              <p className="mt-3 text-sm font-light text-foreground/60">Tamil Nadu, India</p>
               <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.25em] text-foreground/40">
                 Available Q3 '26
               </p>
@@ -155,11 +155,22 @@ export function SiteFooter() {
         </div>
 
         {/* Bottom legal */}
-        <div className="mt-6 md:mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-[0.25em] font-bold text-foreground/40">
-          <span>© 2026 Zencyp India — Precision Digital</span>
-          <span>
-            Crafted with intent. <span className="text-brand">●</span>
-          </span>
+        <div className="mt-6 md:mt-8 flex flex-col gap-4 border-t border-foreground/10 pt-6 text-[10px] uppercase tracking-[0.25em] font-bold text-foreground/40 md:flex-row md:items-center md:justify-between">
+          <span>© 2026 Zencyp Digital Solutions</span>
+          <nav aria-label="Legal" className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Link to="/privacy-policy" className="transition-colors hover:text-brand">
+              Privacy
+            </Link>
+            <Link to="/terms" className="transition-colors hover:text-brand">
+              Terms
+            </Link>
+            <Link to="/cookie-policy" className="transition-colors hover:text-brand">
+              Cookies
+            </Link>
+            <Link to="/copyright" className="transition-colors hover:text-brand">
+              Copyright
+            </Link>
+          </nav>
         </div>
       </div>
     </footer>

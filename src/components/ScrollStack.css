@@ -22,6 +22,15 @@
   min-height: 100vh;
 }
 
+/* On phones 10vh of lead-in reads as dead space between the marquee and the
+   section title. The bottom value is overwritten by JS to clear the settled pile. */
+@media (max-width: 767px) {
+  .scroll-stack-inner {
+    padding-top: 2rem;
+    min-height: 0;
+  }
+}
+
 /* Never transformed — used as a stable reference to detect page-level layout shifts */
 .scroll-stack-anchor {
   width: 100%;

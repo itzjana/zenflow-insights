@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seo, breadcrumbSchema } from "@/lib/seo";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
@@ -7,20 +8,18 @@ import studioCard from "@/assets/img/studio-card.webp";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
-    meta: [
-      { title: "About Zencyp – Leading Digital Agency in Tamil Nadu" },
-      {
-        name: "description",
-        content:
-          "Zencyp is a Tamil Nadu-based digital agency specializing in branding, video production, digital marketing, web development, social media management, and graphic design.",
-      },
-      { property: "og:title", content: "About Zencyp – Leading Digital Agency in Tamil Nadu" },
-      {
-        property: "og:description",
-        content:
-          "Discover Zencyp's story, our results-driven process, and how we build high-performance digital experiences for brands in India.",
-      },
-    ],
+    ...seo({
+      title: "About Zencyp | Digital Marketing & Branding Agency in Tamil Nadu",
+      description:
+        "Zencyp is a full-service digital agency building growth systems for ambitious brands — branding, web development, performance ads and content marketing under one roof.",
+      path: "/about",
+      schema: [
+        breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "About", path: "/about" },
+        ]),
+      ],
+    }),
   }),
   component: About,
 });
@@ -30,7 +29,7 @@ const INSTAGRAM_URL = "https://www.instagram.com/zencyp/";
 
 /** Studio facts shown on the agency card. */
 const studio = {
-  basedIn: "Arani, Tamil Nadu",
+  basedIn: "Tamil Nadu, India",
   disciplines: ["Branding", "Web Development", "Performance Ads", "Content & Video"],
 };
 

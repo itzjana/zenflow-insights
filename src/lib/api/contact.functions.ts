@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 import { getServerConfig } from "../config.server";
+import { escapeHtml, getTransporter, headerSafe } from "../mailer.server";
 
 export const SERVICE_OPTIONS = [
   "Branding",
@@ -33,15 +34,9 @@ export const sendContactMessage = createServerFn({ method: "POST" })
     // Silently accept and drop bot submissions so the bot gets no useful signal.
     if (data.website) return { success: true };
 
-    const config = getServerConfig();
-    const apiKey = config.sendgridApiKey;
-    const fromEmail = config.sendgridFromEmail;
-    const toEmail = config.sendgridToEmail;
-
-    if (!apiKey || !fromEmail || !toEmail) {
-      throw new Error(
-        "Mail configuration not found. Please set SENDGRID_API_KEY, SENDGRID_FROM_EMAIL, and SENDGRID_TO_EMAIL.",
-      );
+    const { mailFrom, mailTo } = getServerConfig();
+    if (!mailFrom || !mailTo) {
+      throw new Error("Mail configuration not found. Please set SMTP_USER (or MAIL_FROM/MAIL_TO).");
     }
 
     const serviceList = data.services.join(", ");
@@ -51,36 +46,40 @@ export const sendContactMessage = createServerFn({ method: "POST" })
         ? `${data.services[0]} +${data.services.length - 1} more`
         : serviceList;
 
-    const payload = {
-      personalizations: [
-        {
-          to: [{ email: toEmail }],
-          subject: `New inquiry: ${subjectServices} from ${data.name}`,
-        },
-      ],
-      from: { email: fromEmail },
-      reply_to: { email: data.email },
-      content: [
-        {
-          type: "text/plain",
-          value: `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone ?? "N/A"}\nCompany: ${data.company ?? "N/A"}\nServices: ${serviceList}\n\nMessage:\n${data.message}`,
-        },
-      ],
-    };
+    const rows: [string, string][] = [
+      ["Name", data.name],
+      ["Email", data.email],
+      ["Phone", data.phone ?? "N/A"],
+      ["Company", data.company ?? "N/A"],
+      ["Services", serviceList],
+    ];
 
-    const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
+    const text = [...rows.map(([k, v]) => `${k}: ${v}`), "", "Message:", data.message].join("\n");
+
+    const html = [
+      '<div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;font-size:14px;line-height:1.6;color:#0a2e33">',
+      '<table cellpadding="0" cellspacing="0" style="border-collapse:collapse">',
+      ...rows.map(
+        ([k, v]) =>
+          `<tr><td style="padding:2px 16px 2px 0;color:#5b7278">${k}</td>` +
+          `<td style="padding:2px 0"><strong>${escapeHtml(v)}</strong></td></tr>`,
+      ),
+      "</table>",
+      '<p style="margin:20px 0 4px;color:#5b7278">Message</p>',
+      // Submitted copy is escaped, then only newlines are turned back into markup.
+      `<p style="margin:0;white-space:pre-wrap">${escapeHtml(data.message)}</p>`,
+      "</div>",
+    ].join("");
+
+    await getTransporter().sendMail({
+      from: { name: "Zencyp website", address: mailFrom },
+      to: mailTo,
+      // So hitting reply in the inbox answers the visitor, not our own mailbox.
+      replyTo: { name: headerSafe(data.name), address: data.email },
+      subject: headerSafe(`New inquiry: ${subjectServices} from ${data.name}`),
+      text,
+      html,
     });
-
-    if (!response.ok) {
-      const body = await response.text();
-      throw new Error(`Email send failed: ${response.status} ${body}`);
-    }
 
     return { success: true };
   });

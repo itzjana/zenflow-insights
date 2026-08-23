@@ -15,6 +15,7 @@ import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 import { useScrollReset } from "@/hooks/useScrollReset";
 import { PageTransition } from "@/components/PageTransition";
 import { CustomCursor } from "@/components/CustomCursor";
+import { CursorTrail } from "@/components/CursorTrail";
 
 function NotFoundComponent() {
   return (
@@ -133,6 +134,8 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      {/* Trail paints under the dot; both bail out on coarse pointers */}
+      <CursorTrail />
       <CustomCursor />
       <PageTransition>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}

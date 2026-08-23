@@ -336,7 +336,7 @@ export function SiteNav() {
             </div>
 
             <div className="px-6 py-6 border-t border-white/10 text-xs uppercase tracking-widest font-semibold text-white/70">
-              info@zencyp.in
+              contact@zencyp.in
             </div>
           </div>
         </div>

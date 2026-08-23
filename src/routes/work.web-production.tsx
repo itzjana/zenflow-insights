@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seo, serviceSchema, breadcrumbSchema } from "@/lib/seo";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
 import { CountUp } from "@/components/CountUp";
 import webHero from "@/assets/img/work-web-hero.webp";
-import { ClientScrollStory, type ClientProject } from "@/components/ClientScrollStory";
+import { LiveBuilds, type ClientProject } from "@/components/LiveBuilds";
 /* Screenshots live in src/assets/clients-raw as full-size PNGs; these are the
    web-optimised WebP versions. Drop a new capture in clients-raw with the same name
    and ask for a re-optimise to refresh these. */
@@ -19,14 +20,24 @@ import { WorkHero, WorkCTA, Eyebrow, CARD } from "@/components/work/WorkPagePart
 
 export const Route = createFileRoute("/work/web-production")({
   head: () => ({
-    meta: [
-      { title: "Web Design & Development – Zencyp" },
-      {
-        name: "description",
-        content:
-          "High-performance, mobile-first websites built for search rankings and conversion — designed, engineered and shipped by Zencyp.",
-      },
-    ],
+    ...seo({
+      title: "Website Design & Development Company in Tamil Nadu — Zencyp",
+      description:
+        "Website design and development built for search rankings and conversion. See live client builds — storefronts, franchise funnels and B2B catalogues shipped by Zencyp.",
+      path: "/work/web-production",
+      schema: [
+        serviceSchema(
+          "Website Design and Development",
+          "Fast, responsive, conversion-focused websites and storefronts.",
+          "/work/web-production",
+        ),
+        breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+          { name: "Web Development", path: "/work/web-production" },
+        ]),
+      ],
+    }),
   }),
   component: WebProductionPage,
 });
@@ -59,7 +70,7 @@ const projects: ClientProject[] = [
   {
     name: "PVP Inn",
     url: "https://pvpinn.com/",
-    sector: "Hospitality — Arani",
+    sector: "Hospitality — Tamil Nadu",
     image: shotPvpinn,
     summary:
       "A hotel and events venue that needed to look credible before anyone would call. Rooms, hall and amenities laid out so a booking decision takes one scroll.",
@@ -86,7 +97,7 @@ const projects: ClientProject[] = [
   {
     name: "Sai Anjali Events",
     url: "https://saianjalievents.in/",
-    sector: "Event management — Arani",
+    sector: "Event management — Tamil Nadu",
     image: shotSaianjali,
     summary:
       "Two decades of weddings and celebrations, finally documented. A portfolio-led site where past work does the selling and the enquiry form is never far away.",
@@ -176,11 +187,11 @@ function WebProductionPage() {
             </h2>
             <p className="max-w-xl text-sm md:text-base font-light text-foreground/60 leading-relaxed">
               Storefronts, franchise funnels, B2B catalogues and venue sites — every one live today.
-              Scroll to walk through them.
+              Hover to open one up.
             </p>
           </Reveal>
 
-          <ClientScrollStory projects={projects} />
+          <LiveBuilds projects={projects} />
         </div>
       </section>
 

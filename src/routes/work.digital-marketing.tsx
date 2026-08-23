@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seo, serviceSchema, breadcrumbSchema } from "@/lib/seo";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
@@ -14,14 +15,24 @@ import proofCampaignTable from "@/assets/img/proof/proof-campaign-table.webp";
 
 export const Route = createFileRoute("/work/digital-marketing")({
   head: () => ({
-    meta: [
-      { title: "Digital Marketing & Performance Ads – Zencyp" },
-      {
-        name: "description",
-        content:
-          "Before-and-after results from Zencyp's Meta Ads, Google Ads and SEO campaigns — measured in enquiries and cost per lead, not impressions.",
-      },
-    ],
+    ...seo({
+      title: "Meta Ads & Google Ads Agency | Performance Marketing — Zencyp",
+      description:
+        "Meta Ads agency and Google Ads management with real campaign reporting. We optimise cost per lead across search, social and content for brands in India.",
+      path: "/work/digital-marketing",
+      schema: [
+        serviceSchema(
+          "Digital Marketing and Performance Ads",
+          "Google Ads management, Meta Ads, SEO and content marketing.",
+          "/work/digital-marketing",
+        ),
+        breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+          { name: "Digital Marketing", path: "/work/digital-marketing" },
+        ]),
+      ],
+    }),
   }),
   component: DigitalMarketingPage,
 });

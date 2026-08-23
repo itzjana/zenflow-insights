@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { seo, organizationSchema, websiteSchema } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -9,7 +10,7 @@ import { HorizontalPortfolio, type PortfolioItem } from "@/components/Horizontal
 import { FloatingObject } from "@/components/FloatingObject";
 import { CountUp } from "@/components/CountUp";
 import { ArrowUpRight } from "lucide-react";
-import { CaseStudies } from "@/components/CaseStudies";
+import { SectorPlaybooks } from "@/components/SectorPlaybooks";
 import homeBanner from "@/assets/img/home-banner.webp";
 import cardBranding from "@/assets/img/card-branding.webp";
 import cardMarketing from "@/assets/img/card-marketing.webp";
@@ -19,20 +20,13 @@ import mobileHero from "@/assets/img/mobile-hero.webp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [
-      { title: "Arani Digital Marketing & Branding Agency – Zencyp" },
-      {
-        name: "description",
-        content:
-          "Zencyp is a top Arani, Tamil Nadu digital marketing and branding agency. We help businesses grow with SEO, web design, social media, and creative video solutions.",
-      },
-      { property: "og:title", content: "Arani Digital Marketing & Branding Agency – Zencyp" },
-      {
-        property: "og:description",
-        content:
-          "Partner with Zencyp for full-service SEO, branding, SMM, video production, and web development in Tamil Nadu.",
-      },
-    ],
+    ...seo({
+      title: "Digital Marketing Agency in Tamil Nadu | SEO, Ads & Branding — Zencyp",
+      description:
+        "Zencyp is a full-service digital marketing and branding agency in Tamil Nadu. SEO, Google Ads, Meta Ads, web development, video marketing and content marketing that generate qualified leads.",
+      path: "/",
+      schema: [organizationSchema, websiteSchema],
+    }),
   }),
   component: Home,
 });
@@ -202,9 +196,9 @@ function Home() {
             <Reveal className="max-w-md shrink-0" delay={0.5}>
               <div className="flex flex-col">
                 <p className="text-lg md:text-xl font-light text-foreground/70 leading-snug mb-6">
-                  Zencyp is Arani, Tamil Nadu's leading full-service digital marketing and branding
-                  agency. We help startups and established brands grow with SEO, web design, social
-                  media, and creative video solutions.
+                  Zencyp is a full-service digital marketing and branding agency. We help startups
+                  and established brands grow with SEO, web design, social media, and creative video
+                  solutions.
                 </p>
 
                 <div className="flex flex-wrap gap-3 mb-6">
@@ -473,7 +467,7 @@ function Home() {
       <HorizontalPortfolio items={portfolio} />
 
       {/* Case studies — targeted by the nav's #case-studies link */}
-      <CaseStudies />
+      <SectorPlaybooks />
 
       {/* Metrics with glass cards */}
       <section

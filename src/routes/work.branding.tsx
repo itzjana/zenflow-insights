@@ -1,64 +1,35 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seo, serviceSchema, breadcrumbSchema } from "@/lib/seo";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
-import { WorkArt } from "@/components/WorkArt";
 import brandingHero from "@/assets/img/work-branding-hero.webp";
 import { WorkHero, WorkCTA, Eyebrow, CARD } from "@/components/work/WorkPageParts";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { BrandSystemBeams } from "@/components/BrandSystemBeams";
 
 export const Route = createFileRoute("/work/branding")({
   head: () => ({
-    meta: [
-      { title: "Branding & Identity Design – Zencyp" },
-      {
-        name: "description",
-        content:
-          "Logo systems, colour, typography and complete brand books built to make Tamil Nadu businesses look credible and command authority.",
-      },
-    ],
+    ...seo({
+      title: "Branding Agency | Logo Design & Brand Identity Systems — Zencyp",
+      description:
+        "Branding agency building logo suites, colour systems, typography and complete brand books for businesses across Tamil Nadu and India.",
+      path: "/work/branding",
+      schema: [
+        serviceSchema(
+          "Branding and Identity Design",
+          "Logo suites, colour systems, typography and brand books.",
+          "/work/branding",
+        ),
+        breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+          { name: "Branding", path: "/work/branding" },
+        ]),
+      ],
+    }),
   }),
   component: BrandingPage,
 });
-
-const cases = [
-  {
-    name: "Vault 01",
-    sector: "Fintech",
-    art: "layers" as const,
-    note: "A restrained mark and a monospaced system built for a product that had to read as trustworthy first.",
-  },
-  {
-    name: "Lumina",
-    sector: "Wellness",
-    art: "orbit" as const,
-    note: "Soft geometry and a warm palette that let a clinical category feel human without losing precision.",
-  },
-  {
-    name: "Aether",
-    sector: "Hospitality",
-    art: "waves" as const,
-    note: "An editorial identity where the typography does the heavy lifting and the mark stays quiet.",
-  },
-  {
-    name: "Meridian",
-    sector: "Retail",
-    art: "grid" as const,
-    note: "A modular system that survives being stretched across packaging, storefront and social.",
-  },
-  {
-    name: "Kiln",
-    sector: "Manufacturing",
-    art: "type" as const,
-    note: "Heavy industrial letterforms paired with a disciplined grid for spec sheets and site signage.",
-  },
-];
 
 const palette = [
   { name: "Ink", value: "var(--foreground)", hex: "#262626" },
@@ -97,55 +68,7 @@ function BrandingPage() {
         imageAlt="Brand identity system laid out flat"
       />
 
-      {/* ─── Carousel of identity work ─── */}
-      <section className="px-5 md:px-6 py-20 md:py-28">
-        <div className="max-w-[1128px] mx-auto">
-          <Reveal className="mb-10 md:mb-14 flex flex-col gap-4">
-            <Eyebrow>Selected identities</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tighter uppercase leading-[1.05] max-w-2xl">
-              Five systems, five very different rooms to live in
-            </h2>
-          </Reveal>
-
-          <Reveal delay={0.1}>
-            <Carousel opts={{ align: "start", loop: true }} className="w-full">
-              <CarouselContent className="-ml-4 md:-ml-6">
-                {cases.map((c) => (
-                  <CarouselItem
-                    key={c.name}
-                    className="pl-4 md:pl-6 basis-full sm:basis-1/2 lg:basis-1/3"
-                  >
-                    <article
-                      className={`group h-full flex flex-col gap-5 p-5 rounded-3xl ${CARD} transition-colors hover:border-brand/40`}
-                    >
-                      <div className="relative overflow-hidden rounded-2xl aspect-[4/5] bg-muted">
-                        <WorkArt
-                          variant={c.art}
-                          label={c.name}
-                          className="w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.2,1,0.3,1)] group-hover:scale-105"
-                        />
-                        <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-background/75 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest">
-                          {c.sector}
-                        </span>
-                      </div>
-                      <div className="flex flex-col gap-2 px-1 pb-1">
-                        <h3 className="text-xl font-extrabold tracking-tight">{c.name}</h3>
-                        <p className="text-sm font-light leading-relaxed text-foreground/60">
-                          {c.note}
-                        </p>
-                      </div>
-                    </article>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <div className="flex items-center justify-end gap-3 mt-8">
-                <CarouselPrevious className="static translate-y-0 size-11 border-foreground/15 hover:bg-brand hover:text-brand-foreground hover:border-brand" />
-                <CarouselNext className="static translate-y-0 size-11 border-foreground/15 hover:bg-brand hover:text-brand-foreground hover:border-brand" />
-              </div>
-            </Carousel>
-          </Reveal>
-        </div>
-      </section>
+      <BrandSystemBeams />
 
       {/* ─── Specimen: colour + type ─── */}
       <section className="px-5 md:px-6 py-20 md:py-28 bg-muted/30 border-y border-foreground/[0.06]">
