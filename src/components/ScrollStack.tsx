@@ -74,6 +74,9 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
   const endElementTopRef = useRef<number>(0);
   const anchorTopRef = useRef<number>(0);
   const stackPositionPxRef = useRef<number>(0);
+  /* Viewport height frozen at measure time. Read live it changes continuously as the
+     mobile URL bar slides, and it feeds the pin geometry — see updateCardTransforms. */
+  const containerHeightRef = useRef<number>(0);
   const stickyTopRef = useRef<number>(FALLBACK_NAV_BOTTOM + NAV_GAP);
   const titleHeightRef = useRef<number>(0);
   const titleGapRef = useRef<number>(0);
@@ -224,6 +227,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     }
 
     const containerHeight = useWindowScroll ? window.innerHeight : (scroller?.clientHeight ?? 0);
+    containerHeightRef.current = containerHeight;
 
     stackPositionPxRef.current = hasTitleRef.current
       ? stickyTopRef.current + titleHeightRef.current + titleGapRef.current
@@ -257,7 +261,12 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     if (!cardsRef.current.length || isUpdatingRef.current) return;
     isUpdatingRef.current = true;
 
-    const { scrollTop, containerHeight } = getScrollData();
+    const { scrollTop } = getScrollData();
+    /* Deliberately the measured height, not the live one. Android and iOS shrink and
+       grow the viewport as the URL bar collapses during a scroll, and this value sets
+       both `pinEnd` and the scale-end point — reading it live re-anchored the whole pile
+       on almost every frame, which is the judder that survived the earlier resize gate. */
+    const containerHeight = containerHeightRef.current || window.innerHeight;
 
     // Anything above this section (hero imagery, fonts, lazy content) can shift the
     // whole page after the offsets were taken. The anchor is never transformed, so any
@@ -476,7 +485,21 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 
     measureOffsets();
     if (useWindowScroll) {
-      window.addEventListener("scroll", handleScroll, { passive: true });
+      /* Frame-synced rather than event-driven. Mobile browsers coalesce `scroll` during
+         momentum and rubber-banding, so transforms computed from those events land in
+         visible jumps while the page keeps moving underneath — the judder that reads as
+         the section vibrating. A rAF loop updates in step with compositing instead, and
+         costs a single number comparison on frames where nothing moved. */
+      let lastY = -1;
+      const loop = () => {
+        const y = window.scrollY;
+        if (y !== lastY) {
+          lastY = y;
+          updateCardTransforms();
+        }
+        animationFrameRef.current = requestAnimationFrame(loop);
+      };
+      animationFrameRef.current = requestAnimationFrame(loop);
     } else {
       setupLenis();
     }
@@ -488,28 +511,30 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     // otherwise leave the cached offsets pointing at the wrong scroll positions.
     document.fonts?.ready.then(scheduleRemeasure).catch(() => {});
 
+    /* Deliberately width-only, and deliberately no observer on the body.
+       measureOffsets() writes paddingBottom onto .scroll-stack-inner, so an observer
+       that reacts to this element's height is watching its own output: on a phone the
+       URL bar changes innerHeight -> new tail padding -> observer fires -> remeasure ->
+       repeat, which is the vibration. A width change is the only resize of this element
+       that is genuinely someone else's doing, and late height changes from webfonts are
+       already covered by the fonts.ready hook above. */
     let observer: ResizeObserver | null = null;
-    let bodyObserver: ResizeObserver | null = null;
-    if (typeof ResizeObserver !== "undefined") {
-      // Content-size changes inside the stack (webfonts, wrapping) are real and rare.
-      observer = new ResizeObserver(scheduleRemeasure);
-      if (innerRef.current) observer.observe(innerRef.current);
-      // Body height, by contrast, moves every time the mobile URL bar slides.
-      if (useWindowScroll) {
-        bodyObserver = new ResizeObserver(scheduleIfViewportChanged);
-        bodyObserver.observe(document.body);
-      }
+    if (typeof ResizeObserver !== "undefined" && innerRef.current) {
+      let lastInnerWidth = innerRef.current.getBoundingClientRect().width;
+      observer = new ResizeObserver((entries) => {
+        const width = entries[0]?.contentRect.width ?? lastInnerWidth;
+        if (Math.abs(width - lastInnerWidth) < 1) return;
+        lastInnerWidth = width;
+        scheduleRemeasure();
+      });
+      observer.observe(innerRef.current);
     }
 
     return () => {
       if (remeasureFrame !== null) cancelAnimationFrame(remeasureFrame);
       observer?.disconnect();
-      bodyObserver?.disconnect();
       window.removeEventListener("resize", scheduleIfViewportChanged);
       window.removeEventListener("load", scheduleRemeasure);
-      if (useWindowScroll) {
-        window.removeEventListener("scroll", handleScroll);
-      }
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }

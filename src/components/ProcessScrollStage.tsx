@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import { CircuitBackdrop } from "@/components/CircuitBackdrop";
+
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 export type ProcessStep = {
@@ -45,6 +47,21 @@ export function ProcessScrollStage({ steps, eyebrow = "Process", heading }: Prop
 
     const count = panels.length;
 
+    /* Below md the stage un-pins into a plain stacked list, so there is nothing to
+       cross-fade — running the same maths there faded every step but one down to
+       transparent and left the list unreadable. */
+    const pinned = window.matchMedia("(min-width: 768px)");
+
+    const reset = () => {
+      panels.forEach((panel) => {
+        panel.style.opacity = "";
+        panel.style.transform = "";
+        panel.style.pointerEvents = "";
+        panel.removeAttribute("aria-hidden");
+      });
+      rails.forEach((rail) => (rail.style.transform = "scaleX(1)"));
+    };
+
     const apply = (progress: number) => {
       // Position along the whole sequence, e.g. 1.4 = 40% of the way from step 2 to 3
       const pos = Math.min(count - 1, Math.max(0, progress * count - 0.5));
@@ -70,17 +87,32 @@ export function ProcessScrollStage({ steps, eyebrow = "Process", heading }: Prop
       }
     };
 
-    const st = ScrollTrigger.create({
-      trigger: wrap,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: true,
-      onUpdate: (self) => apply(self.progress),
-      onRefresh: (self) => apply(self.progress),
-    });
+    let st: ScrollTrigger | null = null;
 
-    apply(0);
-    return () => st.kill();
+    const build = () => {
+      st?.kill();
+      st = null;
+      if (!pinned.matches) {
+        reset();
+        return;
+      }
+      st = ScrollTrigger.create({
+        trigger: wrap,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true,
+        onUpdate: (self) => apply(self.progress),
+        onRefresh: (self) => apply(self.progress),
+      });
+      apply(0);
+    };
+
+    build();
+    pinned.addEventListener("change", build);
+    return () => {
+      pinned.removeEventListener("change", build);
+      st?.kill();
+    };
   }, [steps.length]);
 
   return (
@@ -93,7 +125,10 @@ export function ProcessScrollStage({ steps, eyebrow = "Process", heading }: Prop
       >
         {/* The pinned stage. On small screens it un-pins and becomes a normal list. */}
         <div className="sticky top-0 flex h-dvh flex-col justify-center overflow-hidden px-5 py-20 md:px-6 max-md:static max-md:h-auto">
-          <div className="mx-auto w-full max-w-[1128px]">
+          {/* Scroll-driven circuit board behind the copy — decorative only */}
+          <CircuitBackdrop targetRef={wrapRef} />
+
+          <div className="relative mx-auto w-full max-w-[1128px]">
             <div className="mb-10 flex flex-col gap-4 md:mb-14">
               <span className="flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em]">
                 <span className="size-2 rounded-full bg-brand" /> {eyebrow}

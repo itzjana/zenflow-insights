@@ -44,6 +44,13 @@ export function useScrollReset() {
 
     let raf = 0;
     let refreshHandler: (() => void) | null = null;
+    let intentBound = false;
+
+    /* Gestures that mean "I am scrolling now". The hold loop below exists to defeat
+       *programmatic* stale-offset restores, not the reader — without this, starting to
+       scroll within the settle window gets fought frame by frame, which is what made
+       every page judder on the first swipe after a refresh. */
+    const INTENT_EVENTS = ["wheel", "touchmove", "keydown", "pointerdown"] as const;
 
     const toTop = () => {
       const lenis = getLenis();
@@ -62,6 +69,19 @@ export function useScrollReset() {
         ScrollTrigger.removeEventListener("refresh", refreshHandler);
         refreshHandler = null;
       }
+      if (intentBound) {
+        INTENT_EVENTS.forEach((type) => window.removeEventListener(type, clearPending));
+        intentBound = false;
+      }
+    };
+
+    /** Hand scroll control back to the reader the moment they ask for it. */
+    const bindIntent = () => {
+      if (intentBound) return;
+      intentBound = true;
+      INTENT_EVENTS.forEach((type) =>
+        window.addEventListener(type, clearPending, { passive: true }),
+      );
     };
 
     /* Fire before the outgoing route unmounts, so the document never collapses
@@ -118,6 +138,7 @@ export function useScrollReset() {
         else clearPending();
       };
       raf = requestAnimationFrame(hold);
+      bindIntent();
 
       refreshHandler = () => {
         if (performance.now() < deadline) toTop();

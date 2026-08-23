@@ -4,7 +4,9 @@ import { seo, serviceSchema, breadcrumbSchema, faqSchema } from "@/lib/seo";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
-import { ComparisonSection } from "@/components/ComparisonSection";
+import { ComparisonSwap } from "@/components/ComparisonSwap";
+import { FlowBeamGraph } from "@/components/FlowBeamGraph";
+import { ProgressiveCarousel } from "@/components/ProgressiveCarousel";
 import { ProcessScrollStage } from "@/components/ProcessScrollStage";
 import { MagneticButton } from "@/components/MagneticButton";
 import {
@@ -168,11 +170,28 @@ const problems = [
 ];
 
 const systemFlow = [
-  "Targeted ads",
-  "Landing page",
-  "Lead captured",
-  "Content nurture",
-  "Client closed",
+  {
+    label: "Targeted ads",
+    detail:
+      "Intent-led targeting on Google and Meta, built around the searches that actually convert.",
+  },
+  {
+    label: "Landing page",
+    detail:
+      "A page written for one decision, with the proof and the call to action above the fold.",
+  },
+  {
+    label: "Lead captured",
+    detail: "Forms, calls and WhatsApp all tracked, so no enquiry is lost between channels.",
+  },
+  {
+    label: "Content nurture",
+    detail: "Social and email keep you present through the weeks a considered purchase takes.",
+  },
+  {
+    label: "Client closed",
+    detail: "Attribution back to the campaign, so budget follows what earned the revenue.",
+  },
 ];
 
 const faqs = [
@@ -307,117 +326,60 @@ function Services() {
         </div>
       </section>
 
-      {/* ═══════ THE SYSTEM — flow chain ═══════ */}
-      <section className="py-20 md:py-28 px-6 md:px-10 bg-muted/30 border-y border-foreground/[0.06]">
-        <div className="max-w-[1128px] mx-auto">
-          <Reveal className="mb-10 md:mb-14 flex flex-col gap-4">
-            <span className="text-xs font-bold uppercase tracking-[0.3em] flex items-center gap-4">
-              <span className="size-2 bg-brand rounded-full" /> The Zencyp system
+      {/* ═══════ THE SYSTEM — scroll-drawn beam graph ═══════ */}
+      <section className="border-y border-foreground/[0.06] bg-muted/30 px-6 py-20 md:px-10 md:py-28">
+        <div className="mx-auto max-w-[1128px]">
+          <Reveal className="mb-10 flex flex-col gap-4 md:mb-16">
+            <span className="flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em]">
+              <span className="size-2 rounded-full bg-brand" /> The Zencyp system
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tighter uppercase leading-[1.05] max-w-2xl">
-              How we turn traffic into real enquiries
+            <h2 className="max-w-2xl text-3xl font-extrabold uppercase leading-[1.05] tracking-tighter md:text-4xl">
+              How we turn traffic into{" "}
+              <span className="font-serif font-semibold normal-case italic tracking-tight text-brand-soft">
+                real enquiries
+              </span>
             </h2>
           </Reveal>
 
+          <FlowBeamGraph
+            stages={systemFlow}
+            outcome="Five stages, one loop. Every stage is measured, so we can tell which one is costing you money."
+          />
+        </div>
+      </section>
+
+      {/* ═══════ CAPABILITIES — auto-advancing slider ═══════ */}
+      <section className="px-6 py-20 md:px-10 md:py-28">
+        <div className="mx-auto max-w-[1128px]">
+          <Reveal className="mb-10 flex flex-col gap-5 md:mb-14 lg:flex-row lg:items-end lg:justify-between">
+            <div className="flex flex-col gap-4">
+              <span className="flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em]">
+                <span className="size-2 rounded-full bg-brand" /> Capabilities
+              </span>
+              <h2 className="text-3xl font-extrabold uppercase leading-[1.05] tracking-tighter md:text-5xl">
+                Core specialties
+              </h2>
+              <p className="max-w-md text-sm font-light leading-relaxed text-foreground/60 md:text-base">
+                Six disciplines that operate as one system. Most engagements start with two or three
+                and grow from there.
+              </p>
+            </div>
+            <Link
+              to="/contact"
+              className="inline-flex h-12 shrink-0 items-center gap-2.5 self-start rounded-full bg-brand px-7 text-sm font-bold tracking-wide text-brand-foreground transition-transform duration-300 hover:-translate-y-0.5 lg:self-end"
+            >
+              Book a free strategy call
+              <ArrowRight className="size-4" />
+            </Link>
+          </Reveal>
+
           <Reveal delay={0.08}>
-            <ol className="flex flex-col md:flex-row md:items-stretch gap-3 md:gap-2">
-              {systemFlow.map((s, i) => (
-                <li key={s} className="flex md:flex-1 items-center gap-3 md:gap-2 min-w-0">
-                  <div className="flex-1 flex flex-col gap-2 p-5 rounded-2xl bg-background border border-foreground/[0.07] h-full">
-                    <span className="text-[10px] font-bold tabular-nums text-brand">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="text-sm font-extrabold tracking-tight leading-snug">{s}</span>
-                  </div>
-                  {i < systemFlow.length - 1 && (
-                    <span
-                      aria-hidden
-                      className="shrink-0 text-foreground/25 rotate-90 md:rotate-0 text-lg"
-                    >
-                      →
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ol>
+            <ProgressiveCarousel slides={servicesPillars} />
           </Reveal>
         </div>
       </section>
 
-      {/* ═══════ CAPABILITIES — sticky left, scrolling right ═══════ */}
-      <section className="py-20 md:py-28 px-6 md:px-10">
-        <div className="max-w-[1128px] mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-10 lg:gap-16 items-start">
-          {/* Sticky column. top clears the fixed nav (98px) with breathing room. */}
-          <div className="lg:sticky lg:top-32">
-            <Reveal>
-              <div className="flex flex-col gap-4">
-                <span className="text-xs font-bold uppercase tracking-[0.3em] flex items-center gap-4">
-                  <span className="size-2 bg-brand rounded-full" /> Capabilities
-                </span>
-                <h2 className="text-3xl md:text-5xl font-extrabold tracking-tighter uppercase leading-[1.05]">
-                  Core specialties
-                </h2>
-                <p className="text-sm md:text-base font-light text-foreground/60 leading-relaxed max-w-md">
-                  Six disciplines that operate as one system. Most engagements start with two or
-                  three and grow from there.
-                </p>
-                <Link
-                  to="/contact"
-                  className="mt-2 self-start inline-flex items-center gap-2.5 h-12 px-7 rounded-full bg-brand text-brand-foreground text-sm font-bold tracking-wide transition-transform duration-300 hover:-translate-y-0.5"
-                >
-                  Book a free strategy call
-                  <ArrowRight className="size-4" />
-                </Link>
-              </div>
-            </Reveal>
-          </div>
-
-          {/* Scrolling column */}
-          <div className="flex flex-col gap-6">
-            {servicesPillars.map((p, i) => {
-              const IconComponent = p.icon;
-              return (
-                <Reveal key={p.n} delay={0.05}>
-                  <article className="group rounded-3xl border border-foreground/[0.07] bg-muted/60 p-6 md:p-8 transition-colors hover:border-brand/40">
-                    <header className="flex items-start justify-between gap-4 pb-5 mb-5 border-b border-foreground/[0.07]">
-                      <div className="flex flex-col gap-1.5 min-w-0">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-foreground/35 tabular-nums">
-                          {p.n} / {String(servicesPillars.length).padStart(2, "0")}
-                        </span>
-                        <h3 className="text-2xl md:text-3xl font-extrabold tracking-tighter uppercase leading-tight">
-                          {p.title}
-                        </h3>
-                        <p className="text-xs font-medium text-foreground/50">{p.tagline}</p>
-                      </div>
-                      <span className="shrink-0 size-11 rounded-full border border-foreground/10 flex items-center justify-center text-foreground/40 group-hover:bg-brand group-hover:text-brand-foreground group-hover:border-brand transition-colors">
-                        <IconComponent className="size-4.5" />
-                      </span>
-                    </header>
-
-                    <p className="text-sm font-light leading-relaxed text-foreground/65">
-                      {p.desc}
-                    </p>
-
-                    <ul className="mt-5 flex flex-col gap-2.5">
-                      {p.bullets.map((b, bi) => (
-                        <li
-                          key={bi}
-                          className="flex items-start gap-3 text-sm text-foreground/70 leading-snug"
-                        >
-                          <Check className="size-4 text-brand shrink-0 mt-0.5" />
-                          <span>{b}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                </Reveal>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <ComparisonSection
+      <ComparisonSwap
         eyebrow="Why us"
         title="Marketing that compounds, not"
         accent="marketing that churns"
