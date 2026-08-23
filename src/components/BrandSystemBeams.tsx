@@ -106,7 +106,7 @@ const NODES: DiagramNode[] = [
 
 export function BrandSystemBeams() {
   return (
-    <section className="relative overflow-hidden bg-background py-20 md:py-28">
+    <section className="relative overflow-hidden bg-background py-12 md:py-28">
       <div className="mx-auto mb-12 max-w-[1128px] px-5 text-center md:mb-16 md:px-6">
         <Reveal className="flex flex-col items-center gap-4">
           <span className="flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em]">

@@ -108,7 +108,7 @@ export function HorizontalPortfolio({ items, heading = "Selected Work" }: Props)
     <div ref={wrapperRef} className="bg-background">
       <section
         ref={sectionRef}
-        className="relative h-screen overflow-hidden bg-background flex flex-col justify-between"
+        className="relative h-dvh overflow-hidden bg-background flex flex-col justify-between"
       >
         {/* Header. paddingTop is measured from the live nav so "Selected Work" parks
             just below it while the section is pinned, instead of behind it. */}
@@ -131,7 +131,7 @@ export function HorizontalPortfolio({ items, heading = "Selected Work" }: Props)
         </div>
 
         {/* Scrollable track container */}
-        <div className="flex-1 flex items-center min-h-0 pb-4 lg:pb-6">
+        <div className="flex-1 flex items-center max-md:items-stretch min-h-0 pb-4 lg:pb-6">
           <div ref={trackRef} className="flex gap-6 md:gap-8 pl-6 md:pl-10 will-change-transform">
             {items.map((it, i) => {
               const inner = (
@@ -140,7 +140,7 @@ export function HorizontalPortfolio({ items, heading = "Selected Work" }: Props)
                     className="
                       relative
                       w-[80vw] md:w-[42vw] lg:w-[32vw]
-                      h-[46vh] sm:h-[48vh] md:h-[50vh] lg:h-[54vh]
+                      flex-1 min-h-0 md:flex-none md:h-[50vh] lg:h-[54vh]
                       min-w-60
                       bg-muted overflow-hidden rounded-2xl
                       outline outline-foreground/5
@@ -175,7 +175,7 @@ export function HorizontalPortfolio({ items, heading = "Selected Work" }: Props)
                 </>
               );
 
-              const cls = "shrink-0 flex flex-col gap-3 md:gap-4 group";
+              const cls = "shrink-0 flex flex-col gap-3 md:gap-4 group max-md:h-full";
               // An unset external destination must not ship as a dead "#" link.
               const unresolved = it.external && (!it.href || it.href === "#");
 

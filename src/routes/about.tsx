@@ -142,13 +142,16 @@ function About() {
       </section>
 
       {/* ═══════ ABOUT THE AGENCY ═══════ */}
-      <section className="px-5 md:px-6 py-20 md:py-30">
+      <section className="px-5 md:px-6 py-12 md:py-30">
         <div className="max-w-[1128px] mx-auto flex flex-col gap-14 md:gap-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
             {/* Left: studio card + floating badges */}
             <Reveal>
               <div className="relative">
-                <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-brand/10 blur-3xl" />
+                {/* Decorative glow. The outset is trimmed on phones: at -inset-6 it reached
+                    24px past a 333px-wide parent and pushed the document 3px wider than
+                    the viewport, which is enough to make the whole page scroll sideways. */}
+                <div className="absolute -inset-2 -z-10 rounded-[2rem] bg-brand/10 blur-3xl md:-inset-6" />
                 <div className="relative aspect-[350/460] lg:aspect-[532/620] w-full rounded-[20px] overflow-hidden border border-foreground/10 bg-muted">
                   <img
                     src={studioCard}
@@ -293,7 +296,7 @@ function About() {
       </section>
 
       {/* ═══════ STORY ═══════ */}
-      <section className="px-5 md:px-6 py-20 md:py-28 bg-muted/30 border-y border-foreground/[0.06]">
+      <section className="px-5 md:px-6 py-12 md:py-28 bg-muted/30 border-y border-foreground/[0.06]">
         <div className="max-w-3xl mx-auto flex flex-col items-center text-center gap-6">
           <Reveal>
             <Eyebrow>Our story</Eyebrow>
@@ -350,7 +353,7 @@ function About() {
       </section>
 
       {/* ═══════ METRICS BENTO ═══════ */}
-      <section className="px-5 md:px-6 py-20 md:py-28">
+      <section className="px-5 md:px-6 py-12 md:py-28">
         <div className="max-w-[1177px] mx-auto">
           <Reveal className="mb-10 md:mb-14 flex flex-col gap-4">
             <Eyebrow>Growth metrics</Eyebrow>
@@ -583,7 +586,7 @@ function About() {
       </section>
 
       {/* ═══════ WORK PROCESS ═══════ */}
-      <section className="px-5 md:px-6 py-20 md:py-28 bg-muted/30 border-y border-foreground/[0.06]">
+      <section className="px-5 md:px-6 py-12 md:py-28 bg-muted/30 border-y border-foreground/[0.06]">
         <div className="max-w-[1177px] mx-auto">
           <Reveal className="mb-10 md:mb-14 flex flex-col gap-4">
             <Eyebrow>Work process</Eyebrow>
@@ -611,7 +614,7 @@ function About() {
       </section>
 
       {/* ═══════ CTA ═══════ */}
-      <section className="py-20 md:py-28 text-center px-5 md:px-6">
+      <section className="py-12 md:py-28 text-center px-5 md:px-6">
         <Reveal>
           <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight mb-8">
             Want to see our services?

@@ -285,7 +285,7 @@ function Services() {
       </section>
 
       {/* ═══════ THE REAL PROBLEM ═══════ */}
-      <section className="py-20 md:py-28 px-6 md:px-10 border-t border-foreground/5">
+      <section className="py-12 md:py-28 px-6 md:px-10 border-t border-foreground/5">
         <div className="max-w-[1128px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
           <Reveal>
             <div className="flex flex-col gap-4">
@@ -327,7 +327,7 @@ function Services() {
       </section>
 
       {/* ═══════ THE SYSTEM — scroll-drawn beam graph ═══════ */}
-      <section className="border-y border-foreground/[0.06] bg-muted/30 px-6 py-20 md:px-10 md:py-28">
+      <section className="border-y border-foreground/[0.06] bg-muted/30 px-6 py-12 md:px-10 md:py-28">
         <div className="mx-auto max-w-[1128px]">
           <Reveal className="mb-10 flex flex-col gap-4 md:mb-16">
             <span className="flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em]">
@@ -377,7 +377,7 @@ function Services() {
       </section>
 
       {/* ═══════ CAPABILITIES — sticky heading, cards beside it ═══════ */}
-      <section className="px-6 py-20 md:px-10 md:py-28">
+      <section className="px-6 py-12 md:px-10 md:py-28">
         <div className="mx-auto grid max-w-[1128px] grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
           {/* Sticky column. top clears the fixed nav (98px) with breathing room. */}
           <div className="lg:sticky lg:top-32">
@@ -446,7 +446,7 @@ function Services() {
       />
 
       {/* FAQ Section */}
-      <section className="py-24 md:py-32 px-6 md:px-10 bg-muted/20 border-t border-foreground/5">
+      <section className="py-14 md:py-32 px-6 md:px-10 bg-muted/20 border-t border-foreground/5">
         <div className="max-w-4xl mx-auto">
           <Reveal className="text-center mb-16">
             <span className="text-xs font-bold uppercase tracking-[0.3em] flex items-center justify-center gap-4">
@@ -492,7 +492,7 @@ function Services() {
       </section>
 
       {/* Footer CTA */}
-      <section className="py-32 md:py-48 px-6 md:px-10 text-center bg-background relative overflow-hidden border-t border-foreground/5">
+      <section className="py-20 md:py-48 px-6 md:px-10 text-center bg-background relative overflow-hidden border-t border-foreground/5">
         <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none flex items-center justify-center">
           <span className="text-[30vw] font-black uppercase tracking-tighter leading-none select-none">
             ZENCYP

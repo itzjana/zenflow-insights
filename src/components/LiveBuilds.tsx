@@ -112,9 +112,11 @@ export function LiveBuilds({ projects }: Props) {
               href={p.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex w-[78vw] shrink-0 flex-col gap-3"
+              className="group flex h-full w-[78vw] shrink-0 flex-col gap-3"
             >
-              <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden rounded-2xl border border-foreground/10 bg-muted">
+              {/* Grows into whatever height the pinned panel has left, rather than
+                  holding a fixed 4:3 box and leaving the rest of the screen empty. */}
+              <div className="relative min-h-0 w-full flex-1 overflow-hidden rounded-2xl border border-foreground/10 bg-muted">
                 <img
                   src={p.image}
                   alt={`${p.name} website`}
@@ -125,7 +127,7 @@ export function LiveBuilds({ projects }: Props) {
                   {String(i + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
                 </span>
               </div>
-              <div className="flex flex-col gap-1.5">
+              <div className="flex shrink-0 flex-col gap-1.5">
                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-foreground/40">
                   {p.sector}
                 </span>

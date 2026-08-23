@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
+import type React from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import { useNavClearance } from "@/hooks/useNavClearance";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -22,6 +25,7 @@ type Props = {
  * because a stale pin-spacer is what strands scroll position between layouts.
  */
 export function PinnedHorizontal({ children, header, maxWidth = 1023, className }: Props) {
+  const navClearance = useNavClearance();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -86,8 +90,19 @@ export function PinnedHorizontal({ children, header, maxWidth = 1023, className 
         className="relative flex flex-col justify-center lg:block lg:h-auto lg:overflow-visible max-lg:h-dvh max-lg:overflow-hidden"
       >
         {header}
-        <div className="min-h-0 flex-1 max-lg:flex max-lg:items-center">
-          <div ref={trackRef} className="flex gap-4 will-change-transform max-lg:pl-5 lg:contents">
+        {/* items-stretch, not items-center: while pinned this panel occupies the whole
+            viewport, so anything shorter than it leaves blank screen above and below.
+            The cards take the full height instead and grow their imagery into it. */}
+        <div
+          className="min-h-0 flex-1 max-lg:flex max-lg:items-stretch max-lg:pt-(--nav-clear) max-lg:pb-10"
+          // Only the pinned (mobile) layout starts at the viewport top, so only it has
+          // to clear the nav. Passed as a variable so the padding stays breakpoint-gated.
+          style={{ "--nav-clear": `${navClearance}px` } as React.CSSProperties}
+        >
+          <div
+            ref={trackRef}
+            className="flex gap-4 will-change-transform max-lg:min-h-0 max-lg:pl-5 lg:contents"
+          >
             {children}
           </div>
         </div>

@@ -71,7 +71,7 @@ function BrandingPage() {
       <BrandSystemBeams />
 
       {/* ─── Specimen: colour + type ─── */}
-      <section className="px-5 md:px-6 py-20 md:py-28 bg-muted/30 border-y border-foreground/[0.06]">
+      <section className="px-5 md:px-6 py-12 md:py-28 bg-muted/30 border-y border-foreground/[0.06]">
         <div className="max-w-[1128px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
           <Reveal>
             <div className="flex flex-col gap-6">
@@ -126,7 +126,7 @@ function BrandingPage() {
       </section>
 
       {/* ─── Deliverables ─── */}
-      <section className="px-5 md:px-6 py-20 md:py-28">
+      <section className="px-5 md:px-6 py-12 md:py-28">
         <div className="max-w-[1128px] mx-auto">
           <Reveal className="mb-10 md:mb-14 flex flex-col gap-4">
             <Eyebrow>What you get</Eyebrow>

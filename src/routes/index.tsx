@@ -401,7 +401,7 @@ function Home() {
         </div>
       </div>
 
-      <section id="capabilities" className="mb-16 md:mb-34 px-6 md:px-10 bg-background">
+      <section id="capabilities" className="mb-10 md:mb-34 px-6 md:px-10 bg-background">
         <div className="max-w-5xl mx-auto">
           <ScrollStack
             itemDistance={120}
@@ -471,7 +471,7 @@ function Home() {
 
       {/* Metrics with glass cards */}
       <section
-        className="relative py-24 md:py-32 px-6 md:px-10 text-white overflow-hidden bg-cover bg-center bg-no-repeat"
+        className="relative py-14 md:py-32 px-6 md:px-10 text-white overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${homeBanner})`,
         }}
@@ -505,7 +505,7 @@ function Home() {
       </section>
 
       {/* CTA with magnetic button */}
-      <section className="py-32 md:py-48 px-6 md:px-10 text-center bg-background relative overflow-hidden">
+      <section className="py-20 md:py-48 px-6 md:px-10 text-center bg-background relative overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none flex items-center justify-center">
           <span className="text-[30vw] font-black uppercase tracking-tighter leading-none select-none">
             ZEN

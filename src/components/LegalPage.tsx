@@ -30,7 +30,7 @@ export function LegalPage({
     <div className="bg-background text-foreground selection:bg-brand selection:text-brand-foreground font-sans">
       <SiteNav />
 
-      <section className="px-5 md:px-6 pt-32 md:pt-40 pb-12 md:pb-16">
+      <section className="px-5 md:px-6 pt-32 md:pt-40 pb-8 md:pb-16">
         <div className="max-w-[760px] mx-auto flex flex-col gap-5">
           <Reveal>
             <span className="text-xs font-bold uppercase tracking-[0.3em] flex items-center gap-4">
@@ -56,7 +56,7 @@ export function LegalPage({
         </div>
       </section>
 
-      <section className="px-5 md:px-6 pb-20 md:pb-28">
+      <section className="px-5 md:px-6 pb-12 md:pb-28">
         <div className="max-w-[760px] mx-auto flex flex-col gap-7">
           {blocks.map((b, i) => {
             if (b.kind === "h") {

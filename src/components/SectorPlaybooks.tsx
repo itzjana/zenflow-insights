@@ -155,7 +155,7 @@ const PLAYBOOKS: Playbook[] = [
 export function SectorPlaybooks() {
   return (
     // scroll-mt clears the fixed nav when the #case-studies anchor is used
-    <section id="case-studies" className="scroll-mt-28 bg-background px-5 py-20 md:px-6 md:py-28">
+    <section id="case-studies" className="scroll-mt-28 bg-background px-5 py-12 md:px-6 md:py-28">
       <div className="mx-auto max-w-[1128px]">
         <Reveal className="mb-10 flex flex-col gap-4 md:mb-14">
           <span className="flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em]">

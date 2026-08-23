@@ -159,7 +159,7 @@ function WebProductionPage() {
       />
 
       {/* ─── Build specs ─── */}
-      <section className="px-5 md:px-6 pb-16 md:pb-20">
+      <section className="px-5 md:px-6 pb-10 md:pb-20">
         <div className="max-w-[1128px] mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
           {specs.map((s, i) => (
             <Reveal key={s.label} delay={i * 0.08}>
@@ -178,7 +178,7 @@ function WebProductionPage() {
       </section>
 
       {/* ─── Live client builds: pinned media, scrolling copy ─── */}
-      <section className="px-5 md:px-6 py-16 md:py-24 bg-muted/30 border-y border-foreground/[0.06]">
+      <section className="px-5 md:px-6 py-10 md:py-24 bg-muted/30 border-y border-foreground/[0.06]">
         <div className="max-w-[1128px] mx-auto">
           <Reveal className="mb-10 md:mb-16 flex flex-col gap-4">
             <Eyebrow>Live builds</Eyebrow>
@@ -196,7 +196,7 @@ function WebProductionPage() {
       </section>
 
       {/* ─── Process ─── */}
-      <section className="px-5 md:px-6 py-20 md:py-28">
+      <section className="px-5 md:px-6 py-12 md:py-28">
         <div className="max-w-[1128px] mx-auto">
           <Reveal className="mb-10 md:mb-14 flex flex-col gap-4">
             <Eyebrow>How it ships</Eyebrow>

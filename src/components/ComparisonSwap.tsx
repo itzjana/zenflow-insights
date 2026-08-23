@@ -43,7 +43,7 @@ export function ComparisonSwap({
   const swap = () => setFocus((f) => (f === "us" ? "them" : "us"));
 
   return (
-    <section className="relative overflow-hidden bg-brand px-5 py-20 text-white md:px-6 md:py-28">
+    <section className="relative overflow-hidden bg-brand px-5 py-12 text-white md:px-6 md:py-28">
       <div className="pointer-events-none absolute -right-32 -top-40 size-[34rem] rounded-full bg-accent/10 blur-[120px]" />
       <div className="pointer-events-none absolute -bottom-48 -left-40 size-[30rem] rounded-full bg-brand-soft/15 blur-[120px]" />
 

@@ -30,7 +30,7 @@ type HeroProps = {
 /** Split hero shared by every work detail page. */
 export function WorkHero({ eyebrow, title, copy, image, imageAlt }: HeroProps) {
   return (
-    <section className="px-5 md:px-6 pt-32 md:pt-40 pb-16 md:pb-24 overflow-hidden">
+    <section className="px-5 md:px-6 pt-32 md:pt-40 pb-10 md:pb-24 overflow-hidden">
       <div className="max-w-[1128px] mx-auto grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-10 lg:gap-16 items-center">
         <div className="flex flex-col gap-6">
           <Reveal>
@@ -88,7 +88,7 @@ export function WorkHero({ eyebrow, title, copy, image, imageAlt }: HeroProps) {
 /** Closing call to action shared by every work detail page. */
 export function WorkCTA({ heading, copy }: { heading: string; copy: string }) {
   return (
-    <section className="px-5 md:px-6 py-20 md:py-28 bg-muted/30 border-y border-foreground/[0.06]">
+    <section className="px-5 md:px-6 py-12 md:py-28 bg-muted/30 border-y border-foreground/[0.06]">
       <Reveal className="max-w-2xl mx-auto flex flex-col items-center text-center gap-6">
         <h2 className="text-3xl md:text-4xl font-extrabold tracking-tighter uppercase leading-[1.05] text-balance">
           {heading}
