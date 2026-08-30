@@ -10,8 +10,10 @@
     "preview": "node --env-file-if-exists=.env node_modules/vite/bin/vite.js preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "build:vercel": "DEPLOY_TARGET=vercel vite build",
-    "mail:check": "node --env-file=.env scripts/check-mail.mjs"
+    "build:vercel": "cross-env DEPLOY_TARGET=vercel vite build",
+    "mail:check": "node --env-file=.env scripts/check-mail.mjs",
+    "build:node": "cross-env DEPLOY_TARGET=node vite build",
+    "start": "node .output/server/index.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -78,6 +80,7 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.4",
+    "cross-env": "^10.1.0",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.6",

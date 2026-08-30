@@ -7,10 +7,18 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 
-// Vercel sets VERCEL=1 during its builds. Locally `npm run build` stays fast and
-// produces dist/; on Vercel the nitro plugin emits .vercel/output (Build Output API v3).
-// Force it locally with `npm run build:vercel`.
-const isVercelBuild = !!process.env.VERCEL || process.env.DEPLOY_TARGET === "vercel";
+/*
+ * Deploy target decides which nitro preset (if any) runs.
+ *
+ *  - unset      plain `dist/`: a fetch handler with no HTTP listener. Fine for local
+ *               builds and inspection, NOT something a Node host can serve.
+ *  - "vercel"   .vercel/output, Build Output API v3. Vercel sets VERCEL=1 itself.
+ *  - "node"     .output/server/index.mjs, a standalone server that binds to PORT —
+ *               what a Node host such as Hostinger's Web Apps needs.
+ */
+const deployTarget = process.env.VERCEL ? "vercel" : process.env.DEPLOY_TARGET;
+const nitroPreset =
+  deployTarget === "vercel" ? "vercel" : deployTarget === "node" ? "node-server" : null;
 
 export default defineConfig({
   plugins: [
@@ -26,7 +34,7 @@ export default defineConfig({
         },
       },
     }),
-    ...(isVercelBuild ? [nitro({ preset: "vercel" })] : []),
+    ...(nitroPreset ? [nitro({ preset: nitroPreset })] : []),
     viteReact(),
   ],
   resolve: {
