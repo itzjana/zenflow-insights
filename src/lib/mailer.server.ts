@@ -10,7 +10,7 @@ let cached: Transporter | null = null;
 let cachedKey = "";
 
 /**
- * SMTP transport for the Hostinger mailbox.
+ * SMTP transport for the Zoho mailbox.
  *
  * `secure` is derived from the port rather than hard-coded, because the two get
  * confused constantly: 465 is implicit TLS (wrapped from the first byte), 587 is

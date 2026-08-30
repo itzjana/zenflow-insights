@@ -60,17 +60,20 @@
   position: relative;
 }
 
+/* Each card parks with real CSS sticky; `top` is written per card from JS because the
+   offset depends on the measured nav height and the card's index in the pile.
+   This used to be a per-frame translate3d from the scroll handler, which on phones ran
+   behind the compositor's own scrolling — every card jittered against the page as you
+   swiped. Sticky is resolved on the compositor, so a parked card cannot drift.
+   JS still writes `scale`, but a late scale does not move the card's anchor point. */
 .scroll-stack-card {
+  position: sticky;
   transform-origin: top center;
   will-change: transform, filter;
   backface-visibility: hidden;
   transform-style: preserve-3d;
   width: 100%;
   box-sizing: border-box;
-  /* Improve mobile performance */
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  position: relative;
 }
 
 .scroll-stack-end {

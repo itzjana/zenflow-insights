@@ -17,18 +17,23 @@ import process from "node:process";
 //     VITE_ prefix. Never put secrets here — they ship to the browser.
 
 export function getServerConfig() {
-  // Hostinger's own documented endpoint and port are the defaults, so a deploy
+  // Zoho's India endpoint and the implicit-TLS port are the defaults, so a deploy
   // only strictly needs the mailbox credentials set.
+  //
+  // Zoho is region-sharded and a mailbox only authenticates against its own
+  // datacenter: smtp.zoho.in, smtp.zoho.com, smtp.zoho.eu, smtp.zoho.com.au and so on.
+  // The right one matches the domain you sign in on. Override SMTP_HOST if this
+  // account is not on the India shard.
   const smtpPort = Number(process.env.SMTP_PORT ?? 465);
 
   return {
     nodeEnv: process.env.NODE_ENV,
-    smtpHost: process.env.SMTP_HOST ?? "smtp.hostinger.com",
+    smtpHost: process.env.SMTP_HOST ?? "smtp.zoho.in",
     smtpPort: Number.isFinite(smtpPort) ? smtpPort : 465,
     smtpUser: process.env.SMTP_USER,
     smtpPass: process.env.SMTP_PASS,
-    // The envelope sender must be the authenticated mailbox itself — Hostinger
-    // rejects a From that it does not host.
+    // The envelope sender must be the authenticated mailbox or one of its verified
+    // aliases — Zoho rejects a From it does not own.
     mailFrom: process.env.MAIL_FROM ?? process.env.SMTP_USER,
     mailTo: process.env.MAIL_TO ?? process.env.SMTP_USER,
   };

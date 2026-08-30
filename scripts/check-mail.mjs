@@ -7,7 +7,7 @@
 
 import nodemailer from "nodemailer";
 
-const host = process.env.SMTP_HOST ?? "smtp.hostinger.com";
+const host = process.env.SMTP_HOST ?? "smtp.zoho.in";
 const port = Number(process.env.SMTP_PORT ?? 465);
 const user = process.env.SMTP_USER;
 const pass = process.env.SMTP_PASS;

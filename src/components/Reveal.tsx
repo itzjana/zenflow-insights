@@ -1,4 +1,11 @@
-import { useEffect, useRef, type ReactNode, type ElementType, type RefObject } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type ElementType,
+  type RefObject,
+} from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -20,6 +27,14 @@ type Props = {
   replay?: boolean;
   /** ScrollTrigger start position — override when the default fires too early */
   start?: string;
+  /**
+   * Only animate while this media query matches; otherwise render the children plainly.
+   *
+   * Needed wherever the same markup is hidden at some breakpoints: the reveal starts the
+   * element at opacity 0 and waits for a scroll trigger, and a `display: none` element
+   * never generates one — so it stays invisible until something else forces a refresh.
+   */
+  media?: string;
 };
 
 if (typeof window !== "undefined") {
@@ -36,12 +51,24 @@ export function Reveal({
   trigger,
   replay = false,
   start,
+  media,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
+  // No query means always on. Resolved after mount so SSR and the client agree.
+  const [enabled, setEnabled] = useState(!media);
+
+  useEffect(() => {
+    if (!media) return;
+    const mq = window.matchMedia(media);
+    const sync = () => setEnabled(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, [media]);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !enabled) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
 
@@ -80,7 +107,7 @@ export function Reveal({
     }, ref);
 
     return () => ctx.revert();
-  }, [delay, y, splitWords, trigger, replay, start]);
+  }, [delay, y, splitWords, trigger, replay, start, enabled]);
 
   return (
     <Tag ref={ref as never} className={className}>

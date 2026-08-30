@@ -139,10 +139,19 @@ export function CapabilityShowcase({ items, duration = 5200 }: Props) {
         const Icon = p.icon;
         const isActive = i === active;
         return (
-          <Reveal key={p.n} delay={0.05} className={isActive ? undefined : "max-lg:hidden"}>
+          /* The scroll reveal is confined to the wide layout. Below lg only one card is
+             displayed at a time, and a hidden card never trips a scroll trigger — so a
+             revealed card stayed at opacity 0 after a tab switch and looked like it was
+             still loading. There the card just appears, with a short entry of its own. */
+          <Reveal
+            key={p.n}
+            delay={0.05}
+            media={WIDE}
+            className={isActive ? undefined : "max-lg:hidden"}
+          >
             <article
               id={`cap-card-${p.n}`}
-              className="group rounded-3xl border border-foreground/[0.07] bg-muted/60 p-6 transition-colors hover:border-brand/40 md:p-8"
+              className="group rounded-3xl border border-foreground/[0.07] bg-muted/60 p-6 transition-colors hover:border-brand/40 md:p-8 max-lg:animate-[pcIn_320ms_ease-out]"
             >
               <header className="mb-5 flex items-start justify-between gap-4 border-b border-foreground/[0.07] pb-5">
                 <div className="flex min-w-0 flex-col gap-1.5">

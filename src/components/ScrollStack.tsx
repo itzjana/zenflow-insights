@@ -30,7 +30,6 @@ export interface ScrollStackProps {
 }
 
 interface TransformData {
-  translateY: number;
   scale: number;
   rotation: number;
   blur: number;
@@ -38,10 +37,10 @@ interface TransformData {
 
 /* Gap left between the bottom edge of the fixed nav and the pinned title */
 const NAV_GAP = 16;
+/* Smallest gap ever left between two cards in the flow */
+const MIN_CARD_GAP = 12;
 /* Used until the fixed nav can be measured (SSR / nav not mounted yet) */
 const FALLBACK_NAV_BOTTOM = 80;
-/* Clearance kept between the settled card pile and whatever follows the section */
-const PILE_CLEARANCE = 32;
 
 const ScrollStack: React.FC<ScrollStackProps> = ({
   children,
@@ -77,6 +76,9 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
   /* Viewport height frozen at measure time. Read live it changes continuously as the
      mobile URL bar slides, and it feeds the pin geometry — see updateCardTransforms. */
   const containerHeightRef = useRef<number>(0);
+  /* Scroll offset at which the pile comes unstuck, so the title can leave with it. */
+  const releaseScrollRef = useRef<number>(0);
+  const titleFrozenRef = useRef<boolean>(false);
   const stickyTopRef = useRef<number>(FALLBACK_NAV_BOTTOM + NAV_GAP);
   const titleHeightRef = useRef<number>(0);
   const titleGapRef = useRef<number>(0);
@@ -144,10 +146,14 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 
     cardsRef.current = cards;
 
-    // Reset styles temporarily to get untransformed offsets
+    // Reset styles temporarily to get untransformed offsets. Position has to go too:
+    // a card that is currently parked would otherwise report its stuck position rather
+    // than where it sits in the flow.
     const originalTransforms = cards.map((c) => c.style.transform);
+    const originalPositions = cards.map((c) => c.style.position);
     cards.forEach((c) => {
       c.style.transform = "none";
+      c.style.position = "static";
     });
 
     const endElement = useWindowScroll
@@ -219,12 +225,11 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       titleGapRef.current = 0;
     }
 
-    // Restore transforms
-    cards.forEach((c, idx) => {
-      c.style.transform = originalTransforms[idx] || "";
-    });
-    if (endElement) {
-      endElement.style.transform = originalEndTransform;
+    /* Any inline freeze is stale once the geometry moves; updateCardTransforms will
+       re-apply it on the next tick if the scroll position still calls for it. */
+    if (titleEl) {
+      titleFrozenRef.current = false;
+      titleEl.style.top = "";
     }
 
     const containerHeight = useWindowScroll ? window.innerHeight : (scroller?.clientHeight ?? 0);
@@ -237,29 +242,115 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       ? stickyTopRef.current + titleHeightRef.current + titleGapRef.current
       : parsePercentage(stackPosition, containerHeight);
 
-    // The pile freezes at `pinEnd = endTop - containerHeight / 2` and from there it
-    // scrolls away with the page, so its lowest card sits `pileReach` px below the end
-    // marker. Pad the section by that much so the pile can never land on top of
-    // whatever section follows.
+    /* Park offset per card. Written here rather than per frame: it only changes when
+       the nav height or the pile geometry changes. */
+    cards.forEach((card, i) => {
+      card.style.top = `${Math.round(stackPositionPxRef.current + itemStackDistance * i)}px`;
+    });
+
+    /* Equalise how far each card reaches below its parked slot.
+       A sticky card comes unstuck when its bottom margin edge meets the container's
+       content edge, so a card's release time depends on `top + height + margin`. With a
+       uniform margin those differ by the stack offset, and the lowest-reaching card —
+       the fifth, not the last — broke away on its own while the rest stayed put.
+       Compensating the margin makes every reach identical, so the pile releases as one
+       and, because each card's clamped position still carries its own `top`, it keeps
+       its stagger on the way out. The gaps are rebalanced around itemDistance, so the
+       section's overall height is unchanged. */
+    const reaches = cards.map(
+      (_, i) =>
+        stackPositionPxRef.current + itemStackDistance * i + (cardHeightsRef.current[i] ?? 0),
+    );
+    const deepest = Math.max(...reaches);
+    const extras = reaches.map((r) => deepest - r);
+    const averageExtra = extras.reduce((a, b) => a + b, 0) / (extras.length || 1);
+    const gap = Math.max(MIN_CARD_GAP, itemDistance - averageExtra);
+    cards.forEach((card, i) => {
+      card.style.marginBottom = `${Math.round(gap + extras[i])}px`;
+    });
+
+    /* Those margins moved every card, so the cached flow positions have to be retaken —
+       the end marker included. Leaving its position at the pre-margin value made the tail
+       overshoot by the whole width of the margins, giving a dead hold several times
+       longer than intended. */
+    cardTopsRef.current = cards.map((card) => {
+      if (useWindowScroll) return card.getBoundingClientRect().top + window.scrollY;
+      return card.offsetTop;
+    });
+    if (endElement) {
+      endElementTopRef.current = useWindowScroll
+        ? endElement.getBoundingClientRect().top + window.scrollY
+        : endElement.offsetTop;
+    }
+
+    /* Only now is it safe to hand positioning back. Everything above reads flow
+       geometry, and a sticky card that is currently parked reports its parked position
+       instead — measuring after this point corrupted the tail whenever a remeasure
+       happened while the section was scrolled. */
+    cards.forEach((c, idx) => {
+      c.style.transform = originalTransforms[idx] || "";
+      c.style.position = originalPositions[idx] || "";
+    });
+    if (endElement) {
+      endElement.style.transform = originalEndTransform;
+    }
+
+    /* Tail length is dictated by CSS sticky, not by the old translate maths.
+       A sticky card stops being able to hold its parked position once the bottom of its
+       containing block (this element) comes up to meet it — at that point the browser
+       clamps every card to the same bottom edge, which collapses the staggered pile.
+       Sized against the old pile-overlap formula, that clamp began before the final card
+       had ever reached its slot, so the stack silently never finished building.
+
+       So the tail is derived from the clamp instead: leave enough room for the last card
+       to park, plus a hold so the completed pile is actually on screen for a moment. The
+       scroll this buys is not empty space — the parked pile is what fills the viewport
+       throughout it. */
     const inner = innerRef.current;
-    if (inner && cards.length) {
-      const pileReach = Math.max(
-        ...cards.map(
-          (_, i) =>
-            stackPositionPxRef.current +
-            itemStackDistance * i +
-            (cardHeightsRef.current[i] ?? 0) -
-            containerHeight / 2,
-        ),
+    if (inner && endElement && cards.length) {
+      const last = cards.length - 1;
+      // Scroll offset at which the final card reaches its slot.
+      const lastParksAt =
+        (cardTopsRef.current[last] ?? 0) - (stackPositionPxRef.current + itemStackDistance * last);
+      // How long the finished pile stays put before the browser starts releasing it.
+      const hold = Math.round(containerHeight * 0.35);
+
+      /* Every card now reaches exactly this far, by construction of the margins above.
+         Recomputing it from a uniform itemDistance here (as this once did) no longer
+         describes the real layout and inflated the tail by hundreds of pixels. */
+      const maxReach = deepest + gap;
+
+      /* The room has to be real in-flow content, which is why it is the end marker that
+         grows rather than padding on the container. A sticky element is held inside its
+         containing block's CONTENT box, so padding-bottom buys no travel at all: with
+         292px of padding the cards still came unstuck exactly at the content edge. */
+      const needed = lastParksAt + hold + maxReach;
+      const tail = Math.max(
+        Math.round(containerHeight * 0.1),
+        Math.ceil(needed - endElementTopRef.current),
       );
-      const requiredTail = Math.ceil(pileReach + PILE_CLEARANCE);
-      const tail = Math.max(Math.round(containerHeight * 0.1), requiredTail);
       const tailPx = `${tail}px`;
-      if (inner.style.paddingBottom !== tailPx) {
-        inner.style.paddingBottom = tailPx;
+      if (endElement.style.height !== tailPx) {
+        endElement.style.height = tailPx;
+      }
+
+      /* Every card now reaches the same distance, so they all come unstuck here. The
+         title is held by the same container but reaches far less far, which left it
+         parked under the nav for hundreds of pixels after the pile had gone. */
+      releaseScrollRef.current = endElementTopRef.current + tail - (deepest + gap);
+      // Padding here would only add dead space below the section; the marker does the work.
+      if (inner.style.paddingBottom !== "0px") {
+        inner.style.paddingBottom = "0px";
       }
     }
-  }, [useWindowScroll, measureStickyTop, parsePercentage, stackPosition, itemStackDistance]);
+  }, [
+    useWindowScroll,
+    measureStickyTop,
+    parsePercentage,
+    stackPosition,
+    itemStackDistance,
+    itemDistance,
+  ]);
 
   const updateCardTransforms = useCallback(() => {
     if (!cardsRef.current.length || isUpdatingRef.current) return;
@@ -283,6 +374,27 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         cardTopsRef.current = cardTopsRef.current.map((t) => t + drift);
         endElementTopRef.current += drift;
         titleNaturalTopRef.current += drift;
+      }
+    }
+
+    /* Pin the title to where it stood when the pile released, so the two leave together.
+       This is a one-shot switch rather than a per-frame transform: writing the title's
+       position every frame is exactly what used to make it wobble on phones. */
+    const titleEl = titleRef.current;
+    if (titleEl && hasTitleRef.current && releaseScrollRef.current > 0) {
+      const frozen = scrollTop >= releaseScrollRef.current;
+      if (frozen !== titleFrozenRef.current) {
+        titleFrozenRef.current = frozen;
+        if (frozen) {
+          const offset = Math.round(
+            releaseScrollRef.current + stickyTopRef.current - titleNaturalTopRef.current,
+          );
+          titleEl.style.position = "relative";
+          titleEl.style.top = `${offset}px`;
+        } else {
+          titleEl.style.position = "";
+          titleEl.style.top = "";
+        }
       }
     }
 
@@ -323,16 +435,9 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         }
       }
 
-      let translateY = 0;
-      const isPinned = scrollTop >= pinStart && scrollTop <= pinEnd;
-      if (isPinned) {
-        translateY = scrollTop - cardTop + stackPositionPx + itemStackDistance * i;
-      } else if (scrollTop > pinEnd) {
-        translateY = pinEnd - cardTop + stackPositionPx + itemStackDistance * i;
-      }
-
+      /* No translate here any more — the card's parked position is CSS sticky, so the
+         browser holds it in place without JS. Only the depth cues are written. */
       const newTransform: TransformData = {
-        translateY: Math.round(translateY * 100) / 100,
         scale: Math.round(scale * 1000) / 1000,
         rotation: Math.round(rotation * 100) / 100,
         blur: Math.round(blur * 100) / 100,
@@ -341,21 +446,19 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       const lastTransform = lastTransformsRef.current.get(i);
       const hasChanged =
         !lastTransform ||
-        Math.abs(lastTransform.translateY - newTransform.translateY) > 0.1 ||
         Math.abs(lastTransform.scale - newTransform.scale) > 0.001 ||
         Math.abs(lastTransform.rotation - newTransform.rotation) > 0.1 ||
         Math.abs(lastTransform.blur - newTransform.blur) > 0.1;
 
       if (hasChanged) {
-        const transform = `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
-        const filter = newTransform.blur > 0 ? `blur(${newTransform.blur}px)` : "";
-        card.style.transform = transform;
-        card.style.filter = filter;
+        card.style.transform = `scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
+        card.style.filter = newTransform.blur > 0 ? `blur(${newTransform.blur}px)` : "";
         lastTransformsRef.current.set(i, newTransform);
       }
 
       if (i === cardsRef.current.length - 1) {
         const isInView = scrollTop >= pinStart && scrollTop <= pinEnd;
+        // pinStart/pinEnd now only describe when the pile is complete, not where it sits.
         if (isInView && !stackCompletedRef.current) {
           stackCompletedRef.current = true;
           onStackComplete?.();
@@ -426,10 +529,8 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         : scroller!.querySelectorAll(".scroll-stack-card"),
     ) as HTMLElement[];
     cardsRef.current = cards;
-    cards.forEach((card, i) => {
-      if (i < cards.length - 1) {
-        card.style.marginBottom = `${itemDistance}px`;
-      }
+    cards.forEach((card) => {
+      // marginBottom is set in measureOffsets, which balances it per card.
       card.style.willChange = "transform, filter";
       card.style.transformOrigin = "top center";
       card.style.backfaceVisibility = "hidden";
