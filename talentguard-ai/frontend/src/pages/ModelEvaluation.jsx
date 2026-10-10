@@ -43,7 +43,7 @@ export default function ModelEvaluation() {
   return (
     <div>
       <div className="page-header">
-        <h1> Model Evaluation &amp; Benchmarking</h1>
+        <h1>Model Evaluation &amp; Benchmarking</h1>
         <p>Rigorous offline evaluation on held-out test splits with HR capacity constraints.</p>
       </div>
 
@@ -65,18 +65,18 @@ export default function ModelEvaluation() {
               <Tooltip
                 contentStyle={{
                   backgroundColor: '#ffffff',
-                  borderColor: '#cbd5e1',
+                  borderColor: '#e2e8f0',
                   borderRadius: '8px',
                   color: '#0f172a',
-                  boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)',
+                  boxShadow: '0 4px 12px rgba(15,23,42,0.1)',
                 }}
                 formatter={(val) => [`${val}%`]}
               />
               <Legend />
-              <Bar dataKey="ROC-AUC" fill="#6366f1" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Precision@50" fill="#10b981" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Recall@50" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="F1" fill="#ec4899" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="ROC-AUC" fill="#2563eb" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Precision@50" fill="#16a34a" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Recall@50" fill="#d97706" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="F1" fill="#7c3aed" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -101,7 +101,7 @@ export default function ModelEvaluation() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.875rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--text-muted)' }}>ROC-AUC:</span>
-                  <strong style={{ color: 'var(--text-primary)' }}>{(m.roc_auc || 0).toFixed(4)}</strong>
+                  <strong style={{ color: 'var(--accent)' }}>{(m.roc_auc || 0).toFixed(4)}</strong>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--text-muted)' }}>Precision@50:</span>
@@ -122,7 +122,7 @@ export default function ModelEvaluation() {
               </div>
 
               {m.confusion_matrix && (
-                <div style={{ marginTop: '16px', background: 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '8px', fontSize: '0.75rem' }}>
+                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '8px', fontSize: '0.75rem' }}>
                   <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>CONFUSION MATRIX (TEST SET)</div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', textAlign: 'center' }}>
                     <div style={{ background: 'rgba(255,255,255,0.04)', padding: '4px' }}>TN: {m.confusion_matrix.tn}</div>
