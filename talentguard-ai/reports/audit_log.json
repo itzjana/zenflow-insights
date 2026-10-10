@@ -1,0 +1,437 @@
+{
+  "saved_at": "2026-10-10T07:41:02.224953+00:00",
+  "drafts": [
+    {
+      "employee_id": "167",
+      "risk_score": 0.8967,
+      "risk_reasons": [
+        "OverTime=Yes (increases risk)",
+        "MonthlyIncome=1675 (increases risk)",
+        "Age=19 (increases risk)"
+      ],
+      "evidence": [
+        {
+          "feature": "OverTime",
+          "observed_value": "Yes",
+          "direction": "increases_risk",
+          "magnitude": 0.1833
+        },
+        {
+          "feature": "MonthlyIncome",
+          "observed_value": 1675,
+          "direction": "increases_risk",
+          "magnitude": 0.1743
+        },
+        {
+          "feature": "Age",
+          "observed_value": 19,
+          "direction": "increases_risk",
+          "magnitude": 0.0431
+        }
+      ],
+      "recommended_actions": [
+        "Review workload, staffing, schedules, and work-life balance options.",
+        "Consider fair, policy-compliant compensation benchmarking."
+      ],
+      "conversation_guide": [
+        "How are you finding your current workload and work-life balance?",
+        "Are you satisfied with your current compensation and benefits?"
+      ],
+      "limitations": "This draft is generated from model signals, not confirmed causes. HR professionals must review and adapt before any conversation. Do not contact employees automatically.",
+      "status": "PENDING_APPROVAL",
+      "created_at": "2026-10-10T07:41:02.223954+00:00",
+      "reviewed_by": null,
+      "reviewed_at": null,
+      "review_note": null
+    },
+    {
+      "employee_id": "959",
+      "risk_score": 0.8962,
+      "risk_reasons": [
+        "MonthlyIncome=2121 (increases risk)",
+        "Age=19 (increases risk)",
+        "OverTime=Yes (increases risk)"
+      ],
+      "evidence": [
+        {
+          "feature": "MonthlyIncome",
+          "observed_value": 2121,
+          "direction": "increases_risk",
+          "magnitude": 0.1643
+        },
+        {
+          "feature": "Age",
+          "observed_value": 19,
+          "direction": "increases_risk",
+          "magnitude": 0.055
+        },
+        {
+          "feature": "OverTime",
+          "observed_value": "Yes",
+          "direction": "increases_risk",
+          "magnitude": 0.0508
+        }
+      ],
+      "recommended_actions": [
+        "Consider fair, policy-compliant compensation benchmarking.",
+        "Review workload, staffing, schedules, and work-life balance options."
+      ],
+      "conversation_guide": [
+        "Are you satisfied with your current compensation and benefits?",
+        "How are you finding your current workload and work-life balance?"
+      ],
+      "limitations": "This draft is generated from model signals, not confirmed causes. HR professionals must review and adapt before any conversation. Do not contact employees automatically.",
+      "status": "PENDING_APPROVAL",
+      "created_at": "2026-10-10T07:41:02.223954+00:00",
+      "reviewed_by": null,
+      "reviewed_at": null,
+      "review_note": null
+    },
+    {
+      "employee_id": "1273",
+      "risk_score": 0.8945,
+      "risk_reasons": [
+        "MonthlyIncome=1118 (increases risk)",
+        "Age=25 (increases risk)",
+        "OverTime=Yes (increases risk)"
+      ],
+      "evidence": [
+        {
+          "feature": "MonthlyIncome",
+          "observed_value": 1118,
+          "direction": "increases_risk",
+          "magnitude": 0.2775
+        },
+        {
+          "feature": "Age",
+          "observed_value": 25,
+          "direction": "increases_risk",
+          "magnitude": 0.0868
+        },
+        {
+          "feature": "OverTime",
+          "observed_value": "Yes",
+          "direction": "increases_risk",
+          "magnitude": 0.0796
+        }
+      ],
+      "recommended_actions": [
+        "Consider fair, policy-compliant compensation benchmarking.",
+        "Review workload, staffing, schedules, and work-life balance options."
+      ],
+      "conversation_guide": [
+        "Are you satisfied with your current compensation and benefits?",
+        "How are you finding your current workload and work-life balance?"
+      ],
+      "limitations": "This draft is generated from model signals, not confirmed causes. HR professionals must review and adapt before any conversation. Do not contact employees automatically.",
+      "status": "PENDING_APPROVAL",
+      "created_at": "2026-10-10T07:41:02.223954+00:00",
+      "reviewed_by": null,
+      "reviewed_at": null,
+      "review_note": null
+    },
+    {
+      "employee_id": "1624",
+      "risk_score": 0.8945,
+      "risk_reasons": [
+        "Age=18 (increases risk)",
+        "MonthlyIncome=1569 (increases risk)",
+        "OverTime=Yes (increases risk)"
+      ],
+      "evidence": [
+        {
+          "feature": "Age",
+          "observed_value": 18,
+          "direction": "increases_risk",
+          "magnitude": 0.142
+        },
+        {
+          "feature": "MonthlyIncome",
+          "observed_value": 1569,
+          "direction": "increases_risk",
+          "magnitude": 0.1226
+        },
+        {
+          "feature": "OverTime",
+          "observed_value": "Yes",
+          "direction": "increases_risk",
+          "magnitude": 0.0929
+        }
+      ],
+      "recommended_actions": [
+        "Consider fair, policy-compliant compensation benchmarking.",
+        "Review workload, staffing, schedules, and work-life balance options."
+      ],
+      "conversation_guide": [
+        "Are you satisfied with your current compensation and benefits?",
+        "How are you finding your current workload and work-life balance?"
+      ],
+      "limitations": "This draft is generated from model signals, not confirmed causes. HR professionals must review and adapt before any conversation. Do not contact employees automatically.",
+      "status": "PENDING_APPROVAL",
+      "created_at": "2026-10-10T07:41:02.223954+00:00",
+      "reviewed_by": null,
+      "reviewed_at": null,
+      "review_note": null
+    },
+    {
+      "employee_id": "622",
+      "risk_score": 0.8927,
+      "risk_reasons": [
+        "Age=26 (increases risk)",
+        "MonthlyIncome=2340 (increases risk)",
+        "OverTime=Yes (increases risk)"
+      ],
+      "evidence": [
+        {
+          "feature": "Age",
+          "observed_value": 26,
+          "direction": "increases_risk",
+          "magnitude": 0.1629
+        },
+        {
+          "feature": "MonthlyIncome",
+          "observed_value": 2340,
+          "direction": "increases_risk",
+          "magnitude": 0.1622
+        },
+        {
+          "feature": "OverTime",
+          "observed_value": "Yes",
+          "direction": "increases_risk",
+          "magnitude": 0.1319
+        }
+      ],
+      "recommended_actions": [
+        "Consider fair, policy-compliant compensation benchmarking.",
+        "Review workload, staffing, schedules, and work-life balance options."
+      ],
+      "conversation_guide": [
+        "Are you satisfied with your current compensation and benefits?",
+        "How are you finding your current workload and work-life balance?"
+      ],
+      "limitations": "This draft is generated from model signals, not confirmed causes. HR professionals must review and adapt before any conversation. Do not contact employees automatically.",
+      "status": "PENDING_APPROVAL",
+      "created_at": "2026-10-10T07:41:02.223954+00:00",
+      "reviewed_by": null,
+      "reviewed_at": null,
+      "review_note": null
+    },
+    {
+      "employee_id": "1248",
+      "risk_score": 0.8897,
+      "risk_reasons": [
+        "OverTime=Yes (increases risk)",
+        "YearsWithCurrManager=0 (increases risk)",
+        "MonthlyIncome=1859 (increases risk)"
+      ],
+      "evidence": [
+        {
+          "feature": "OverTime",
+          "observed_value": "Yes",
+          "direction": "increases_risk",
+          "magnitude": 0.257
+        },
+        {
+          "feature": "YearsWithCurrManager",
+          "observed_value": 0,
+          "direction": "increases_risk",
+          "magnitude": 0.0902
+        },
+        {
+          "feature": "MonthlyIncome",
+          "observed_value": 1859,
+          "direction": "increases_risk",
+          "magnitude": 0.0642
+        }
+      ],
+      "recommended_actions": [
+        "Review workload, staffing, schedules, and work-life balance options.",
+        "Consider fair, policy-compliant compensation benchmarking."
+      ],
+      "conversation_guide": [
+        "How are you finding your current workload and work-life balance?",
+        "Are you satisfied with your current compensation and benefits?"
+      ],
+      "limitations": "This draft is generated from model signals, not confirmed causes. HR professionals must review and adapt before any conversation. Do not contact employees automatically.",
+      "status": "PENDING_APPROVAL",
+      "created_at": "2026-10-10T07:41:02.223954+00:00",
+      "reviewed_by": null,
+      "reviewed_at": null,
+      "review_note": null
+    },
+    {
+      "employee_id": "485",
+      "risk_score": 0.8885,
+      "risk_reasons": [
+        "OverTime=Yes (increases risk)",
+        "MonthlyIncome=2851 (increases risk)",
+        "Age=33 (increases risk)"
+      ],
+      "evidence": [
+        {
+          "feature": "OverTime",
+          "observed_value": "Yes",
+          "direction": "increases_risk",
+          "magnitude": 0.2215
+        },
+        {
+          "feature": "MonthlyIncome",
+          "observed_value": 2851,
+          "direction": "increases_risk",
+          "magnitude": 0.18
+        },
+        {
+          "feature": "Age",
+          "observed_value": 33,
+          "direction": "increases_risk",
+          "magnitude": 0.1244
+        }
+      ],
+      "recommended_actions": [
+        "Review workload, staffing, schedules, and work-life balance options.",
+        "Consider fair, policy-compliant compensation benchmarking."
+      ],
+      "conversation_guide": [
+        "How are you finding your current workload and work-life balance?",
+        "Are you satisfied with your current compensation and benefits?"
+      ],
+      "limitations": "This draft is generated from model signals, not confirmed causes. HR professionals must review and adapt before any conversation. Do not contact employees automatically.",
+      "status": "PENDING_APPROVAL",
+      "created_at": "2026-10-10T07:41:02.223954+00:00",
+      "reviewed_by": null,
+      "reviewed_at": null,
+      "review_note": null
+    },
+    {
+      "employee_id": "514",
+      "risk_score": 0.8877,
+      "risk_reasons": [
+        "OverTime=Yes (increases risk)",
+        "MonthlyIncome=2285 (increases risk)",
+        "Age=30 (increases risk)"
+      ],
+      "evidence": [
+        {
+          "feature": "OverTime",
+          "observed_value": "Yes",
+          "direction": "increases_risk",
+          "magnitude": 0.4536
+        },
+        {
+          "feature": "MonthlyIncome",
+          "observed_value": 2285,
+          "direction": "increases_risk",
+          "magnitude": 0.2497
+        },
+        {
+          "feature": "Age",
+          "observed_value": 30,
+          "direction": "increases_risk",
+          "magnitude": 0.1826
+        }
+      ],
+      "recommended_actions": [
+        "Review workload, staffing, schedules, and work-life balance options.",
+        "Consider fair, policy-compliant compensation benchmarking."
+      ],
+      "conversation_guide": [
+        "How are you finding your current workload and work-life balance?",
+        "Are you satisfied with your current compensation and benefits?"
+      ],
+      "limitations": "This draft is generated from model signals, not confirmed causes. HR professionals must review and adapt before any conversation. Do not contact employees automatically.",
+      "status": "PENDING_APPROVAL",
+      "created_at": "2026-10-10T07:41:02.223954+00:00",
+      "reviewed_by": null,
+      "reviewed_at": null,
+      "review_note": null
+    },
+    {
+      "employee_id": "1878",
+      "risk_score": 0.8873,
+      "risk_reasons": [
+        "OverTime=Yes (increases risk)",
+        "MonthlyIncome=2472 (increases risk)",
+        "StockOptionLevel=0 (increases risk)"
+      ],
+      "evidence": [
+        {
+          "feature": "OverTime",
+          "observed_value": "Yes",
+          "direction": "increases_risk",
+          "magnitude": 0.1645
+        },
+        {
+          "feature": "MonthlyIncome",
+          "observed_value": 2472,
+          "direction": "increases_risk",
+          "magnitude": 0.1232
+        },
+        {
+          "feature": "StockOptionLevel",
+          "observed_value": 0,
+          "direction": "increases_risk",
+          "magnitude": 0.1049
+        }
+      ],
+      "recommended_actions": [
+        "Review workload, staffing, schedules, and work-life balance options.",
+        "Consider fair, policy-compliant compensation benchmarking.",
+        "Review equity and long-term incentive eligibility per policy."
+      ],
+      "conversation_guide": [
+        "How are you finding your current workload and work-life balance?",
+        "Are you satisfied with your current compensation and benefits?",
+        "Are you aware of the long-term incentive options available to you?"
+      ],
+      "limitations": "This draft is generated from model signals, not confirmed causes. HR professionals must review and adapt before any conversation. Do not contact employees automatically.",
+      "status": "PENDING_APPROVAL",
+      "created_at": "2026-10-10T07:41:02.224953+00:00",
+      "reviewed_by": null,
+      "reviewed_at": null,
+      "review_note": null
+    },
+    {
+      "employee_id": "137",
+      "risk_score": 0.8866,
+      "risk_reasons": [
+        "MonthlyIncome=2926 (increases risk)",
+        "Age=20 (increases risk)",
+        "OverTime=Yes (increases risk)"
+      ],
+      "evidence": [
+        {
+          "feature": "MonthlyIncome",
+          "observed_value": 2926,
+          "direction": "increases_risk",
+          "magnitude": 0.247
+        },
+        {
+          "feature": "Age",
+          "observed_value": 20,
+          "direction": "increases_risk",
+          "magnitude": 0.1406
+        },
+        {
+          "feature": "OverTime",
+          "observed_value": "Yes",
+          "direction": "increases_risk",
+          "magnitude": 0.1197
+        }
+      ],
+      "recommended_actions": [
+        "Consider fair, policy-compliant compensation benchmarking.",
+        "Review workload, staffing, schedules, and work-life balance options."
+      ],
+      "conversation_guide": [
+        "Are you satisfied with your current compensation and benefits?",
+        "How are you finding your current workload and work-life balance?"
+      ],
+      "limitations": "This draft is generated from model signals, not confirmed causes. HR professionals must review and adapt before any conversation. Do not contact employees automatically.",
+      "status": "PENDING_APPROVAL",
+      "created_at": "2026-10-10T07:41:02.224953+00:00",
+      "reviewed_by": null,
+      "reviewed_at": null,
+      "review_note": null
+    }
+  ]
+}

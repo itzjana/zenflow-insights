@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "talentguard"
+version = "1.0.0"
+description = "TalentGuard AI - HR Attrition Risk Prediction & Retention Platform"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "joblib",
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic",
+    "python-dotenv",
+    "httpx",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
