@@ -30,17 +30,17 @@ export default function Overview() {
   return (
     <div>
       <div className="page-header">
-        <h1> TalentGuard AI</h1>
-        <p>Prioritise supportive retention conversations with data-driven insights.</p>
+        <h1>TalentGuard AI — Platform Overview</h1>
+        <p>Prioritise supportive retention conversations with data-driven insights. All scores are probabilistic estimates requiring human review.</p>
       </div>
 
       {error && <div className="error-box"> API unavailable — ensure the backend is running on port 8000.<br/><small>{error}</small></div>}
 
       <div className="metrics-grid">
         <MetricCard label="Dataset Rows" value={data?.dataset?.rows?.toLocaleString()} sub="IBM HR Analytics" />
-        <MetricCard label="Observed Attrition" value={data ? `${data.dataset.attrition_rate}%` : '—'} sub={`${data?.dataset?.attrition_count ?? '—'} employees`} color="#f59e0b" />
-        <MetricCard label="Best Model" value={data?.model?.trained ? 'HGB' : 'Untrained'} sub={data?.model?.name} color={data?.model?.trained ? '#6366f1' : '#ef4444'} />
-        <MetricCard label="ROC-AUC" value={data?.metrics?.roc_auc ? data.metrics.roc_auc.toFixed(3) : '—'} sub="Held-out test" color="#10b981" />
+        <MetricCard label="Observed Attrition" value={data ? `${data.dataset.attrition_rate}%` : '—'} sub={`${data?.dataset?.attrition_count ?? '—'} employees`} color="var(--amber)" />
+        <MetricCard label="Best Model" value={data?.model?.trained ? 'HGB' : 'Untrained'} sub={data?.model?.name} color={data?.model?.trained ? 'var(--accent)' : 'var(--red)'} />
+        <MetricCard label="ROC-AUC" value={data?.metrics?.roc_auc ? data.metrics.roc_auc.toFixed(3) : '—'} sub="Held-out test" color="var(--green)" />
         <MetricCard label="Precision@50" value={data?.metrics?.precision_at_50 ? data.metrics.precision_at_50.toFixed(3) : '—'} sub="Capacity metric" />
         <MetricCard label="Recall@50" value={data?.metrics?.recall_at_50 ? data.metrics.recall_at_50.toFixed(3) : '—'} sub="Coverage" />
       </div>
@@ -70,11 +70,11 @@ export default function Overview() {
           <h3 style={{color:'var(--text-primary)',marginBottom:16}}>Quick Actions</h3>
           <div style={{display:'flex',flexDirection:'column',gap:10}}>
             {[
-              [' View Top-50 Watch List', '/watchlist'],
-              [' Review Retention Drafts', '/retention'],
-              [' Run What-If Simulation', '/whatif'],
-              [' Explore EDA Charts', '/eda'],
-              [' Model Evaluation Report', '/evaluation'],
+              ['View Top-50 Watch List', '/watchlist'],
+              ['Review Retention Drafts', '/retention'],
+              ['Run What-If Simulation', '/whatif'],
+              ['Explore EDA Charts', '/eda'],
+              ['Model Evaluation Report', '/evaluation'],
             ].map(([label, path]) => (
               <button key={path} className="btn btn-ghost" style={{justifyContent:'flex-start'}} onClick={() => navigate(path)}>
                 {label}
